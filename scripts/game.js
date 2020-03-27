@@ -176,6 +176,50 @@ var LostWorld = function(canvas) {
 					this.sourceX = 882;
 					this.sourceY = 1639;
 				}
+				if(this.skin==7){
+					this.width=38;
+					this.height=78;
+					this.sourceWidth = 19;
+					this.sourceHeight = 39;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=6){
+						this.sourceX = 1327;
+						this.sourceY = 1486;
+					}
+					if(this.animate>=6&&this.animate<=12){
+						this.sourceX = 1327;
+						this.sourceY = 1524;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+				}
+				if(this.skin==8){
+					this.width=38;
+					this.height=88;
+					this.sourceWidth = 19;
+					this.sourceHeight = 44;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=6){
+						this.sourceX = 1327;
+						this.sourceY = 1563;
+					}
+					if(this.animate>=6&&this.animate<=12){
+						this.sourceX = 1327;
+						this.sourceY = 1606;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+				}
 			}else{
 				this.sourceX=562;
 				this.sourceY=1628;
@@ -745,7 +789,7 @@ var LostWorld = function(canvas) {
 						this.animate=32;
 					}
 					if(this.movement==1){
-						if(this.x<610){
+						if(this.x<490){
 							this.x+=1;
 							if(this.animate>=0&&this.animate<=8){
 								this.sourceX=361;
@@ -771,7 +815,7 @@ var LostWorld = function(canvas) {
 						}
 					}
 					if(this.movement==2){
-						if(this.x>70){
+						if(this.x>200){
 							this.x-=1;
 							if(this.animate>=0&&this.animate<=8){
 								this.sourceX=461;
@@ -1155,6 +1199,21 @@ var LostWorld = function(canvas) {
 						}
 					}
 				}
+				if(this.skin==10){
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=8){
+						this.sourceX=505;
+						this.sourceY=1521;
+					}
+					if(this.animate>=8&&this.animate<=16){
+						this.sourceX=525;
+						this.sourceY=1521;
+					}
+				}
 			}else{
 				this.sourceX=562;
 				this.sourceY=1626;
@@ -1176,7 +1235,7 @@ var LostWorld = function(canvas) {
 	};
 	this.start = function() {
 		arena = new Background(0,0,360,330,0,0,720,660);
-		controller = new Logic(1,true);
+		controller = new Logic(12,true);
 		hero = new Player(true,361,1331,20,38,300,300,42,72,0,false,false,false,false,0,0,1,0,100,50,0,0,false,false,false);
 		attack1 = new Firstattack(false,562,1327,74,74,152,142,152,142,0,0);
 		people = new Npc(true,0,676,20,38,300,300,42,72,0,20,1,2,0);
@@ -1197,9 +1256,9 @@ var LostWorld = function(canvas) {
 		this.entities.push(slot2);
 		this.entities.push(slot3);
 		this.entities.push(attack1);
+		this.entities.push(people);
 		this.entities.push(exhibit1);
 		this.entities.push(exhibit2);
-		this.entities.push(people);
 		this.entities.push(people1);
 		this.entities.push(people2);
 		this.entities.push(dialog);
@@ -1764,6 +1823,9 @@ var LostWorld = function(canvas) {
 				if(hero.y>530){
 					controller.floor=8;
 					hero.y=180;
+					people.skin=10;
+					people.x=627;
+					people.y=300;
 				}
 			}
 		}
@@ -1777,6 +1839,10 @@ var LostWorld = function(canvas) {
 				if(hero.y<180){
 					controller.floor=7;
 					hero.y=520;
+					people.skin=4;
+					people.x=300;
+					people.y=300;
+					people.movement=1;
 				}
 			}
 			if(hero.y>265&&hero.y<380){
@@ -1786,7 +1852,7 @@ var LostWorld = function(canvas) {
 					exhibit1.active=true;
 					people.skin=6;
 					people.x=300;
-					people.y=550;
+					people.y=220;
 					people.movement=1;
 				}
 			}
@@ -1818,12 +1884,16 @@ var LostWorld = function(canvas) {
 				if(hero.x<65){
 					controller.floor=10;
 					hero.x=615;
+					people.skin=0;
 					exhibit1.active=false;
 				}
 				if(hero.x>620){
 					controller.floor=8;
 					hero.x=70;
 					exhibit1.active=false;
+					people.skin=10;
+					people.x=627;
+					people.y=300;
 				}
 			}
 		}
@@ -1834,6 +1904,12 @@ var LostWorld = function(canvas) {
 				if(hero.x<65){
 					controller.floor=25;
 					hero.x=615;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 				if(hero.x>620){
 					controller.floor=9;
@@ -1842,7 +1918,7 @@ var LostWorld = function(canvas) {
 					people.active=true;
 					people.skin=6;
 					people.x=300;
-					people.y=550;
+					people.y=220;
 					people.movement=1;
 				}
 			}
@@ -1892,7 +1968,14 @@ var LostWorld = function(canvas) {
 				if(hero.x<65){
 					controller.floor=13;
 					hero.x=615;
-					exhibit1.active=false;
+					exhibit1.active=true;
+					exhibit2.active=true;
+					exhibit1.skin=8;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=8;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 				if(hero.x>620){
 					controller.floor=2;
@@ -1909,7 +1992,6 @@ var LostWorld = function(canvas) {
 				if(hero.x>620){
 					controller.floor=12;
 					hero.x=70;
-					exhibit1.active=true;
 				}
 			}
 			if(hero.x>260&&hero.x<430){
@@ -2082,10 +2164,19 @@ var LostWorld = function(canvas) {
 				if(hero.x<65){
 					controller.floor=26;
 					hero.x=615;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 				if(hero.x>620){
 					controller.floor=10;
 					hero.x=70;
+					exhibit1.skin=0;
+					exhibit2.skin=0;
+
 				}
 			}
 		}
@@ -2096,12 +2187,24 @@ var LostWorld = function(canvas) {
 				if(hero.x>620){
 					controller.floor=25;
 					hero.x=70;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 			if(hero.x>260&&hero.x<430){
 				if(hero.y>530){
 					controller.floor=27;
 					hero.y=180;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 		}
@@ -2112,12 +2215,24 @@ var LostWorld = function(canvas) {
 				if(hero.x>620){
 					controller.floor=28;
 					hero.x=70;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 			if(hero.x>260&&hero.x<430){
 				if(hero.y<180){
 					controller.floor=26;
 					hero.y=520;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 		}
@@ -2128,12 +2243,24 @@ var LostWorld = function(canvas) {
 				if(hero.y<180){
 					controller.floor=29;
 					hero.y=520;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 			if(hero.y>265&&hero.y<380){
 				if(hero.x<65){
 					controller.floor=27;
 					hero.x=615;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 		}
@@ -2145,12 +2272,20 @@ var LostWorld = function(canvas) {
 					controller.floor=30;
 					hero.x=615;
 					people.active=true;
+					exhibit1.skin=0;
+					exhibit2.skin=0;
 				}
 			}
 			if(hero.x>260&&hero.x<430){
 				if(hero.y>530){
 					controller.floor=28;
 					hero.y=180;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 				}
 			}
 		}
@@ -2198,6 +2333,12 @@ var LostWorld = function(canvas) {
 				if(hero.x>620){
 					controller.floor=29;
 					hero.x=70;
+					exhibit1.skin=7;
+					exhibit1.x=180;
+					exhibit1.y=145;
+					exhibit2.skin=7;
+					exhibit2.x=500;
+					exhibit2.y=145;
 					people.active=false;
 					dialog.skin=0;
 					if(hero.key==true){
