@@ -321,7 +321,7 @@ var LostWorld = function(canvas) {
 	}
 	//tworzenie klasy gracza wraz z parametrami
 	class Player{
-		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,moveUp,moveDown,moveLeft,moveRight,movement,animate,level,exp,next,gold,kills,apple,key,carrot,following){
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,moveUp,moveDown,moveLeft,moveRight,movement,animate,level,exp,next,health,power,gold,kills,apple,key,carrot,following,ready){
 			this.active=active;
 			this.sourceX=sourceX;
 			this.sourceY=sourceY;
@@ -338,6 +338,8 @@ var LostWorld = function(canvas) {
 			this.moveRight=moveRight;
 			this.movement=movement;
 			this.animate=animate;
+			this.health=health;
+			this.power=power;
 			this.gold=gold;
 			this.kills=kills;
 			this.level=level;
@@ -347,6 +349,7 @@ var LostWorld = function(canvas) {
 			this.key=key;
 			this.carrot=carrot;
 			this.following=following;
+			this.ready=ready;
 			this.speed = {x:0,y:0};
 		}
 		movements(){
@@ -441,9 +444,120 @@ var LostWorld = function(canvas) {
 			}
 		}
 	}
+	//tworzenie klasy dla paskow wskaznikow zycia gracza i sily
+	class Bars{
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,skin){
+			this.active=active;
+			this.sourceX=sourceX;
+			this.sourceY=sourceY;
+			this.sourceWidth=sourceWidth;
+			this.sourceHeight=sourceHeight;
+			this.width=width;
+			this.height=height;
+			this.x=x;
+			this.y=y;
+			this.skin=skin;	
+		}
+		animating(){
+			if(this.active==true){
+				if(this.skin==0){
+					this.sourceX=562;
+					this.sourceY=1628;
+				}
+				if(this.skin==1){
+					this.width=164;
+					this.height=20;
+					this.sourceWidth = 82;
+					this.sourceHeight = 10;
+					this.sourceX=799;
+					this.sourceY=1330;
+					this.x=132;
+					this.y=32;
+					if(this.animate==0){
+						this.sourceY=1330;
+					}
+					if(this.animate==1){
+						this.sourceX=799;
+						this.sourceY=1341;
+					}
+					if(this.animate==2){
+						this.sourceY=1352;
+					}
+					if(this.animate==3){
+						this.sourceY=1363;
+					}
+					if(this.animate==4){
+						this.sourceY=1374;
+					}
+					if(this.animate==5){
+						this.sourceY=1385;
+					}
+					if(this.animate==6){
+						this.sourceY=1396;
+					}
+					if(this.animate==7){
+						this.sourceY=1407;
+					}
+					if(this.animate==8){
+						this.sourceY=1418;
+					}
+					if(this.animate==9){
+						this.sourceY=1429;
+					}
+					if(this.animate==10){
+						this.sourceY=1440;
+					}
+					if(this.animate>10){
+						this.animate=10;
+					}
+				}
+				if(this.skin==2){
+					this.width=164;
+					this.height=20;
+					this.sourceWidth = 82;
+					this.sourceHeight = 10;
+					this.sourceX=799;
+					this.sourceY=1451;
+					this.x=132;
+					this.y=80;
+					if(this.animate>=0&&this.animate<=3){
+						this.sourceY=1451;
+					}
+					if(this.animate>=3&&this.animate<=6){
+						this.sourceX=799;
+						this.sourceY=1462;
+					}
+					if(this.animate>=6&&this.animate<=9){
+						this.sourceY=1473;
+					}
+					if(this.animate>=9&&this.animate<=12){
+						this.sourceY=1484;
+					}
+					if(this.animate>=12&&this.animate<=15){
+						this.sourceY=1495;
+					}
+					if(this.animate>=15&&this.animate<=18){
+						this.sourceY=1506;
+					}
+					if(this.animate>=18&&this.animate<=21){
+						this.sourceY=1517;
+					}
+					if(this.animate>=21&&this.animate<=24){
+						this.sourceY=1528;
+					}
+					if(this.animate>=24&&this.animate<=27){
+						this.sourceY=1539;
+					}
+					if(this.animate>=27){
+						this.animate=0;
+					}
+				}
+			}
+		}
+	}
 	//tworzenie obiektu ataku gracza wraz z parametrami
-	class Firstattack {
-		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,movement,animate){
+	class Playerattacks {
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,movement,animate,skin){
 			this.active=active;
 			this.sourceX=sourceX;
 			this.sourceY=sourceY;
@@ -454,72 +568,178 @@ var LostWorld = function(canvas) {
 			this.x=x;
 			this.y=y;
 			this.movement=movement;
-			this.animate=animate;	
+			this.animate=animate;
+			this.skin=skin;			
 		}
 		movements(){
 			if(this.active==true){
 				hero.active=false;
 				this.movement=hero.movement;
-				if(hero.movement==0){
-					this.x=hero.x-55;
-					this.y=hero.y-35;
-				}
-				if(hero.movement==1){
-					this.x=hero.x-53;
-					this.y=hero.y-35;
-				}
-				if(hero.movement==2){
-					this.x=hero.x-55;
-					this.y=hero.y-37;
-				}
-				if(hero.movement==3){
-					this.x=hero.x-55;
-					this.y=hero.y-37;
-				}
-				if(this.animate<24){
-					this.animate++;
-				}else{
-					this.animate=0;
-					this.active=false;
-				}
-				if(this.movement==0){
-					if(this.animate>=0&&this.animate<=12){
-						this.sourceX=562;
-						this.sourceY=1403;
+				if(this.skin==1){
+					if(hero.movement==0){
+						this.x=hero.x-55;
+						this.y=hero.y-35;
 					}
-					if(this.animate>=12&&this.animate<=24){
-						this.sourceX=637;
-						this.sourceY=1403;
+					if(hero.movement==1){
+						this.x=hero.x-53;
+						this.y=hero.y-35;
+					}
+					if(hero.movement==2){
+						this.x=hero.x-55;
+						this.y=hero.y-37;
+					}
+					if(hero.movement==3){
+						this.x=hero.x-55;
+						this.y=hero.y-37;
+					}
+					if(this.animate<24){
+						this.animate++;
+					}else{
+						this.animate=0;
+						this.active=false;
+					}
+					if(this.movement==0){
+						if(this.animate>=0&&this.animate<=12){
+							this.sourceX=562;
+							this.sourceY=1403;
+						}
+						if(this.animate>=12&&this.animate<=24){
+							this.sourceX=637;
+							this.sourceY=1403;
+						}
+					}
+					if(this.movement==1){
+						if(this.animate>=0&&this.animate<=12){
+							this.sourceX=562;
+							this.sourceY=1328;
+						}
+						if(this.animate>=12&&this.animate<=24){
+							this.sourceX=637;
+							this.sourceY=1328;
+						}
+					}
+					if(this.movement==2){
+						if(this.animate>=0&&this.animate<=12){
+							this.sourceX=562;
+							this.sourceY=1478;
+						}
+						if(this.animate>=12&&this.animate<=24){
+							this.sourceX=637;
+							this.sourceY=1478;
+						}
+					}
+					if(this.movement==3){
+						if(this.animate>=0&&this.animate<=12){
+							this.sourceX=562;
+							this.sourceY=1553;
+						}
+						if(this.animate>=12&&this.animate<=24){
+							this.sourceX=637;
+							this.sourceY=1553;
+						}
 					}
 				}
-				if(this.movement==1){
-					if(this.animate>=0&&this.animate<=12){
-						this.sourceX=562;
-						this.sourceY=1328;
+				if(this.skin==2){
+					this.width=148;
+					this.height=148;
+					this.sourceHeight=74;
+					this.sourceHeight=74;
+					this.sourceX=712;
+					this.sourceY=1328;
+					if(hero.movement==0){
+						this.x=hero.x-55;
+						this.y=hero.y-35;
 					}
-					if(this.animate>=12&&this.animate<=24){
-						this.sourceX=637;
-						this.sourceY=1328;
+					if(hero.movement==1){
+						this.x=hero.x-53;
+						this.y=hero.y-35;
 					}
-				}
-				if(this.movement==2){
-					if(this.animate>=0&&this.animate<=12){
-						this.sourceX=562;
-						this.sourceY=1478;
+					if(hero.movement==2){
+						this.x=hero.x-55;
+						this.y=hero.y-37;
 					}
-					if(this.animate>=12&&this.animate<=24){
-						this.sourceX=637;
-						this.sourceY=1478;
+					if(hero.movement==3){
+						this.x=hero.x-55;
+						this.y=hero.y-37;
 					}
-				}
-				if(this.movement==3){
-					if(this.animate>=0&&this.animate<=12){
-						this.sourceX=562;
-						this.sourceY=1553;
+					if(this.animate<24){
+						this.animate++;
+					}else{
+						this.animate=0;
+						this.active=false;
 					}
-					if(this.animate>=12&&this.animate<=24){
-						this.sourceX=637;
-						this.sourceY=1553;
+					if(this.movement==0){
+						if(this.animate>=0&&this.animate<=6){
+							this.sourceY=1404;
+						}
+						if(this.animate>=6&&this.animate<=12){
+							this.sourceY=1478;
+						}
+						if(this.animate>=12&&this.animate<=18){
+							this.sourceY=1328;
+						}
+						if(this.animate>=18&&this.animate<=24){
+							this.sourceY=1553;
+						}
+						if(this.animate>=24){
+							this.animate=0;
+							this.active=false;
+						}
+					}
+					if(this.movement==1){
+						if(this.animate>=0&&this.animate<=6){
+							this.sourceY=1328;
+						}
+						if(this.animate>=6&&this.animate<=12){
+							this.sourceY=1553;
+						}
+						if(this.animate>=12&&this.animate<=18){
+							this.sourceY=1404;
+						}
+						if(this.animate>=18&&this.animate<=24){
+							this.sourceY=1478;
+						}
+						if(this.animate>=24){
+							this.animate=0;
+							this.active=false;
+						}
+					}
+					if(this.movement==2){
+						if(this.animate>=0&&this.animate<=6){
+							this.sourceY=1478;
+						}
+						if(this.animate>=6&&this.animate<=12){
+							this.sourceY=1328;
+						}
+						if(this.animate>=12&&this.animate<=18){
+							this.sourceY=1553;
+						}
+						if(this.animate>=18&&this.animate<=24){
+							this.sourceY=1404;
+						}
+						if(this.animate>=24){
+							this.animate=0;
+							this.active=false;
+						}
+					}
+					if(this.movement==3){
+						if(this.animate>=0&&this.animate<=6){
+							this.sourceY=1553;
+						}
+						if(this.animate>=6&&this.animate<=12){
+							this.sourceY=1404;
+						}
+						if(this.animate>=12&&this.animate<=18){
+							this.sourceY=1478;
+						}
+						if(this.animate>=18&&this.animate<=24){
+							this.sourceY=1328;
+						}
+						if(this.animate>=24){
+							this.animate=0;
+							this.active=false;
+							
+						}
 					}
 				}
 			}else{
@@ -1220,7 +1440,181 @@ var LostWorld = function(canvas) {
 			}
 		}
 	}
-	
+	//tworzenie klasy angatonist wraz z parametrami
+	class Antagonist{
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,timemove,movement,skin,animate){
+			this.active=active;
+			this.sourceX=sourceX;
+			this.sourceY=sourceY;
+			this.sourceWidth=sourceWidth;
+			this.sourceHeight=sourceHeight;
+			this.width=width;
+			this.height=height;
+			this.x=x;
+			this.y=y;
+			this.speed=speed;
+			this.timemove=timemove;
+			this.movement=movement;
+			this.skin=skin;
+			this.animate=animate;	
+		}
+		movements(){
+			if(this.active==true){
+				if(this.skin==0){
+					this.sourceX=562;
+					this.sourceY=1626;
+				}
+				if(this.skin==1){
+					this.sourceWidth=20;
+					this.sourceHeight=36;
+					this.width=40;
+					this.height=72;
+					if(this.movement==1){
+						if(this.x<610){
+							this.x+=1.3;
+							this.sourceY=1552;
+							this.sourceX=1895;
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x>70){
+							this.x-=1.3;
+							this.sourceY=1552;
+							this.sourceX=1873;
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.y<520){
+							this.y+=1.3;
+							this.sourceY=1590;
+							this.sourceX=1874;
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.y>180){
+							this.y-=1.3;
+							this.sourceY=1590;
+							this.sourceX=1895;
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+				}
+				if(this.skin==2){
+					this.sourceWidth=20;
+					this.sourceHeight=39;
+					this.width=40;
+					this.height=78;
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=16;
+					}
+					if(this.movement==1){
+						if(this.x<610){
+							this.x+=2;
+							this.sourceY=1433;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1953;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1953;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1930;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1930;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x>70){
+							this.x-=2;
+							this.sourceY=1433;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1886;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1886;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1909;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1909;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.y<520){
+							this.y+=2;
+							this.sourceY=1473;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1883; 
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1883;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1907;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1907; 
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.y>180){
+							this.y-=2;
+							this.sourceY=1473;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1956;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1956;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1932;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1932;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+				}
+			}else{
+				this.sourceX=562;
+				this.sourceY=1626;
+			}
+		}
+	}
 	//deklaracja wymiarów całej mapy
 	this.gameMap = {
 		width: 720,
@@ -1236,11 +1630,13 @@ var LostWorld = function(canvas) {
 	this.start = function() {
 		arena = new Background(0,0,360,330,0,0,720,660);
 		controller = new Logic(12,true);
-		hero = new Player(true,361,1331,20,38,300,300,42,72,0,false,false,false,false,0,0,1,0,100,50,0,0,false,false,false);
-		attack1 = new Firstattack(false,562,1327,74,74,152,142,152,142,0,0);
+		hero = new Player(true,361,1331,20,38,300,300,42,72,0,false,false,false,false,0,0,1,0,100,10,0,50,0,0,false,false,false,false);
+		attack1 = new Playerattacks(false,562,1327,74,74,152,142,152,142,0,0,1);
+		attack2 = new Playerattacks(false,562,1327,74,74,152,142,152,142,0,0,2);
 		people = new Npc(true,0,676,20,38,300,300,42,72,0,20,1,2,0);
 		people1 = new Npc(true,0,676,20,38,300,300,42,72,0,20,1,2,0);
 		people2 = new Npc(true,0,676,20,38,300,300,42,72,0,20,1,0,0);
+		enemy1 = new Antagonist(true,0,676,20,38,300,300,42,72,0,20,1,1,0);
 		exhibit1 = new Misc(true,361,1331,42,56,150,150,42,45,1,0);
 		exhibit2 = new Misc(true,361,1331,42,56,150,150,42,45,1,0);
 		exhibit3 = new Misc(false,361,1331,42,56,150,150,42,45,1,0);
@@ -1248,6 +1644,8 @@ var LostWorld = function(canvas) {
 		slot1 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
 		slot2 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
 		slot3 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
+		hpbar = new Bars(true,1102,799,1451,42,100,100,442,82,1);
+		powbar = new Bars(true,1102,799,1451,42,100,100,442,82,2);
 		this.entities.push(controller);
 		this.entities.push(arena);
 		this.entities.push(exhibit3);
@@ -1255,12 +1653,16 @@ var LostWorld = function(canvas) {
 		this.entities.push(slot1);
 		this.entities.push(slot2);
 		this.entities.push(slot3);
+		this.entities.push(hpbar);
+		this.entities.push(powbar);
 		this.entities.push(attack1);
+		this.entities.push(attack2);
 		this.entities.push(people);
 		this.entities.push(exhibit1);
 		this.entities.push(exhibit2);
 		this.entities.push(people1);
 		this.entities.push(people2);
+		this.entities.push(enemy1);
 		this.entities.push(dialog);
 		if(hero.active==true){
 			window.addEventListener("keydown", function(event){
@@ -1294,9 +1696,27 @@ var LostWorld = function(canvas) {
 						hero.movement = 1;
 					break;
 					case 90:
+						attack1.skin=1;
 						attack1.active=true;
 						hero.speed.x=0;
 						hero.speed.y=0;
+					break;
+					case 88:
+						if(hero.power<27){
+							hero.power+=1;
+						}else{
+							hero.power=0;
+						}
+						if(hero.power>=27){
+							hero.power=27;
+							attack2.skin=2;
+							attack2.active=true;
+							hero.speed.x=0;
+							hero.speed.y=0;
+						}
+						if(attack2.animate>=24){
+							hero.power=0;
+						}
 					break;
 				}
 			},false)
@@ -1305,16 +1725,23 @@ var LostWorld = function(canvas) {
 			switch(event.keyCode){
 				case 38:
 					hero.moveDown = false;
+					hero.power=0;
 				break;
 				case 40:
 					hero.moveUp = false;
+					hero.power=0;
 				break;
 				case 39:
 					hero.moveLeft = false;
+					hero.power=0;
 					break;
 				case 37:
 					hero.moveRight = false;
+					hero.power=0;
 				break;
+				case 88:
+					hero.power=0;
+				break;		
 			}
 		},false)
 			this.update();
@@ -1422,14 +1849,25 @@ var LostWorld = function(canvas) {
 		slot1.animating();
 		slot2.animating();
 		slot3.animating();
+		hpbar.animating();
+		powbar.animating();
 		attack1.movements();
+		attack2.movements();
 		people.movements();
 		people1.movements();
 		people2.movements();
+		enemy1.movements();
 		exhibit1.animating();
 		exhibit2.animating();
 		exhibit3.animating();
 		dialog.animating();
+		//wyswietlanie energii gracza
+		hpbar.animate=hero.health;
+		if(hero.health>10){
+			hero.health=10;
+		}
+		//wyswietlanie sily ataku gracza
+		powbar.animate=hero.power;
 		//wyswietlanie zawartosci ekwipunku
 		if(hero.apple>=1){
 			slot1.skin=1;
