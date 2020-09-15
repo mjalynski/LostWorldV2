@@ -18,29 +18,81 @@ var LostWorld = function(canvas) {
 		width: 70,
 		height: 70,
 	};
-    WebFont.load({
+   WebFont.load({
 		google: {
 			families: ['K2D:300,400,700']
 		}
 	});
 	//tworzenie klasy gry wraz z parametrami
 	class Logic{
-		constructor(floor,ingame,timer,hint,bdefeat,checkexp){
+		constructor(brand,choose,lang,intro,title,activating,floor,ingame,tutorial,keychecker,timer,timer2,hint,engrid,npcgrid,bdefeat,checkexp,ending,gameover){
+			this.brand=brand;
+			this.choose=choose;
+			this.lang=lang;
+			this.intro=intro;
+			this.title=title;
+			this.activating=activating;
 			this.floor=floor;
 			this.ingame=ingame;
+			this.tutorial=tutorial;
+			this.keychecker=keychecker;
 			this.timer=timer;
+			this.timer2=timer2;
 			this.hint=hint;
+			this.engrid=engrid;
+			this.npcgrid=npcgrid;
 			this.bdefeat=bdefeat;
 			this.checkexp=checkexp;
+			this.ending=ending;
+			this.gameover=gameover;
+		}
+		states(){
+			if(this.brand==true){
+				this.choose=false;
+				this.intro=false;
+				this.title=false;
+				if(this.timer<=400){
+					this.timer+=1;
+				}else{
+					this.choose=true;
+					this.brand=false;
+					this.timer=0;
+				}
+			}
+			if(this.choose==true){
+				this.intro=true;
+				this.timer=0;
+			}
+			if(this.intro==true){
+				this.title=false;
+				this.tutorial=false;
+				this.ingame=false;
+				if(this.timer<=1000){
+					this.timer+=1;
+				}else{
+					this.title=true;
+					this.timer=0;
+				}
+			}
+			if(this.ending==true){
+				this.title=false;
+				this.tutorial=false;
+				this.ingame=false;
+				if(this.timer<=2550){
+					this.timer+=1;
+				}
+			}
 		}
 		help(){
-			if(this.hint==false){
-				this.timer=300;
-			}else{
-				if(this.timer>0){
-				this.timer-=1;	
+			if(this.tutorial==true||this.ingame==true){
+				if(this.hint==false){
+					this.timer=300;
 				}else{
-					this.hint=false;
+					if(this.timer>0){
+					this.timer-=1;	
+					}else{
+						this.hint=false;
+					}
 				}
 			}
 		}
@@ -138,6 +190,102 @@ var LostWorld = function(canvas) {
 						this.active=false;
 					}
 				}
+				if(this.skin==3){
+					this.x=0;
+					this.y=0;
+					this.width=724;
+					this.height=666;
+					this.sourceWidth = 362;
+					this.sourceHeight = 333;
+					this.sourceY = 0;
+					if(this.animate<=20&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=20;
+						this.active=false;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX = 724;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX = 362;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX = 0;
+					}
+					if(this.animate>=12&&this.animate<=16){
+						this.sourceX = 362;
+					}
+					if(this.animate>=16&&this.animate<=20){
+						this.sourceX = 724;
+					}
+					if(this.animate>=20){
+						this.animate=0;
+						this.active=false;
+					}
+				}
+				if(this.skin==4){
+					this.x=0;
+					this.y=0;
+					this.width=724;
+					this.height=666;
+					this.sourceWidth = 362;
+					this.sourceHeight = 333;
+					this.sourceY = 0;
+					if(this.animate<=20&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=20;
+						this.active=false;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX = 1810;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX = 2172;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX = 0;
+					}
+					if(this.animate>=12&&this.animate<=16){
+						this.sourceX = 2172;
+					}
+					if(this.animate>=16&&this.animate<=20){
+						this.sourceX = 2534;
+					}
+					if(this.animate>=20){
+						this.animate=0;
+						this.active=false;
+					}
+				}
+				if(this.skin==5){
+					this.x=0;
+					this.y=0;
+					this.width=724;
+					this.height=666;
+					this.sourceWidth = 362;
+					this.sourceHeight = 333;
+					this.sourceY = 0;
+					if(this.animate<=42&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=42;
+						this.active=false;
+					}
+					if(this.animate>=0&&this.animate<=14){
+						this.sourceX = 1810;
+					}
+					if(this.animate>=14&&this.animate<=28){
+						this.sourceX = 2172;
+					}
+					if(this.animate>=28&&this.animate<=42){
+						this.sourceX = 2534;
+					}
+					if(this.animate>=42){
+						this.animate=0;
+						this.active=false;
+					}
+				}
 			}else{
 				this.sourceX=362;
 				this.sourceY=999;
@@ -152,7 +300,7 @@ var LostWorld = function(canvas) {
 	}
 	//tworzenie klasy wyposazenia wraz z parametrami
 	class Misc{
-		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,skin,animate){
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,skin,animate,movement,timemove){
 			this.active=active;
 			this.sourceX=sourceX;
 			this.sourceY=sourceY;
@@ -164,6 +312,8 @@ var LostWorld = function(canvas) {
 			this.y=y;
 			this.skin=skin;
 			this.animate=animate;	
+			this.movement=movement;
+			this.timemove=timemove;
 		}
 		animating(){
 			if(this.active==true){
@@ -275,12 +425,12 @@ var LostWorld = function(canvas) {
 					}
 				}
 				if(this.skin==6){
-					this.width=676;
-					this.height=54;
-					this.sourceWidth = 338;
-					this.sourceHeight = 27;
-					this.sourceX = 769;
-					this.sourceY = 2305;
+					this.width=672;
+					this.height=100;
+					this.sourceWidth = 336;
+					this.sourceHeight = 50;
+					this.sourceX = 1109;
+					this.sourceY = 2347;
 				}
 				if(this.skin==7){
 					this.width=38;
@@ -334,7 +484,7 @@ var LostWorld = function(canvas) {
 					if(this.animate<=36&&this.animate>=0){
 						this.animate+=1;
 					}else{
-						this.animate=36
+						this.animate=36;
 					}
 					if(this.animate>=0&&this.animate<=18){
 						this.sourceX=4520;
@@ -356,7 +506,7 @@ var LostWorld = function(canvas) {
 					if(this.animate<=36&&this.animate>=0){
 						this.animate+=1;
 					}else{
-						this.animate=36
+						this.animate=36;
 					}
 					if(this.animate>=0&&this.animate<=18){
 						this.sourceX=4520;
@@ -367,6 +517,587 @@ var LostWorld = function(canvas) {
 						this.sourceY = 2195;
 					}
 					if(this.animate>=36){
+						this.animate=0;
+					}
+				}
+				if(this.skin==11){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=4067;
+						this.sourceY=2116;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=4067;
+						this.sourceY=2000;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX = 4067;
+						this.sourceY = 2058;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==12){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=4085;
+						this.sourceY=2134;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=4085;
+						this.sourceY=2018;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX = 4085;
+						this.sourceY = 2076;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==13){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=4067;
+						this.sourceY=2152;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX = 4067;
+						this.sourceY = 2036;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX = 4067;
+						this.sourceY = 2094;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==14){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=4049;
+						this.sourceY=2134;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=4049;
+						this.sourceY=2018;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX = 4049;
+						this.sourceY = 2076;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==15){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=3908;
+						this.sourceY=2134;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=3908;
+						this.sourceY=2021;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX=3908;
+						this.sourceY=2079;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==16){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=3928;
+						this.sourceY=2134;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=3928;
+						this.sourceY=2021;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX=3928;
+						this.sourceY=2079;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==17){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=3948;
+						this.sourceY=2134;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=3948;
+						this.sourceY=2021;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX=3948;
+						this.sourceY=2079;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==18){
+					this.width=36;
+					this.height=36;
+					this.sourceWidth = 18;
+					this.sourceHeight = 18;
+					if(this.animate<=40&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=40;
+					}
+					if(this.animate>=0&&this.animate<=10){
+						this.sourceX=3988;
+						this.sourceY=2134;
+					}
+					if(this.animate>=10&&this.animate<=25){
+						this.sourceX=3988;
+						this.sourceY=2021;
+					}
+					if(this.animate>=25&&this.animate<=40){
+						this.sourceX=3988;
+						this.sourceY=2079;
+					}
+					if(this.animate>=40){
+						this.animate=0;
+					}
+				}
+				if(this.skin==21){
+					this.width=48;
+					this.height=448;
+					this.sourceWidth = 24;
+					this.sourceHeight = 224;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=2;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=3901;
+						this.sourceY=2162;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=3952;
+						this.sourceY=2162;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX=3927;
+						this.sourceY=2162;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+				}
+				if(this.skin==22){
+					this.width=36;
+					this.height=114;
+					this.sourceWidth = 18;
+					this.sourceHeight = 57;
+					this.sourceX=1357;
+					this.sourceY=2095;
+					if(this.movement==4){
+						if(this.timemove>0){
+							this.timemove-=1;
+							this.y-=1;
+						}else{
+							this.timemove=0;
+						}
+					}
+				}
+				if(this.skin==23){
+					this.width=114;
+					this.height=104;
+					this.sourceWidth = 57;
+					this.sourceHeight = 52;
+					this.sourceX=1353;
+					this.sourceY=2219;
+					if(this.movement==4){
+						if(this.timemove>0){
+							this.timemove-=1;
+							this.x-=1;
+						}else{
+							this.timemove=0;
+						}
+					}
+				}
+				if(this.skin==24){
+					this.width=628;
+					this.height=346;
+					this.sourceWidth = 314;
+					this.sourceHeight = 173;
+					this.sourceX=3016;
+					this.sourceY=2210;
+					if(this.timemove>0){
+						this.timemove-=1;
+						this.y+=1;
+					}else{
+						this.timemove=0;
+						this.active=false;
+					}
+				}
+				if(this.skin==25){
+					this.width=246;
+					this.height=246;
+					this.sourceWidth = 123;
+					this.sourceHeight = 123;
+					if(this.animate<=8&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=8;
+					}
+					if(this.animate>=0&&this.animate<=2){
+						this.sourceX=3333;
+						this.sourceY=2118;
+					}
+					if(this.animate>=2&&this.animate<=4){
+						this.sourceX=3460;
+						this.sourceY=2118;
+					}
+					if(this.animate>=4&&this.animate<=5){
+						this.sourceX=3333;
+						this.sourceY=2244;
+					}
+					if(this.animate>=6&&this.animate<=8){
+						this.sourceX=3460;
+						this.sourceY=2244;
+					}
+					if(this.animate>=8){
+						this.animate=0;
+					}
+				}
+				if(this.skin==26){
+					this.width=228;
+					this.height=160;
+					this.sourceWidth = 114;
+					this.sourceHeight = 80;
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=16;
+					}
+					if(this.animate>=0&&this.animate<=8){
+						this.sourceX=3989;
+						this.sourceY=2188;
+					}
+					if(this.animate>=8&this.animate<=16){
+						this.sourceX=3989;
+						this.sourceY=2270;
+					}
+					if(this.animate>=16){
+						this.animate=0;
+					}
+				}
+				if(this.skin==27){
+					this.width=110;
+					this.height=104;
+					this.sourceWidth = 55;
+					this.sourceHeight = 52;
+					this.sourceX=1412;
+					this.sourceY=2219;
+				}
+				if(this.skin==28){
+					this.width=78;
+					this.height=142;
+					this.sourceWidth = 39;
+					this.sourceHeight = 71;
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=1484;
+						this.sourceY=2132;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=1524;
+						this.sourceY=2132;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX=1565;
+						this.sourceY=2132;
+					}
+					if(this.animate>=12&&this.animate<=16){
+						this.sourceX=1606;
+						this.sourceY=2132;
+					}
+					if(this.animate>=16){
+						this.animate=0;
+					}
+				}
+				if(this.skin==29){
+					this.width=80;
+					this.height=24;
+					this.sourceWidth = 40;
+					this.sourceHeight = 12;
+					this.sourceX=3362;
+					this.sourceY=2004;
+					if(this.y>150){
+						this.y-=3;	
+					}else{
+						this.skin=30;	
+					}
+				}
+				if(this.skin==30){
+					this.width=80;
+					this.height=60;
+					this.sourceWidth = 40;
+					this.sourceHeight = 30;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=3362;
+						this.sourceY=2038;
+					}
+					if(this.animate>=4&&this.animate<=12){
+						this.sourceX=3362;
+						this.sourceY=2077;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+						this.skin=0;
+					}
+				}
+				if(this.skin==31){
+					this.width=80;
+					this.height=24;
+					this.sourceWidth = 40;
+					this.sourceHeight = 12;
+					this.sourceX=3406;
+					this.sourceY=2004;
+					if(this.y>150){
+						this.y-=3;	
+					}else{
+						this.skin=32;	
+					}
+				}
+				if(this.skin==32){
+					this.width=80;
+					this.height=60;
+					this.sourceWidth = 40;
+					this.sourceHeight = 30;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=3406;
+						this.sourceY=2038;
+					}
+					if(this.animate>=4&&this.animate<=12){
+						this.sourceX=3406;
+						this.sourceY=2077;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+						this.skin=0;
+					}
+				}
+				if(this.skin==33){
+					this.width=80;
+					this.height=24;
+					this.sourceWidth = 40;
+					this.sourceHeight = 12;
+					this.sourceX=3449;
+					this.sourceY=2004;
+					if(this.y>150){
+						this.y-=3;	
+					}else{
+						this.skin=34;	
+					}
+				}
+				if(this.skin==34){
+					this.width=80;
+					this.height=60;
+					this.sourceWidth = 40;
+					this.sourceHeight = 30;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=3449;
+						this.sourceY=2038;
+					}
+					if(this.animate>=4&&this.animate<=12){
+						this.sourceX=3449;
+						this.sourceY=2077;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+						this.skin=0;
+					}
+				}
+				if(this.skin==35){
+					this.width=80;
+					this.height=24;
+					this.sourceWidth = 40;
+					this.sourceHeight = 12;
+					this.sourceX=3492;
+					this.sourceY=2004;
+					if(this.y>150){
+						this.y-=3;	
+					}else{
+						this.skin=36;	
+					}
+				}
+				if(this.skin==36){
+					this.width=80;
+					this.height=60;
+					this.sourceWidth = 40;
+					this.sourceHeight = 30;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=3492;
+						this.sourceY=2038;
+					}
+					if(this.animate>=4&&this.animate<=12){
+						this.sourceX=3492;
+						this.sourceY=2077;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+						this.skin=0;
+					}
+				}
+				if(this.skin==37){
+					this.width=30;
+					this.height=72;
+					this.sourceWidth = 15;
+					this.sourceHeight = 36;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=6){
+						this.sourceX = 1473;
+						this.sourceY = 2220;
+					}
+					if(this.animate>=6&&this.animate<=12){
+						this.sourceX = 1473;
+						this.sourceY = 2258;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+				}
+				if(this.skin==38){
+					this.width=52;
+					this.height=60;
+					this.sourceWidth = 26;
+					this.sourceHeight = 30;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=6){
+						this.sourceX = 1491;
+						this.sourceY = 2220;
+					}
+					if(this.animate>=6&&this.animate<=12){
+						this.sourceX = 1519;
+						this.sourceY = 2220;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+				}
+				if(this.skin==39){
+					this.width=52;
+					this.height=60;
+					this.sourceWidth = 26;
+					this.sourceHeight = 30;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=6){
+						this.sourceX = 1491;
+						this.sourceY = 2251;
+					}
+					if(this.animate>=6&&this.animate<=12){
+						this.sourceX = 1519;
+						this.sourceY = 2251;
+					}
+					if(this.animate>=12){
 						this.animate=0;
 					}
 				}
@@ -398,8 +1129,6 @@ var LostWorld = function(canvas) {
 				if(this.skin==0){
 					this.sourceX=4520;
 					this.sourceY=2000;
-					this.x=0;
-					this.y=0;
 				}
 				if(this.skin==1){
 					this.width=442;
@@ -471,6 +1200,26 @@ var LostWorld = function(canvas) {
 					this.x=135;
 					this.y=200;
 				}
+				if(this.skin==8){
+					this.width=442;
+					this.height=82;
+					this.sourceWidth = 221;
+					this.sourceHeight = 42;
+					this.sourceX=1107;
+					this.sourceY=2248;
+					this.x=135;
+					this.y=200;
+				}
+				if(this.skin==9){
+					this.width=442;
+					this.height=82;
+					this.sourceWidth = 221;
+					this.sourceHeight = 42;
+					this.sourceX=1107;
+					this.sourceY=2290;
+					this.x=135;
+					this.y=165;
+				}
 			}else{
 				this.skin=0;
 				this.sourceX=4520;
@@ -482,7 +1231,7 @@ var LostWorld = function(canvas) {
 	}
 	//tworzenie klasy gracza wraz z parametrami
 	class Player{
-		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,moveUp,moveDown,moveLeft,moveRight,movement,animate,level,exp,next,health,mana,power,gold,kills,apple,potion,magic,key,carrot,following,ready,fight,drink,freeze,fretime,bewitch,timehit,hit){
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,moveUp,moveDown,moveLeft,moveRight,movement,animate,level,exp,next,health,mana,power,gold,kills,apple,potion,magic,key,carrot,following,ready,fight,drink,freeze,fretime,bewitch,timehit,hit,dead){
 			this.active=active;
 			this.sourceX=sourceX;
 			this.sourceY=sourceY;
@@ -522,69 +1271,73 @@ var LostWorld = function(canvas) {
 			this.timehit=timehit;
 			this.hit=hit;
 			this.speed = {x:0,y:0};
+			this.dead=dead;
 		}
 		movements(){
 			this.sourceX=4520;
 			this.sourceY=2000;
 			if(this.active==true){
-				if(this.hit==true){
-					if(this.timehit<100){
-						this.timehit+=1;
-					}
-					if(this.timehit>=100){
-						this.hit=false;
-					}
-				}else{
-					this.timehit=0;
-				}
-				if(this.freeze==false){
-					this.fretime=200;
-					if(this.moveDown==true){
-						if(this.y>175){
-							this.speed.y = -1.4;
-						}else{
-							this.y=175;
+				if(this.dead==false){
+					if(this.hit==true){
+						if(this.timehit<100){
+							this.timehit+=1;
 						}
-					}
-					if(this.moveUp==true){
-						if(this.y<532){
-							this.speed.y = 1.4;
-						}else{
-							this.y=532;
+						if(this.timehit>=100){
+							this.hit=false;
 						}
-					}
-					if(this.moveRight==true){
-						if(this.x>60){
-							this.speed.x = -1.4;
-						}else{
-							this.x=60;
-						}
-					}
-					if(this.moveLeft==true){
-						if(this.x<623){
-							this.speed.x = 1.4;
-						}else{
-							this.x=623;
-						}
-					}
-					if(!this.moveUp && !this.moveDown){
-						this.speed.y = 0;
-					}
-					if(!this.moveRight && !this.moveLeft){
-						this.speed.x = 0;
-					}
-				}else{
-					this.speed.y=0;
-					this.speed.x=0;
-					if(this.fretime<=0){
-						this.freeze=false;
 					}else{
-						this.fretime-=1;	
+						this.timehit=0;
+					}
+					if(this.freeze==false){
+						this.fretime=200;
+						if(this.moveDown==true){
+							if(this.y>175){
+								this.speed.y = -1.4;
+							}else{
+								this.y=175;
+							}
+						}
+						if(this.moveUp==true){
+							if(this.y<532){
+								this.speed.y = 1.4;
+							}else{
+								this.y=532;
+							}
+						}
+						if(this.moveRight==true){
+							if(this.x>60){
+								this.speed.x = -1.4;
+							}else{
+								this.x=60;
+							}
+						}
+						if(this.moveLeft==true){
+							if(this.x<623){
+								this.speed.x = 1.4;
+							}else{
+								this.x=623;
+							}
+						}
+						if(!this.moveUp && !this.moveDown){
+							this.speed.y = 0;
+						}
+						if(!this.moveRight && !this.moveLeft){
+							this.speed.x = 0;
+						}
+					}else{
+						this.speed.y=0;
+						this.speed.x=0;
+						if(this.fretime<=0){
+							this.freeze=false;
+						}else{
+							this.fretime-=1;	
+						}
 					}
 				}
 			}else{
 				this.sourceX=4520;
-				this.sourceY=2000;	
+				this.sourceY=2000;
+				this.dead=false;
 			}
 		}
 	}
@@ -756,7 +1509,7 @@ var LostWorld = function(canvas) {
 				this.skin=0;
 				this.sourceX=4520;
 				this.sourceY=2000;
-				this.x=0;
+				this.x=200;
 				this.y=0;
 			}
 		}
@@ -1054,11 +1807,11 @@ var LostWorld = function(canvas) {
 						this.height=70;
 						this.sourceWidth=57;
 						this.sourceHeight=37;
-						if(this.animate>=0&&this.animate<=4){
-							this.sourceX=529;
-							this.sourceY=2348;
+						if(this.animate<=2){
+							this.sourceX=4520;
+							this.sourceY=2000;
 						}
-						if(this.animate>=4&&this.animate<=8){
+						if(this.animate>=2&&this.animate<=8){
 							this.sourceX=585;
 							this.sourceY=2089;
 						}		
@@ -1072,11 +1825,11 @@ var LostWorld = function(canvas) {
 						this.height=70;
 						this.sourceWidth=57;
 						this.sourceHeight=37;
-						if(this.animate>=0&&this.animate<=4){
-							this.sourceX=586;
-							this.sourceY=2348;
+						if(this.animate<=2){
+							this.sourceX=4520;
+							this.sourceY=2000;
 						}
-						if(this.animate>=4&&this.animate<=8){
+						if(this.animate>=2&&this.animate<=8){
 							this.sourceX=567;
 							this.sourceY=2014;
 						}
@@ -1090,11 +1843,11 @@ var LostWorld = function(canvas) {
 						this.height=102;
 						this.sourceWidth=20;
 						this.sourceHeight=54;
- 						if(this.animate>=0&&this.animate<=4){
-							this.sourceX=417;
-							this.sourceY=2339;
+						if(this.animate<=2){
+							this.sourceX=4520;
+							this.sourceY=2000;
 						}
- 						if(this.animate>=4&&this.animate<=8){
+						if(this.animate>=2&&this.animate<=8){
 							this.sourceX=594;
 							this.sourceY=2155;
 						}
@@ -1108,11 +1861,11 @@ var LostWorld = function(canvas) {
 						this.height=102;
 						this.sourceWidth=20;
 						this.sourceHeight=54;
-						if(this.animate>=0&&this.animate<=4){
-							this.sourceX=483;
-							this.sourceY=2339;
+						if(this.animate<=2){
+							this.sourceX=4520;
+							this.sourceY=2000;
 						}
-						if(this.animate>=4&&this.animate<=8){
+						if(this.animate>=2&&this.animate<=8){
 							this.sourceX=594;
 							this.sourceY=2230;
 						}
@@ -1339,12 +2092,16 @@ var LostWorld = function(canvas) {
 					this.y=0;
 				}
 				if(this.skin==1){
+					this.sourceWidth=19;
+					this.sourceHeight=37;
+					this.width=38;
+					this.height=74;
 					if(hero.x<this.x){
 						this.sourceX=487;
-						this.sourceY=2148;
+						this.sourceY=2149;
 					}else{
 						this.sourceX=507;
-						this.sourceY=2148;		
+						this.sourceY=2149;		
 					}
 				}
 				if(this.skin==2){
@@ -1617,20 +2374,20 @@ var LostWorld = function(canvas) {
 						if(this.y<520){
 							this.y+=1;
 							if(this.animate>=0&&this.animate<=8){
-								this.sourceX=366;
-								this.sourceY=2188;
+								this.sourceX=364;
+								this.sourceY=2187;
 							}
 							if(this.animate>=8&&this.animate<=16){
-								this.sourceX=386;
-								this.sourceY=2188;
+								this.sourceX=385;
+								this.sourceY=2187;
 							}
 							if(this.animate>=16&&this.animate<=24){
-								this.sourceX=366;
-								this.sourceY=2188;
+								this.sourceX=364;
+								this.sourceY=2187;
 							}
 							if(this.animate>=24&&this.animate<=32){
-								this.sourceX=386;
-								this.sourceY=2167;
+								this.sourceX=385;
+								this.sourceY=2187;
 							}
 							if(this.animate>=32){
 								this.animate=0;
@@ -1644,19 +2401,19 @@ var LostWorld = function(canvas) {
 							this.y-=1;
 							if(this.animate>=0&&this.animate<=8){
 								this.sourceX=406;
-								this.sourceY=2188;
+								this.sourceY=2187;
 							}
 							if(this.animate>=8&&this.animate<=16){
-								this.sourceX=426;
-								this.sourceY=2188;
+								this.sourceX=427;
+								this.sourceY=2187;
 							}
 							if(this.animate>=16&&this.animate<=24){
 								this.sourceX=406;
-								this.sourceY=2188;
+								this.sourceY=2187;
 							}
 							if(this.animate>=24&&this.animate<=32){
-								this.sourceX=426;
-								this.sourceY=2188;
+								this.sourceX=427;
+								this.sourceY=2187;
 							}
 							if(this.animate>=32){
 								this.animate=0;
@@ -1735,19 +2492,19 @@ var LostWorld = function(canvas) {
 							this.y+=2;
 							if(this.animate>=0&&this.animate<=8){
 								this.sourceX=366;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=8&&this.animate<=16){
 								this.sourceX=386;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=16&&this.animate<=24){
 								this.sourceX=366;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=24&&this.animate<=32){
 								this.sourceX=386;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=32){
 								this.animate=0;
@@ -1761,19 +2518,19 @@ var LostWorld = function(canvas) {
 							this.y-=2;
 							if(this.animate>=0&&this.animate<=8){
 								this.sourceX=406;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=8&&this.animate<=16){
 								this.sourceX=426;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=16&&this.animate<=24){
 								this.sourceX=406;
-								this.sourceY=2264;
+								this.sourceY=2263;
 							}
 							if(this.animate>=24&&this.animate<=32){
 								this.sourceX=426;
-								this.sourceY=2246;
+								this.sourceY=2263;
 							}
 							if(this.animate>=32){
 								this.animate=0;
@@ -1997,6 +2754,366 @@ var LostWorld = function(canvas) {
 						this.sourceY=2187;
 					}
 				}
+				if(this.skin==11){
+					this.sourceX=448;
+					this.sourceY=2264;
+					this.sourceWidth=19;
+					this.sourceHeight=36;
+					this.width=38;
+					this.height=72;
+					if(this.animate<=24&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=24;
+					}
+					if(this.movement==1){
+						if(this.animate>=0&&this.animate<=12){
+							this.sourceX=448;
+						}
+						if(this.animate>=12&&this.animate<=24){
+							this.sourceX=468;
+						}
+						if(this.animate>=24){
+							this.animate=0;
+						}
+					}
+				}
+				if(this.skin==12){
+					this.sourceWidth=19;
+					this.sourceHeight=36;
+					this.width=38;
+					this.height=72;
+					if(hero.x<this.x){
+						this.sourceX=489;
+						this.sourceY=2264;
+					}else{
+						this.sourceX=510;
+						this.sourceY=2264;		
+					}
+				}
+				if(this.skin==13){
+					this.sourceX=366;
+					this.sourceY=2149;
+					this.sourceWidth=20;
+					this.sourceHeight=36;
+					this.width=42;
+					this.height=72;
+					if(this.animate<=32&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=32;
+					}
+					if(this.movement==1){
+						if(this.x<600){
+							this.x+=1;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=366;
+								this.sourceY=2150;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=386;
+								this.sourceY=2150;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=406;
+								this.sourceY=2150;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=386;
+								this.sourceY=2150;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x>70){
+							this.x-=1;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=466;
+								this.sourceY=2150;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=446;
+								this.sourceY=2150;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=426;
+								this.sourceY=2150;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=446;
+								this.sourceY=2150;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.y<520){
+							this.y+=1;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=364;
+								this.sourceY=2187;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=385;
+								this.sourceY=2187;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=364;
+								this.sourceY=2187;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=385;
+								this.sourceY=2187;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.y>270){
+							this.y-=1;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=406;
+								this.sourceY=2187;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=427;
+								this.sourceY=2187;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=406;
+								this.sourceY=2187;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=427;
+								this.sourceY=2187;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+				}
+				if(this.skin==14){
+					this.sourceWidth=19;
+					this.sourceHeight=36;
+					this.width=38;
+					this.height=72;
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=16;
+					}
+					if(this.movement==1){
+						if(this.x<610){
+							this.x+=1.8;
+							this.sourceY=2273;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1352;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1352;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1372;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1372;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x>70){
+							this.x-=1.8;
+							this.sourceY=2273;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1392;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1392;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1412;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1412;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.y<520){
+							this.y+=1.8;
+							this.sourceY=2309;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1352; 
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1352;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1372;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1372; 
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.y>270){
+							this.y-=1.8;
+							this.sourceY=2309;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=1392;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=1392;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=1412;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=1412;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+				}
+				if(this.skin==15){
+					this.sourceWidth=20;
+					this.sourceHeight=37;
+					this.width=42;
+					this.height=74;
+					if(this.animate<=32&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=32;
+					}
+					if(this.movement==1){
+						if(this.x<490){
+							this.x+=2;
+							this.sourceY=2341;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=0;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=20;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=40;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=20;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x>200){
+							this.x-=2;
+							this.sourceY=2341;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=61;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=81;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=101;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=81;
+							}
+							if(this.animate>=31){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.y<520){
+							this.y+=2;
+							this.sourceY=2341;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=121;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=141;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=121;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=141;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.y>180){
+							this.y-=2;
+							this.sourceY=2341;
+							if(this.animate>=0&&this.animate<=8){
+								this.sourceX=161;
+							}
+							if(this.animate>=8&&this.animate<=16){
+								this.sourceX=181;
+							}
+							if(this.animate>=16&&this.animate<=24){
+								this.sourceX=161;
+							}
+							if(this.animate>=24&&this.animate<=32){
+								this.sourceX=181;
+							}
+							if(this.animate>=32){
+								this.animate=0;
+							}
+						}else{
+							this.movement=Math.floor(Math.random()*4+1);
+						}
+					}
+				}
 			}else{
 				this.skin=0;
 				this.sourceX=4520;
@@ -2179,7 +3296,123 @@ var LostWorld = function(canvas) {
 						}
 					}
 				}
-				
+				if(this.skin==2){
+					this.sourceWidth=32;
+					this.sourceHeight=58;
+					this.width=64;
+					this.height=116;
+					if(this.timemove1>0){
+						this.timemove1-=1;						 
+					}
+					if(this.timemove1<=0){
+						this.timemove1=300;
+						this.movement= Math.floor(Math.random()*1+1);
+					}
+					if(this.timemove2>0){
+						this.timemove2-=1;						 
+					}
+					if(this.timemove2<=0){
+						this.timemove2=100;
+					}
+					if(this.movement>=1&&this.movement<=2){
+						this.sourceWidth=32;
+						this.sourceHeight=58;
+						this.width=64;
+						this.height=116;
+						if(this.animate<=16&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=16;
+						}
+						if(this.animate>=16){
+							this.animate=0;
+						}
+						if(this.animate>=0&&this.animate<=8){
+							this.sourceX=2287;
+							this.sourceY=2180;
+						}
+						if(this.animate>=8&&this.animate<=16){
+							this.sourceX=2347;
+							this.sourceY=2180;
+						}
+					}
+					if(this.movement==1){
+						if(this.x<450){
+							this.x+=2;
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+						if(this.y<520){
+							if(this.y<hero.y){
+								this.y+=1.5;
+							}
+						}
+						if(this.y>90){
+							if(this.y>hero.y){
+								this.y-=1.5;
+							}
+						}
+					}
+					if(this.movement==2){
+						if(this.x>180){
+							this.x-=4;
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+						if(this.y<520){
+							if(this.y<hero.y){
+								this.y+=1.5;
+							}
+						}
+						if(this.y>90){
+							if(this.y>hero.y){
+								this.y-=1.5;
+							}
+						}
+					}
+					if(this.movement==3){
+						this.sourceWidth=53;
+						this.sourceHeight=60;
+						this.width=106;
+						this.height=120;
+						if(this.animate<=24&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=24;
+						}
+						if(this.animate>=0&&this.animate<=8){
+							this.sourceX=2337;
+							this.sourceY=2239;
+						}
+						if(this.animate>=8&&this.animate<=24){
+							this.sourceX=2286;
+							this.sourceY=2308;
+						}
+						if(this.animate>=24){
+							this.animate=0;
+							this.movement= Math.floor(Math.random()*2+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.animate<=36&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=36;
+						}
+						if(this.animate>=0&&this.animate<=8){
+							this.sourceX=2287;
+							this.sourceY=2180;
+						}
+						if(this.animate>=8&&this.animate<=36){
+							this.sourceX=2287;
+							this.sourceY=2241;
+						}
+						if(this.animate>=36){
+							this.animate=0;
+							this.movement= Math.floor(Math.random()*2+1);
+						}
+					}
+				}
 				if(this.skin==3){
 					this.sourceWidth=54;
 					this.sourceHeight=69;
@@ -2325,6 +3558,408 @@ var LostWorld = function(canvas) {
 						}
 					}
 				}
+				if(this.skin==4){
+					if(this.timemove2<200){
+						this.timemove2+=1;
+						this.sourceWidth=31;
+						this.sourceHeight=50;
+						this.width=62;
+						this.height=100;
+						this.sourceX=2624;
+						this.sourceY=2140;
+						this.movement=1;
+					}else{
+						if(this.timemove1<150){
+							this.timemove1+=1;	
+							if(this.timemove1<50){
+								this.movement=1;
+								this.timemove1+=1;
+							}
+							if(this.timemove1>=50&&this.timemove1<100){
+								this.movement=2;
+								this.timemove1+=1;
+							}
+							if(this.timemove1>=100){
+								this.movement=3;
+								this.timemove1+=1;
+							}
+						}
+					}
+					if(this.movement==1){
+						this.sourceWidth=31;
+						this.sourceHeight=50;
+						this.width=62;
+						this.height=100;
+						this.sourceX=2624;
+						this.sourceY=2140;
+					}
+					if(this.movement==2){
+						this.sourceWidth=31;
+						this.sourceHeight=50;
+						this.width=62;
+						this.height=100;
+						if(this.animate<=8&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=8;
+						}
+						if(this.animate>=0&&this.animate<=4){
+							this.sourceX=2624;
+							this.sourceY=2140;
+						}
+						if(this.animate>=4&&this.animate<=8){
+							this.sourceX=2655;
+							this.sourceY=2140;
+						}
+						if(this.animate>=8){
+							this.animate=0;
+						}
+					}
+					if(this.movement==3){
+						this.sourceWidth=40;
+						this.sourceHeight=67;
+						this.width=80;
+						this.height=134;
+						if(this.animate<=32&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=32;
+						}
+						if(this.animate>=0&&this.animate<=22){
+							this.sourceX=2687;
+							this.sourceY=2124;
+						}
+						if(this.animate>=22&&this.animate<=32){
+							this.sourceX=2729;
+							this.sourceY=2124;
+						}
+						if(this.animate>=32){
+							this.animate=0;
+							this.movement=8;
+							this.skin=5;
+							this.timer2=0;
+						}
+					}
+				}
+				if(this.skin==5){
+					this.sourceWidth=40;
+					this.sourceHeight=67;
+					this.width=80;
+					this.height=134;
+					if(this.movement<7){
+						if(this.animate<=32&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=32;
+						}
+						if(this.animate>=0&&this.animate<=22){
+							this.sourceX=2687;
+							this.sourceY=2124;
+						}
+						if(this.animate>=22&&this.animate<=32){
+							this.sourceX=2729;
+							this.sourceY=2124;
+						}
+						if(this.animate>=32){
+							this.animate=0;
+						}
+					}
+					if(this.timemove1>0){
+						this.timemove1-=1;						 
+					}
+					if(this.timemove1<=0){
+						this.timemove1=400;
+						this.movement=7;
+					}
+					if(this.timemove1==200){
+						this.movement=9;
+					}
+					if(this.timemove2>0){
+						this.timemove2-=1;						 
+					}
+					if(this.timemove2<=0){
+						this.timemove2=600;
+						this.movement=8;
+						this.timemove1=200;
+						this.animate=0;
+					}
+					if(this.movement==1){
+						if(this.x>60&&this.y>155){
+							this.y-=2;
+							this.x-=2;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x<580&&this.y>155){
+							this.y-=2;
+							this.x+=2;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.x>60&&this.y<300){
+							this.y+=2;
+							this.x-=2;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.x<580&&this.y<300){
+							this.y+=2;
+							this.x+=2;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==5){
+						if(this.x>60&&this.y<300){
+							this.x-=3;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==6){
+						if(this.x<580&&this.y<300){
+							this.x+=3;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==7||this.movement==9){
+						if(this.animate<=60&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=60;
+						}
+						if(this.animate>=0&&this.animate<=16){
+							this.sourceX=2687;
+							this.sourceY=2124;
+						}
+						if(this.animate>=16&&this.animate<=60){
+							this.sourceX=2770;
+							this.sourceY=2123;
+						}
+						if(this.animate>=60){
+							this.animate=0;
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==8){
+						if(this.animate<=64&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=64;
+						}
+						if(this.animate>=0&&this.animate<=8||this.animate>=16&&this.animate<=24||this.animate>=32&&this.animate<=40||this.animate>=48&&this.animate<=56){
+							this.sourceX=2627;
+							this.sourceY=2195;
+						}
+						if(this.animate>=8&&this.animate<=16||this.animate>=24&&this.animate<=32||this.animate>=40&&this.animate<=48||this.animate>=56&&this.animate<=64){
+							this.sourceX=2670;
+							this.sourceY=2195;
+						}
+						if(this.animate>=64){
+							this.animate=0;
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+				}
+				if(this.skin==6){
+					if(this.movement==1){
+						this.sourceWidth=40;
+						this.sourceHeight=67;
+						this.width=80;
+						this.height=134;
+						if(this.animate<=64&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=64;
+						}
+						if(this.animate>=0&&this.animate<=8||this.animate>=16&&this.animate<=24||this.animate>=32&&this.animate<=40||this.animate>=48&&this.animate<=56){
+							this.sourceX=2627;
+							this.sourceY=2192;
+						}
+						if(this.animate>=8&&this.animate<=16||this.animate>=24&&this.animate<=32||this.animate>=40&&this.animate<=48||this.animate>=56&&this.animate<=64){
+							this.sourceX=2670;
+							this.sourceY=2192;
+						}
+						if(this.x<320){
+							this.x+=2;
+						}
+						if(this.x>320){
+							this.x-=2;
+						}
+						if(this.y<250){
+							this.y+=2;
+						}
+						if(this.y>250){
+							this.y-=2;
+						}
+						if(this.x>=310&&this.x<=330&&this.y>=240&&this.y<=260){
+							this.movement=2;
+							this.animate=0;							
+						}
+					}
+					if(this.movement==2){
+						this.sourceWidth=55;
+						this.sourceHeight=34;
+						this.width=110;
+						this.height=68;
+						if(this.animate<=64&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=64;
+						}
+						if(this.animate>=0&&this.animate<=8||this.animate>=32&&this.animate<=40){
+							this.sourceX=2629;
+							this.sourceY=2365;
+						}
+						if(this.animate>=8&&this.animate<=16||this.animate>=40&&this.animate<=48){
+							this.sourceX=2686;
+							this.sourceY=2365;
+						}
+						if(this.animate>=16&&this.animate<=24||this.animate>=48&&this.animate<=56){
+							this.sourceX=2743;
+							this.sourceY=2365;
+						}
+						if(this.animate>=24&&this.animate<=32||this.animate>=56&&this.animate<=64){
+							this.sourceX=2800;
+							this.sourceY=2365;
+						}
+						if(this.animate>=64){
+							this.movement=3;
+						}
+					}
+					if(this.movement==3){
+						this.skin=7;
+						this.movement=1;
+						this.x=230;
+						this.y=140;
+						this.health=84;
+					}
+				}
+				if(this.skin==7){
+					this.sourceWidth=84;
+					this.sourceHeight=101;
+					this.width=168;
+					this.height=202;
+					if(this.animate<=88&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=88;
+					}
+					if(this.animate>=0&&this.animate<=80){
+						this.sourceX=4132;
+						this.sourceY=2001;
+					}
+					if(this.animate>=80&this.animate<=88){
+						this.sourceX=4132;
+						this.sourceY=2119;
+					}
+					if(this.animate>=88){
+						this.animate=0;
+					}
+					if(this.timemove1>0){
+						this.timemove1-=1;						 
+					}
+					if(this.timemove1<=0){
+						this.timemove1=400;
+						this.movement=7;
+					}
+					if(this.timemove1==200){
+						this.movement=8;
+					}
+					if(this.timemove2>0){
+						this.timemove2-=1;						 
+					}
+					if(this.timemove2<=0){
+						this.timemove2=850;
+						this.movement=8;
+						this.timemove1=200;
+						this.animate=0;
+					}
+					if(this.movement==1){
+						if(this.x>150&&this.y>135){
+							this.y-=2;
+							this.x-=1;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x<400&&this.y>135){
+							this.y-=2;
+							this.x+=1;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.x>150&&this.y<180){
+							this.y+=2;
+							this.x-=1;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.x<400&&this.y<180){
+							this.y+=2;
+							this.x+=1;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==5){
+						if(this.x>150&&this.y<180){
+							this.x-=2;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==6){
+						if(this.x<400&&this.y<180){
+							this.x+=2;
+						}else{
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==7||this.movement==9){
+						if(this.animate<=60&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=60;
+						}
+						if(this.animate>=0&&this.animate<=16){
+							this.sourceX=4132;
+							this.sourceY=2001;
+						}
+						if(this.animate>=16&&this.animate<=60){
+							this.sourceX=4132;
+							this.sourceY=2237
+						}
+						if(this.animate>=60){
+							this.animate=0;
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+					if(this.movement==8){
+						if(this.animate<=999&&this.animate>=0){
+							this.animate+=1;
+						}else{
+							this.animate=999;
+						}
+
+						if(this.animate>=999){
+							this.animate=0;
+							this.movement= Math.floor(Math.random()*6+1);
+						}
+					}
+				}	
 			}else{
 				this.skin=0;
 				this.sourceX=4520;
@@ -2412,6 +4047,22 @@ var LostWorld = function(canvas) {
 						this.x=580;
 					}
 				}
+				if(this.skin==2){
+					this.sourceX=4108;
+					this.sourceY=2345; 
+					this.sourceWidth=42;
+					this.sourceHeight=55;
+					this.width=84;
+					this.height=110;
+				}
+				if(this.skin==3){
+					this.sourceX=4198;
+					this.sourceY=2345; 
+					this.sourceWidth=42;
+					this.sourceHeight=55;
+					this.width=84;
+					this.height=110;
+				}
 			}else{
 				this.skin=0;
 				this.sourceX=4520;
@@ -2423,7 +4074,7 @@ var LostWorld = function(canvas) {
 	}
 	//tworzenie klasy leaderweapons wraz z parametrami
 	class Leaderweapons{
-		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,timemove,movement,skin,animate){
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,timemove,movement,movex,movey,skin,animate){
 			this.active=active;
 			this.sourceX=sourceX;
 			this.sourceY=sourceY;
@@ -2436,6 +4087,8 @@ var LostWorld = function(canvas) {
 			this.speed=speed;
 			this.timemove=timemove;
 			this.movement=movement;
+			this.movex=movex;
+			this.movey=movey;
 			this.skin=skin;
 			this.animate=animate;	
 		}
@@ -2595,6 +4248,210 @@ var LostWorld = function(canvas) {
 					this.sourceX=4520;
 					this.sourceY=2000;
 				}
+				if(this.skin==8){
+					this.sourceX=2346;
+					this.sourceY=2374;
+					this.sourceWidth=34;
+					this.sourceHeight=30;
+					this.width=68;
+					this.height=60;
+					if(this.x<600){
+						this.x+=7;
+					}else{
+						this.x=0;
+						this.y=0;
+						this.skin=7;
+					}
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=2346;
+						this.sourceY=2367;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=2346;
+						this.sourceY=2334;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX=2346;
+						this.sourceY=2303;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+				}
+				if(this.skin==9){
+					this.sourceWidth=25;
+					this.sourceHeight=24;
+					this.width=50;
+					this.height=48;
+					if(this.movex==1){
+						this.x+=2;
+					}
+					if(this.movex==2){
+						this.x-=2;
+					}
+					if(this.movey==1){
+						this.y+=2;
+					}
+					if(this.movey==2){
+						this.y-=2;
+					}
+					if(this.animate<=8&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=8;
+					}
+					if(this.animate>=8){
+						this.animate=0;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=2286;
+						this.sourceY=2371;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=2317;
+						this.sourceY=2371;
+					}
+					if(this.animate>=8){
+						this.animate=0;
+					}
+				}
+				if(this.skin==10){
+					if(this.animate<=8&&this.animate>=0){
+							this.animate+=1;
+					}else{
+						this.animate=8;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceWidth=35;
+						this.sourceHeight=35;
+						this.width=70;
+						this.height=70;
+						this.sourceX=2911;
+						this.sourceY=2127;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceWidth=35;
+						this.sourceHeight=35;
+						this.width=70;
+						this.height=70;
+						this.sourceX=2965;
+						this.sourceY=2127;
+					}
+					if(this.animate>=8){
+						this.animate=0;
+					}
+					if(this.movex==1){
+						if(this.x<610){
+							this.x+=6;
+						}
+					}
+					if(this.movex==2){
+						if(this.x>70){
+							this.x-=6;
+						}
+					}
+					if(this.movey==1){
+						if(this.y<520){
+							this.y+=6;
+						}
+					}
+					if(this.movey==2){
+						if(this.y>180){
+							this.y-=6;
+						}
+					}
+				}
+				if(this.skin==11){
+					this.sourceWidth=24;
+					this.sourceHeight=24;
+					this.width=48;
+					this.height=48;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=1701;
+						this.sourceY=2219;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=1725;
+						this.sourceY=2219;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX=1750;
+						this.sourceY=2219;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+						this.skin=7;
+					}
+				}
+				if(this.skin==12){
+					this.width=96;
+					this.height=116;
+					this.sourceWidth = 48;
+					this.sourceHeight = 56;
+					this.sourceY = 1996;
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=16;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX = 1331;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX = 1426;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX = 1378;
+					}
+					if(this.animate>=12&&this.animate<=16){
+						this.sourceX = 1426;
+					}
+					if(this.animate>=16){
+						this.animate=0;
+					}
+					if(this.movement==1){
+						if(this.x>60){
+							this.x-=5;
+							this.y+=5;
+						}else{
+							this.x=0;
+							this.y=0;
+							this.skin=7;
+						}
+					}
+					if(this.movement==2){
+						if(this.x>60){
+							this.y+=5;
+						}else{
+							this.x=0;
+							this.y=0;
+							this.skin=7;
+						}
+					}
+					if(this.movement==3){
+						if(this.x>60){
+							this.x+=5;
+							this.y+=5;
+						}else{
+							this.x=0;
+							this.y=0;
+							this.skin=7;
+						}
+					}
+				}
 			}else{
 				this.skin=0;
 				this.sourceX=4520;
@@ -2606,7 +4463,7 @@ var LostWorld = function(canvas) {
 	}
 	//tworzenie klasy antagonist wraz z parametrami
 	class Antagonist{
-		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,timemove,movement,health,fullhealth,skin,animate,timehit,hit){
+		constructor(active,sourceX,sourceY,sourceWidth,sourceHeight,x,y,width,height,speed,timemove,movement,movex,movey,health,fullhealth,skin,animate,timehit,hit,attack){
 			this.active=active;
 			this.sourceX=sourceX;
 			this.sourceY=sourceY;
@@ -2619,12 +4476,15 @@ var LostWorld = function(canvas) {
 			this.speed=speed;
 			this.timemove=timemove;
 			this.movement=movement;
+			this.movex=movex;
+			this.movey=movey;
 			this.health=health;
 			this.fullhealth=fullhealth;
 			this.skin=skin;
 			this.animate=animate;
 			this.timehit=timehit;
 			this.hit=hit;
+			this.attack=attack;
 		}
 		movements(){
 			if(this.active==true){
@@ -2636,7 +4496,11 @@ var LostWorld = function(canvas) {
 						this.hit=false;
 					}
 					if(this.skin==2){
-						if(this.movement==1){
+						this.sourceWidth=20;
+						this.sourceHeight=39;
+						this.width=40;
+						this.height=78;
+						if(this.movex==1){
 							if(this.x<610){
 								this.sourceY=2016;
 								if(this.animate>=0&&this.animate<=4){
@@ -2656,7 +4520,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==2){
+						if(this.movex==2){
 							if(this.x>70){
 								this.sourceY=2016;
 								if(this.animate>=0&&this.animate<=4){
@@ -2676,7 +4540,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==3){
+						if(this.movey==1){
 							if(this.y<520){
 								this.sourceY=2056;
 								if(this.animate>=0&&this.animate<=4){
@@ -2696,7 +4560,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==4){
+						if(this.movey==2){
 							if(this.y>180){
 								this.sourceY=2056;
 								if(this.animate>=0&&this.animate<=4){
@@ -2718,7 +4582,11 @@ var LostWorld = function(canvas) {
 						}
 					}
 					if(this.skin==4){
-						if(this.movement==1){
+						this.sourceWidth=30;
+						this.sourceHeight=48;
+						this.width=60;
+						this.height=96;
+						if(this.movex==1){
 							if(this.x<590){
 								this.sourceY=1997;
 								if(this.animate>=0&&this.animate<=6){
@@ -2738,7 +4606,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==2){
+						if(this.movex==2){
 							if(this.x>70){
 								this.sourceY=1997;
 								if(this.animate>=0&&this.animate<=6){
@@ -2758,7 +4626,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==3){
+						if(this.movey==1){
 							if(this.y<500){
 								this.sourceY=2047;
 								if(this.animate>=0&&this.animate<=6){
@@ -2778,7 +4646,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==4){
+						if(this.movey==2){
 							if(this.y>180){
 								this.sourceY=2047;
 								if(this.animate>=0&&this.animate<=6){
@@ -2800,7 +4668,11 @@ var LostWorld = function(canvas) {
 						}
 					}
 					if(this.skin==8){
-						if(this.movement==1){
+						this.sourceWidth=20;
+						this.sourceHeight=37;
+						this.width=40;
+						this.height=74;
+						if(this.movex==1){
 							if(this.x<610){
 								this.sourceY=2018;
 								if(this.animate>=0&&this.animate<=4){
@@ -2820,7 +4692,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==2){
+						if(this.movex==2){
 							if(this.x>70){
 								this.sourceY=2018;
 								if(this.animate>=0&&this.animate<=4){
@@ -2840,7 +4712,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==3){
+						if(this.movey==1){
 							if(this.y<520){
 								this.sourceY=2057;
 								if(this.animate>=0&&this.animate<=4){
@@ -2860,7 +4732,7 @@ var LostWorld = function(canvas) {
 								}
 							}
 						}
-						if(this.movement==4){
+						if(this.movey==2){
 							if(this.y>180){
 								this.sourceY=2057;
 								if(this.animate>=0&&this.animate<=4){
@@ -2908,56 +4780,84 @@ var LostWorld = function(canvas) {
 						}
 					}
 					if(this.skin==10){
-						if(this.movement==1){
+						this.sourceWidth=27;
+						this.sourceHeight=37;
+						this.width=54;
+						this.height=74;
+						if(this.movex==1){
 							if(this.x<610){
-								this.sourceY=2016;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2876;
+								this.sourceY=2035;
+								if(this.animate>=0&&this.animate<=4){
+									this.sourceX=2856;
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2900;
+								if(this.animate>=4&&this.animate<=8){
+									this.sourceX=2856;
+								}
+								if(this.animate>=8&&this.animate<=12){
+									this.sourceX=2824;
+								}
+								if(this.animate>=12&&this.animate<=16){
+									this.sourceX=2824;
 								}
 								if(this.animate>=16){
 									this.animate=0;
 								}
 							}
 						}
-						if(this.movement==2){
+						if(this.movex==2){
 							if(this.x>70){
-								this.sourceY=2016;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2850;
+								this.sourceY=1996;
+								if(this.animate>=0&&this.animate<=4){
+									this.sourceX=2856;
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2826;
+								if(this.animate>=4&&this.animate<=8){
+									this.sourceX=2856;
+								}
+								if(this.animate>=8&&this.animate<=12){
+									this.sourceX=2824;
+								}
+								if(this.animate>=12&&this.animate<=16){
+									this.sourceX=2824;
 								}
 								if(this.animate>=16){
 									this.animate=0;
 								}
 							}
 						}
-						if(this.movement==3){
+						if(this.movey==1){
 							if(this.y<520){
-								this.sourceY=2057;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2850;
+								this.sourceY=2113;
+								if(this.animate>=0&&this.animate<=4){
+									this.sourceX=2856;
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2826;
+								if(this.animate>=4&&this.animate<=8){
+									this.sourceX=2856;
+								}
+								if(this.animate>=8&&this.animate<=12){
+									this.sourceX=2824;
+								}
+								if(this.animate>=12&&this.animate<=16){
+									this.sourceX=2824;
 								}
 								if(this.animate>=16){
 									this.animate=0;
 								}
 							}
 						}
-						if(this.movement==4){
+						if(this.movey==2){
 							if(this.y>180){
-								this.sourceY=2057;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2876;
+								this.sourceY=2074;
+								if(this.animate>=0&&this.animate<=4){
+									this.sourceX=2856;
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2900;
+								if(this.animate>=4&&this.animate<=8){
+									this.sourceX=2856;
+								}
+								if(this.animate>=8&&this.animate<=12){
+									this.sourceX=2824;
+								}
+								if(this.animate>=12&&this.animate<=16){
+									this.sourceX=2824;
 								}
 								if(this.animate>=16){
 									this.animate=0;
@@ -3029,397 +4929,1343 @@ var LostWorld = function(canvas) {
 					}
 				}else{
 					this.timehit=0;
-					if(this.skin==2){
-						if(this.movement==1){
-							if(this.x<610){
-								this.sourceY=2100;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=1960;
+					if(this.attack==false){
+						if(this.skin==1){
+							if(this.movement==1){
+								if(this.x<610){
+									if(this.animate>=0&&this.animate<=2){
+										this.sourceX=1900;
+										this.sourceY=2209;
+									}
+									if(this.animate>=2&&this.animate<=4){
+										this.sourceX=4520;
+										this.sourceY=2000;
+									}
+									if(this.animate>=4){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=1960;
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.sourceY=2100;
+									if(this.animate>=0&&this.animate<=2){
+										this.sourceX=1878;
+										this.sourceY=2209;
+									}
+									if(this.animate>=2&&this.animate<=4){
+										this.sourceX=4520;
+										this.sourceY=2000;
+									}
+									if(this.animate>=4){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=1937;
+							}
+							if(this.movement==3){
+								if(this.y<520){
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=2){
+										this.sourceX=1879;
+										this.sourceY=2251;
+									}
+									if(this.animate>=2&&this.animate<=4){
+										this.sourceX=4520;
+										this.sourceY=2000;
+									}
+									if(this.animate>=4){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=1937;
-								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=2){
+										this.sourceX=1900;
+										this.sourceY=2249;
+									}
+									if(this.animate>=2&&this.animate<=4){
+										this.sourceX=4520;
+										this.sourceY=2000;
+									}
+									if(this.animate>4){
+										this.animate=0;
+									}
 								}
 							}
 						}
-						if(this.movement==2){
-							if(this.x>70){
-								this.sourceY=2100;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=1893;
+						if(this.skin==2){
+							this.sourceWidth=20;
+							this.sourceHeight=39;
+							this.width=40;
+							this.height=78;
+							if(this.timemove>0){
+								this.timemove-=1;				 
+							}
+							if(this.timemove<=0){
+								this.timemove=100;
+								this.movement= Math.floor(Math.random()*4+1);
+							}
+							if(this.movex==0&&this.movey==0){
+								this.movex= Math.floor(Math.random()*2+1);
+								this.movey= Math.floor(Math.random()*2+1);	
+							}
+							if(this.movex==0){
+								this.x+=0;
+							}
+							if(this.movex==1){
+								if(this.x<610){
+									this.x+=2;
+									this.movey=0;
+									this.sourceY=2100;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=1960;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=1960;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=1937;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=1937;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=1893;
+							}
+							if(this.movex==2){
+								if(this.x>70){
+									this.x-=2;
+									this.movey=0;
+									this.sourceY=2100;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=1893;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=1893;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=1916;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=1916;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=1916;
+							}
+							if(this.movey==0){
+								this.y+=0;
+							}
+							if(this.movey==1){
+								if(this.y<520){
+									this.y+=2;
+									this.movex=0;
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=1890; 
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=1890;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=1914;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=1914; 
+									}
+									if(this.animate>=16){
+											this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=1916;
-								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==2){
+								if(this.y>180){
+									this.y-=2;
+									this.movex=0;
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=1963;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=1963;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=1939;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=1939;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
 							}
 						}
-						if(this.movement==3){
-							if(this.y<520){
-								this.sourceY=2140;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=1890; 
+						if(this.skin==4){
+							this.sourceWidth=30;
+							this.sourceHeight=48;
+							this.width=60;
+							this.height=96;
+							if(this.movex==0&&this.movey==0){
+								this.movex= Math.floor(Math.random()*2+1);
+								this.movey= Math.floor(Math.random()*2+1);	
+							}
+							if(this.movex==0){
+								this.x+=0;
+							}
+							if(this.movex==1){
+								if(this.x<590){
+									this.x+=1.5;
+									this.movey=0;
+									this.sourceY=1997;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1729;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1729;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1761;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1761;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=1890;
+							}
+							if(this.movex==2){
+								if(this.x>70){
+									this.x-=1.5;
+									this.movey=0;
+									this.sourceY=1997;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1665;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1665;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1697;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1697;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=1914;
+							}
+							if(this.movey==0){
+								this.y+=0;
+							}
+							if(this.movey==1){
+								if(this.y<500){
+									this.y+=1.5;
+									this.movex=0;
+									this.sourceY=2047;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1665;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1665;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1697;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1697;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=1914; 
-								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==2){
+								if(this.y>180){
+									this.y-=1.5;
+									this.movex=0;
+									this.sourceY=2047;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1729;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1729;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1761;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1761;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
 							}
 						}
-						if(this.movement==4){
-							if(this.y>180){
-								this.sourceY=2140;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=1963;
+						if(this.skin==8){
+							this.sourceWidth=20;
+							this.sourceHeight=37;
+							this.width=40;
+							this.height=74;
+							if(this.movex==0&&this.movey==0){
+								this.movex= Math.floor(Math.random()*2+1);
+								this.movey= Math.floor(Math.random()*2+1);	
+							}
+							if(this.movex==0){
+								this.x+=0;
+							}
+							if(this.movex==1){
+								if(this.x<610){
+									this.x+=2;
+									this.movey=0;
+									this.sourceY=2101;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=2034;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=2034;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=2056;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=2056;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=1963;
+							}
+							if(this.movex==2){
+								if(this.x>70){
+									this.x-=2;
+									this.movey=0;
+									this.sourceY=2101;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=1989;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=1989;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=2011;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=2011;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=1939;
+							}
+							if(this.movey==1){
+								if(this.y<520){
+									this.y+=2;
+									this.movex=0;
+									this.sourceY=2141;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=1989;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=1989;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=2011;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=2011;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=1939;
-								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==2){
+								if(this.y>180){
+									this.y-=2;
+									this.movex=0;
+									this.sourceY=2141;
+									if(this.animate>=0&&this.animate<=4){
+										this.sourceX=2034;
+									}
+									if(this.animate>=4&&this.animate<=8){
+										this.sourceX=2034;
+									}
+									if(this.animate>=8&&this.animate<=12){
+										this.sourceX=2056;
+									}
+									if(this.animate>=12&&this.animate<=16){
+										this.sourceX=2056;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
 							}
 						}
-					}
-					if(this.skin==4){
-						if(this.movement==1){
-							if(this.x<590){
-								this.sourceY=1997;
-								if(this.animate>=0&&this.animate<=6){
-									this.sourceX=1729;
-								}
-								if(this.animate>=6&&this.animate<=12){
-									this.sourceX=1729;
-								}
-								if(this.animate>=12&&this.animate<=18){
-									this.sourceX=1761;
-								}
-								if(this.animate>=18&&this.animate<=24){
-									this.sourceX=1761;
-								}
-								if(this.animate>=24){
-									this.animate=0;
+						if(this.skin==9){
+							if(this.movement==1){
+								if(this.x<610){
+									this.sourceX=1813;
+									this.sourceY=2218;
 								}
 							}
-						}
-						if(this.movement==2){
-							if(this.x>70){
-								this.sourceY=1997;
-								if(this.animate>=0&&this.animate<=6){
-									this.sourceX=1665;
-								}
-								if(this.animate>=6&&this.animate<=12){
-									this.sourceX=1665;
-								}
-								if(this.animate>=12&&this.animate<=18){
-									this.sourceX=1697;
-								}
-								if(this.animate>=18&&this.animate<=24){
-									this.sourceX=1697;
-								}
-								if(this.animate>=24){
-									this.animate=0;
-								}
-							}
-						}
-						if(this.movement==3){
-							if(this.y<500){
-								this.sourceY=2047;
-								if(this.animate>=0&&this.animate<=6){
-									this.sourceX=1665;
-								}
-								if(this.animate>=6&&this.animate<=12){
-									this.sourceX=1665;
-								}
-								if(this.animate>=12&&this.animate<=18){
-									this.sourceX=1697;
-								}
-								if(this.animate>=18&&this.animate<=24){
-									this.sourceX=1697;
-								}
-								if(this.animate>=24){
-									this.animate=0;
-								}
-							}
-						}
-						if(this.movement==4){
-							if(this.y>180){
-								this.sourceY=2047;
-								if(this.animate>=0&&this.animate<=6){
-									this.sourceX=1729;
-								}
-								if(this.animate>=6&&this.animate<=12){
-									this.sourceX=1729;
-								}
-								if(this.animate>=12&&this.animate<=18){
-									this.sourceX=1761;
-								}
-								if(this.animate>=18&&this.animate<=24){
-									this.sourceX=1761;
-								}
-								if(this.animate>=24){
-									this.animate=0;
-								}
-							}
-						}
-					}
-					if(this.skin==8){
-						if(this.movement==1){
-							if(this.x<610){
-								this.sourceY=2101;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=2034;
-								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=2034;
-								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=2056;
-								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=2056;
-								}
-								if(this.animate>=16){
-									this.animate=0;
-								}
-							}
-						}
-						if(this.movement==2){
-							if(this.x>70){
-								this.sourceY=2101;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=1989;
-								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=1989;
-								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=2011;
-								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=2011;
-								}
-								if(this.animate>=16){
-									this.animate=0;
-								}
-							}
-						}
-						if(this.movement==3){
-							if(this.y<520){
-								this.sourceY=2141;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=1989;
-								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=1989;
-								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=2011;
-								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=2011;
-								}
-								if(this.animate>=16){
-									this.animate=0;
-								}
-							}
-						}
-						if(this.movement==4){
-							if(this.y>180){
-								this.sourceY=2141;
-								if(this.animate>=0&&this.animate<=4){
-									this.sourceX=2034;
-								}
-								if(this.animate>=4&&this.animate<=8){
-									this.sourceX=2034;
-								}
-								if(this.animate>=8&&this.animate<=12){
-									this.sourceX=2056;
-								}
-								if(this.animate>=12&&this.animate<=16){
-									this.sourceX=2056;
-								}
-								if(this.animate>=16){
-									this.animate=0;
-								}
-							}
-						}
-					}
-					if(this.skin==9){
-						if(this.movement==1){
-							if(this.x<610){
-								this.sourceX=1813;
-								this.sourceY=2218;
-							}
-						}
-						if(this.movement==2){
-							if(this.x>70){
-								this.sourceX=1792;
-								this.sourceY=2218;
-							}
-						}
-						if(this.movement==3){
-							if(this.y<520){
-								this.sourceX=1792;
-								this.sourceY=2257;
-							}
-						}
-						if(this.movement==4){
-							if(this.y>180){
-								this.sourceX=1813;
-								this.sourceY=2257;
-							}
-						}
-					}
-					if(this.skin==10){
-						if(this.movement==1){
-							if(this.x<610){
-								this.sourceY=2100;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=1841;
-								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=1865;
-								}
-								if(this.animate>=16){
-									this.animate=0;
-								}
-							}
-						}
-						if(this.movement==2){
-							if(this.x>70){
-								this.sourceY=2100;
-								if(this.animate>=0&&this.animate<=8){
+							if(this.movement==2){
+								if(this.x>70){
 									this.sourceX=1792;
-								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=1816;
-								}
-								if(this.animate>=16){
-									this.animate=0;
+									this.sourceY=2218;
 								}
 							}
-						}
-						if(this.movement==3){
-							if(this.y<520){
-								this.sourceY=2140;
-								if(this.animate>=0&&this.animate<=8){
+							if(this.movement==3){
+								if(this.y<520){
 									this.sourceX=1792;
+									this.sourceY=2257;
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=1816;
-								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceX=1813;
+									this.sourceY=2257;
 								}
 							}
 						}
-						if(this.movement==4){
-							if(this.y>180){
-								this.sourceY=2140;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=1841;
+						if(this.skin==10){
+							this.sourceWidth=27;
+							this.sourceHeight=39;
+							this.width=54;
+							this.height=78;
+							if(this.timemove>0){
+								this.timemove-=1;				 
+							}
+							if(this.timemove<=0){
+								this.timemove=100;
+								this.movement= Math.floor(Math.random()*4+1);
+							}
+							if(this.movex==0&&this.movey==0){
+								this.movex= Math.floor(Math.random()*2+1);
+								this.movey= Math.floor(Math.random()*2+1);	
+							}
+							if(this.movex==0){
+								this.x+=0;
+							}
+							if(this.movex==1){
+								if(this.x<610){
+									this.x+=2;
+									this.movey=0;
+									this.sourceY=2100;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1833;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1862;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=1865;
+							}
+							if(this.movex==2){
+								if(this.x>70){
+									this.x-=2;
+									this.movey=0;
+									this.sourceY=2100;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1777;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1806;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==0){
+								this.y+=0;
+							}
+							if(this.movey==1){
+								if(this.y<520){
+									this.y+=2;
+									this.movex=0;
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1777;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1806;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
+								}
+							}
+							if(this.movey==2){
+								if(this.y>180){
+									this.y-=2;
+									this.movex=0;
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1833;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1862;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movex= Math.floor(Math.random()*2+1);
+									this.movey= Math.floor(Math.random()*2+1);
 								}
 							}
 						}
-					}
-					if(this.skin==11){
-						if(this.movement==1){
-							if(this.x<610){
-								this.sourceY=1997;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2122;
+						if(this.skin==11){
+							if(this.movement==1){
+								if(this.x<610){
+									this.sourceY=1997;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2122;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2151;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2151;
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.sourceY=1997;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2062;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2092;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movement==3){
+								if(this.y<520){
+									this.sourceY=2042;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2062;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2092;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceY=2042;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2122;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2151;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
 								}
 							}
 						}
-						if(this.movement==2){
-							if(this.x>70){
-								this.sourceY=1997;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2062;
+						if(this.skin==15){
+							this.sourceX=1788;
+							this.sourceY=2298;
+						}
+					}else{
+						if(this.skin==2){
+							if(this.movex==1){
+								this.sourceWidth=46;
+								this.sourceHeight=38;
+								this.width=92;
+								this.height=76;
+								if(this.x<590){
+									this.x+=3;
+									this.sourceY=2236;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1969;
+									}
+									if(this.animate>=6){
+										this.animate=0;
+										this.attack=false;
+									}
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2092;
+							}
+							if(this.movex==2){
+								this.sourceWidth=46;
+								this.sourceHeight=38;
+								this.width=92;
+								this.height=76;
+								if(this.x>70){
+									this.x-=3;
+									this.sourceY=2236;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1920;
+									}
+									if(this.animate>=6){
+										this.animate=0;
+										this.attack=false;
+									}
 								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==1){
+								this.sourceWidth=19;
+								this.sourceHeight=48;
+								this.width=38;
+								this.height=96;
+								if(this.y<500){
+									this.y+=3;
+									this.sourceY=2236;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2018;
+									}
+									if(this.animate>=6){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movey==2){
+								this.sourceWidth=19;
+								this.sourceHeight=45;
+								this.width=38;
+								this.height=90;
+								if(this.y>180){
+									this.y-=3;
+									this.sourceY=2229;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2040;
+									}
+									if(this.animate>=6){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==1){
+								if(this.x<590){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2004;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2046;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2079;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2121;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1958;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1925;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==3){
+								if(this.y<500){
+									this.sourceY=2344;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1949;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1916;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceY=2337;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2108;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2075;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2042;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2009;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
 								}
 							}
 						}
-						if(this.movement==3){
-							if(this.y<520){
-								this.sourceY=2042;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2062;
+						if(this.skin==4){
+							if(this.movex==1){
+								this.sourceWidth=39;
+								this.sourceHeight=48;
+								this.width=78;
+								this.height=96;
+								if(this.x<590){
+									this.x+=0.5;
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2167;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2125;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2078;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2036;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2092;
+							}
+							if(this.movex==2){
+								this.sourceWidth=39;
+								this.sourceHeight=48;
+								this.width=78;
+								this.height=96;
+								if(this.x>70){
+									this.x-=0.5;
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1863;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1906;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1952;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1995;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==1){
+								this.sourceWidth=30;
+								this.sourceHeight=48;
+								this.width=60;
+								this.height=96;
+								if(this.y<500){
+									this.y+=0.5;
+									this.sourceY=2344;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1850;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1883;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1916;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1949;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movey==2){
+								this.sourceWidth=30;
+								this.sourceHeight=55;
+								this.width=60;
+								this.height=110;
+								if(this.y>180){
+									this.y-=0.5;
+									this.sourceY=2338;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2009;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2042;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2075;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2108;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==1){
+								if(this.x<590){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2004;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2046;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2079;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2121;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1958;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1925;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==3){
+								if(this.y<500){
+									this.sourceY=2344;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1949;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1916;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceY=2337;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2108;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2075;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2042;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2009;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
 								}
 							}
 						}
-						if(this.movement==4){
-							if(this.y>180){
-								this.sourceY=2042;
-								if(this.animate>=0&&this.animate<=8){
-									this.sourceX=2122;
+						if(this.skin==8){
+							if(this.movex==1){
+								this.sourceWidth=23;
+								this.sourceHeight=37;
+								this.width=46;
+								this.height=74;
+								if(this.x<590){
+									this.x+=0;
+									this.sourceY=2099;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2164;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2138;
+									}
+									if(this.animate>=12){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=8&&this.animate<=16){
-									this.sourceX=2151;
+							}
+							if(this.movex==2){
+								this.sourceWidth=23;
+								this.sourceHeight=37;
+								this.width=46;
+								this.height=74;
+								if(this.x>70){
+									this.x-=0;
+									this.sourceY=2099;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2085;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2111;
+									}
+									if(this.animate>=12){
+										this.animate=0;
+									}
 								}
-								if(this.animate>=16){
-									this.animate=0;
+							}
+							if(this.movey==1){
+								this.sourceWidth=19;
+								this.sourceHeight=37;
+								this.width=38;
+								this.height=74;
+								if(this.y<500){
+									this.y+=0;
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2078;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2100;
+									}
+									if(this.animate>=12){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movey==2){
+								this.sourceWidth=19;
+								this.sourceHeight=37;
+								this.width=38;
+								this.height=74;
+								if(this.y>180){
+									this.y-=0;
+									this.sourceY=2140;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2122;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2144;
+									}
+									if(this.animate>=12){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==1){
+								if(this.x<590){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2004;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2046;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2079;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2121;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1958;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1925;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==3){
+								if(this.y<500){
+									this.sourceY=2344;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1949;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1916;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
+								}
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceY=2337;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2108;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2075;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2042;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2009;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+									}
 								}
 							}
 						}
-					}
-					if(this.skin==15){
-						this.sourceX=1788;
-						this.sourceY=2298;
+						if(this.skin==10){
+							if(this.movex==1){
+								this.sourceWidth=36;
+								this.sourceHeight=41;
+								this.width=72;
+								this.height=82;
+								if(this.x<590){
+									this.x+=1;
+									this.sourceY=2352;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1666;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1704;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movex==2){
+								this.sourceWidth=36;
+								this.sourceHeight=41;
+								this.width=72;
+								this.height=82;
+								if(this.x>70){
+									this.x-=1;
+									this.sourceY=2352;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1626;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1589;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movey==1){
+								this.sourceWidth=21;
+								this.sourceHeight=39;
+								this.width=42;
+								this.height=78;
+								if(this.y<500){
+									this.y+=1;
+									this.sourceY=2353;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1742;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1767;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movey==2){
+								this.sourceWidth=19;
+								this.sourceHeight=45;
+								this.width=38;
+								this.height=90;
+								if(this.y>180){
+									this.y-=1;
+									this.sourceY=2347;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=1794;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=1816;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==1){
+								if(this.x<590){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2004;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2046;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2079;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2121;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.sourceY=2286;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1958;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1925;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==3){
+								if(this.y<500){
+									this.sourceY=2344;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=1949;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=1916;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=1883;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=1850;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.sourceY=2337;
+									if(this.animate>=0&&this.animate<=6){
+										this.sourceX=2108;
+									}
+									if(this.animate>=6&&this.animate<=12){
+										this.sourceX=2075;
+									}
+									if(this.animate>=12&&this.animate<=18){
+										this.sourceX=2042;
+									}
+									if(this.animate>=18&&this.animate<=24){
+										this.sourceX=2009;
+									}
+									if(this.animate>=24){
+										this.animate=0;
+										this.attack=false;
+									}
+								}
+							}
+						}
+						if(this.skin==11){
+							if(this.movement==1){
+								if(this.x<610){
+									this.x+=6;
+									this.sourceY=1997;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2122;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2151;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movement= Math.floor(Math.random()*4+1);
+								}
+							}
+							if(this.movement==2){
+								if(this.x>70){
+									this.x-=6;
+									this.sourceY=1997;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2062;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2092;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movement= Math.floor(Math.random()*4+1);
+								}
+							}
+							if(this.movement==3){
+								if(this.y<520){
+									this.y+=6;
+									this.sourceY=2042;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2062;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2092;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movement= Math.floor(Math.random()*4+1);
+								}
+							}
+							if(this.movement==4){
+								if(this.y>180){
+									this.y-=6;
+									this.sourceY=2042;
+									if(this.animate>=0&&this.animate<=8){
+										this.sourceX=2122;
+									}
+									if(this.animate>=8&&this.animate<=16){
+										this.sourceX=2151;
+									}
+									if(this.animate>=16){
+										this.animate=0;
+									}
+								}else{
+									this.movement= Math.floor(Math.random()*4+1);
+								}
+							}	
+						
+						}
 					}
 				}
 				if(this.skin==0){
@@ -3434,60 +6280,17 @@ var LostWorld = function(canvas) {
 					this.sourceHeight=36;
 					this.width=40;
 					this.height=72;
-					if(this.movement==1){
-						if(this.x<610){
-							this.x+=1.3;
-							this.sourceX=1900;
-							this.sourceY=2209;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
+					if(this.animate<=4&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=4;
 					}
-					if(this.movement==2){
-						if(this.x>70){
-							this.x-=1.3;
-							this.sourceX=1878;
-							this.sourceY=2209;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==3){
-						if(this.y<520){
-							this.y+=1.3;
-							this.sourceX=1879;
-							this.sourceY=2257;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==4){
-						if(this.y>180){
-							this.y-=1.3;
-							this.sourceX=1900;
-							this.sourceY=2257;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-				}
-				if(this.skin==2){
-					this.fullhealth=3;
-					this.sourceWidth=20;
-					this.sourceHeight=39;
-					this.width=40;
-					this.height=78;
 					if(this.timemove>0){
 					 this.timemove-=1;				 
 					}
 					if(this.timemove<=0){
 						this.timemove=100;
 						this.movement= Math.floor(Math.random()*4+1);
-					}
-					if(this.animate<=16&&this.animate>=0){
-						this.animate+=1;
-					}else{
-						this.animate=16;
 					}
 					if(this.movement==1){
 						if(this.x<610){
@@ -3516,6 +6319,14 @@ var LostWorld = function(canvas) {
 						}else{
 							this.movement= Math.floor(Math.random()*4+1);
 						}
+					}
+				}
+				if(this.skin==2){
+					this.fullhealth=3;
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=16;
 					}
 				}
 				if(this.skin==3){
@@ -3631,42 +6442,10 @@ var LostWorld = function(canvas) {
 				}
 				if(this.skin==4){
 					this.fullhealth=5;
-					this.sourceWidth=30;
-					this.sourceHeight=48;
-					this.width=60;
-					this.height=96;
 					if(this.animate<=24&&this.animate>=0){
 						this.animate+=1;
 					}else{
 						this.animate=24;
-					}
-					if(this.movement==1){
-						if(this.x<590){
-							this.x+=1.5;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==2){
-						if(this.x>70){
-							this.x-=1.5;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==3){
-						if(this.y<500){
-							this.y+=1.5;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==4){
-						if(this.y>180){
-							this.y-=1.5;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
 					}
 				}
 				if(this.skin==5){
@@ -3820,49 +6599,10 @@ var LostWorld = function(canvas) {
 				}
 				if(this.skin==8){
 					this.fullhealth=5;
-					this.sourceWidth=20;
-					this.sourceHeight=37;
-					this.width=40;
-					this.height=74;
-					if(this.timemove>0){
-					 this.timemove-=1;						 
-					}
-					if(this.timemove<=0){
-						this.timemove=100;
-						this.movement= Math.floor(Math.random()*4+1);
-					}
 					if(this.animate<=16&&this.animate>=0){
 						this.animate+=1;
 					}else{
 						this.animate=16;
-					}
-					if(this.movement==1){
-						if(this.x<610){
-							this.x+=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==2){
-						if(this.x>70){
-							this.x-=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==3){
-						if(this.y<520){
-							this.y+=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==4){
-						if(this.y>180){
-							this.y-=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
 					}
 				}
 				if(this.skin==9){
@@ -3909,49 +6649,10 @@ var LostWorld = function(canvas) {
 				}
 				if(this.skin==10){
 					this.fullhealth=3;
-					this.sourceWidth=23;
-					this.sourceHeight=38;
-					this.width=46;
-					this.height=76;
-					if(this.timemove>0){
-						this.timemove-=1;				 
-					}
-					if(this.timemove<=0){
-						this.timemove=100;
-						this.movement= Math.floor(Math.random()*4+1);
-					}
 					if(this.animate<=16&&this.animate>=0){
 						this.animate+=1;
 					}else{
 						this.animate=16;
-					}
-					if(this.movement==1){
-						if(this.x<610){
-							this.x+=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==2){
-						if(this.x>70){
-							this.x-=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==3){
-						if(this.y<520){
-							this.y+=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
-					}
-					if(this.movement==4){
-						if(this.y>180){
-							this.y-=2;
-						}else{
-							this.movement= Math.floor(Math.random()*4+1);
-						}
 					}
 				}
 				if(this.skin==11){
@@ -4160,12 +6861,453 @@ var LostWorld = function(canvas) {
 						}
 					}
 				}
+				if(this.skin==17){
+					this.fullhealth=1;
+					this.sourceWidth=31;
+					this.sourceHeight=35;
+					this.width=62;
+					this.height=70;
+					this.sourceX=1794;
+					this.sourceY=1996;
+					if(this.animate<=8&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=8;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=1794;
+						this.sourceY=1996;	
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=4520;
+						this.sourceY=2000;	
+					}
+					if(this.timemove>0){
+						this.timemove-=1;			 
+					}
+					if(this.timemove<=0){
+						this.timemove=100;
+							this.movement= Math.floor(Math.random()*18+1);
+					}
+					if(this.movement==1){
+						this.x=90;
+						this.y=200;
+					}
+					if(this.movement==2){
+						this.x=190;
+						this.y=200;
+					}
+					if(this.movement==3){
+						this.x=290;
+						this.y=200;
+					}
+					if(this.movement==4){
+						this.x=390;
+						this.y=200;
+					}
+					if(this.movement==5){
+						this.x=490;
+						this.y=200;
+					}
+					if(this.movement==6){
+						this.x=590;
+						this.y=200;
+					}
+					if(this.movement==7){
+						this.x=90;
+						this.y=300;
+					}
+					if(this.movement==8){
+						this.x=190;
+						this.y=300;
+					}
+					if(this.movement==9){
+						this.x=290;
+						this.y=300;
+					}
+					if(this.movement==10){
+						this.x=390;
+						this.y=300;
+					}
+					if(this.movement==11){
+						this.x=490;
+						this.y=300;
+					}
+					if(this.movement==12){
+						this.x=590;
+						this.y=300;
+					}
+					if(this.movement==13){
+						this.x=90;
+						this.y=400;
+					}
+					if(this.movement==14){
+						this.x=190;
+						this.y=400;
+					}
+					if(this.movement==15){
+						this.x=290;
+						this.y=400;
+					}
+					if(this.movement==16){
+						this.x=390;
+						this.y=400;
+					}
+					if(this.movement==17){
+						this.x=490;
+						this.y=400;
+					}
+					if(this.movement==18){
+						this.x=590;
+						this.y=400;
+					}
+					if(this.movement==13){
+						this.x=90;
+						this.y=500;
+					}
+					if(this.movement==14){
+						this.x=190;
+						this.y=500;
+					}
+					if(this.movement==15){
+						this.x=290;
+						this.y=500;
+					}
+					if(this.movement==16){
+						this.x=390;
+						this.y=500;
+					}
+					if(this.movement==17){
+						this.x=490;
+						this.y=500;
+					}
+					if(this.movement==18){
+						this.x=590;
+						this.y=500;
+					}
+				}
+				if(this.skin==18){
+					this.fullhealth=1;
+					if(this.movement==1){
+						this.sourceWidth=19;
+						this.sourceHeight=7;
+						this.width=38;
+						this.height=14;
+						this.sourceX=2170;
+						this.sourceY=2150;
+						if(this.x<=610){
+							this.x+=4;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==2){
+						this.sourceWidth=19;
+						this.sourceHeight=7;
+						this.width=38;
+						this.height=14;
+						this.sourceX=2170;
+						this.sourceY=2140;
+						if(this.x>=70){
+							this.x-=4;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==3){
+						this.sourceWidth=7;
+						this.sourceHeight=19;
+						this.width=14;
+						this.height=38;
+						this.sourceX=2170;
+						this.sourceY=2158;
+						if(this.y<=520){
+							this.y+=4;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==4){
+						this.sourceWidth=7;
+						this.sourceHeight=19;
+						this.width=14;
+						this.height=38;
+						this.sourceX=2182;
+						this.sourceY=2158;
+						if(this.y>=180){
+							this.y-=4;
+						}else{
+							this.active=false;
+						}
+					}
+				}
+				if(this.skin==19){
+					this.fullhealth=1;
+					if(this.movement==1){
+						this.sourceWidth=15;
+						this.sourceHeight=7;
+						this.width=30;
+						this.height=14;
+						this.sourceX=1834;
+						this.sourceY=2006;
+						if(this.x<=610){
+							this.x+=4;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==2){
+						this.sourceWidth=15;
+						this.sourceHeight=7;
+						this.width=30;
+						this.height=14;
+						this.sourceX=1834;
+						this.sourceY=1998;
+						if(this.x>=70){
+							this.x-=4;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==3){
+						this.sourceWidth=7;
+						this.sourceHeight=15;
+						this.width=14;
+						this.height=30;
+						this.sourceX=1834;
+						this.sourceY=2015;
+						if(this.y<=520){
+							this.y+=4;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==4){
+						this.sourceWidth=7;
+						this.sourceHeight=15;
+						this.width=14;
+						this.height=30;
+						this.sourceX=1842;
+						this.sourceY=2015;
+						if(this.y>=180){
+							this.y-=4;
+						}else{
+							this.active=false;
+						}
+					}
+				}
+				if(this.skin==20){
+					this.fullhealth=1;
+					this.sourceWidth=23;
+					this.sourceHeight=24;
+					this.width=46
+					this.height=48;
+					if(this.timemove>0){
+					 this.timemove-=1;			 
+					}
+					if(this.timemove<=0){
+						this.timemove=50;
+						this.movement= Math.floor(Math.random()*4+1);
+					}
+					if(this.animate<=16&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=16;
+					}
+					if(this.movement==1){
+						if(this.x<570){
+							this.x+=3;
+							this.sourceY=2229;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=2891;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=2917;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=2943;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=2917;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==2){
+						if(this.x>110){
+							this.x-=3;
+							this.sourceY=2257;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=2891;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=2917;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=2943;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=2917;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==3){
+						if(this.y<480){
+							this.y+=3;
+							this.sourceY=2197;
+							if(this.animate>=0&&this.animate<=4){
+								this.sourceX=2891;
+							}
+							if(this.animate>=4&&this.animate<=8){
+								this.sourceX=2917;
+							}
+							if(this.animate>=8&&this.animate<=12){
+								this.sourceX=2943;
+							}
+							if(this.animate>=12&&this.animate<=16){
+								this.sourceX=2917;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+					if(this.movement==4){
+						if(this.y>220){
+							this.y-=3;
+							this.sourceY=2285;
+							if(this.animate>=0&&this.animate<=16){
+								this.sourceX=2891;
+							}
+							if(this.animate>=16){
+								this.animate=0;
+							}
+						}else{
+							this.movement= Math.floor(Math.random()*4+1);
+						}
+					}
+				}
+				if(this.skin==21){
+					this.fullhealth=999;
+					this.sourceX=2622;
+					this.sourceY=2266; 
+					this.sourceWidth=126;
+					this.sourceHeight=96;
+					this.width=252;
+					this.height=192;
+					if(this.movement==1){
+						if(this.x<50){
+							this.x+=4;
+						}else{
+							this.movement=2;	
+						}
+					}
+					if(this.movement==2){
+						if(this.x>=-350){
+							this.x-=4;
+						}else{
+							this.movement=1;	
+						}
+					}
+				}
+				if(this.skin==22){
+					this.fullhealth=999;
+					this.sourceX=2753;
+					this.sourceY=2266; 
+					this.sourceWidth=126;
+					this.sourceHeight=96;
+					this.width=252;
+					this.height=192;
+					if(this.movement==1){
+						if(this.x>400){
+							this.x-=4;
+						}else{
+							this.movement=2;	
+						}
+					}
+					if(this.movement==2){
+						if(this.x<=800){
+							this.x+=4;
+						}else{
+							this.movement=1;	
+						}
+					}
+				}
+				if(this.skin==23){
+					this.fullhealth=1;
+					this.sourceWidth=16;
+					this.sourceHeight=16;
+					this.width=32;
+					this.height=32;
+					if(this.animate<=12&&this.animate>=0){
+						this.animate+=1;
+					}else{
+						this.animate=12;
+					}
+					if(this.animate>=0&&this.animate<=4){
+						this.sourceX=2920;
+						this.sourceY=2175;
+					}
+					if(this.animate>=4&&this.animate<=8){
+						this.sourceX=2938;
+						this.sourceY=2175;
+					}
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX=2956;
+						this.sourceY=2175;
+					}
+					if(this.animate>=12){
+						this.animate=0;
+					}
+					if(this.movement==1){
+						if(this.x<=610){
+							this.x+=5;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==2){
+						if(this.x>=70){
+							this.x-=5;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==3){
+						if(this.y<=520){
+							this.y+=5;
+						}else{
+							this.active=false;
+						}
+					}
+					if(this.movement==4){
+						if(this.y>=180){
+							this.y-=5;
+						}else{
+							this.active=false;
+						}
+					}
+				}
 			}else{
 				this.skin=0;
 				this.sourceX=4520;
 				this.sourceY=2000;
 				this.x=0;
 				this.y=0;
+				this.attack=false;
+				this.hit=false;
+				this.timehit=0;
 			}
 		}
 	}
@@ -4210,29 +7352,55 @@ var LostWorld = function(canvas) {
 					}
 				}
 				if(this.skin==2){
-					this.sourceWidth=23;
-					this.sourceHeight=23;
-					this.width=46;
-					this.height=46;
-					if(this.animate<24){
+					this.sourceWidth=24;
+					this.sourceHeight=24;
+					this.width=48;
+					this.height=48;
+					if(this.animate<=12&&this.animate>=0){
 						this.animate+=1;
+					}else{
+						this.animate=12;
 					}
-					if(this.animate>=0&&this.animate<=8){
+					if(this.animate>=0&&this.animate<=4){
 						this.sourceX=1701;
-						this.sourceY=2220;
+						this.sourceY=2219;
 					}
-					if(this.animate>=8&&this.animate<=16){
+					if(this.animate>=4&&this.animate<=8){
 						this.sourceX=1725;
-						this.sourceY=2220;
+						this.sourceY=2219;
 					}
-					if(this.animate>=16&&this.animate<=24){
-						this.sourceX=1749;
-						this.sourceY=2220;
+					if(this.animate>=8&&this.animate<=12){
+						this.sourceX=1750;
+						this.sourceY=2219;
 					}
-					if(this.animate>=24){
+					if(this.animate>=12){
 						this.animate=0;
 						this.active=false;
 					}
+				}
+				if(this.skin==3){
+					this.sourceWidth=73;
+					this.sourceHeight=76;
+					this.width=146;
+					this.height=152;
+					this.sourceX=2214;
+					this.sourceY=2039;	
+				}
+				if(this.skin==4){
+					this.sourceWidth=32;
+					this.sourceHeight=58;
+					this.width=64;
+					this.height=116;
+					this.sourceX=2287;
+					this.sourceY=2180;					
+				}
+				if(this.skin==5){
+					this.sourceWidth=54;
+					this.sourceHeight=69;
+					this.width=108;
+					this.height=138;
+					this.sourceX=2395;
+					this.sourceY=2119;	
 				}
 			}else{
 				this.skin=0;
@@ -4254,11 +7422,37 @@ var LostWorld = function(canvas) {
 		this.masterSprite.addEventListener("load",function(){
 			that.start();
 		},false);
+		this.bgm1 = new Audio("sounds/bgm1.ogg");
+		this.bgm2 = new Audio("sounds/bgm2.ogg");
+		this.bgm3 = new Audio("sounds/bgm3.ogg");
+		this.bgm4 = new Audio("sounds/bgm4.ogg");
+		this.bgm5 = new Audio("sounds/bgm5.ogg");
+		this.bgm6 = new Audio("sounds/bgm6.ogg");
+		this.bgm7 = new Audio("sounds/bgm7.ogg");
+		this.bgm8 = new Audio("sounds/bgm8.ogg");
+		this.bgm9 = new Audio("sounds/bgm9.ogg");
+		this.bgm10 = new Audio("sounds/bgm10.ogg");
+		this.bgm11 = new Audio("sounds/bgm11.ogg");
+		this.bgm12 = new Audio("sounds/bgm12.ogg");
+		this.bgm13 = new Audio("sounds/bgm13.ogg");
+		this.se1 = new Audio("sounds/se1.ogg");
+		this.se2 = new Audio("sounds/se2.ogg");
+		this.se3 = new Audio("sounds/se3.ogg");
+		this.se4 = new Audio("sounds/se4.ogg");
+		this.se5 = new Audio("sounds/se5.ogg");
+		this.se6 = new Audio("sounds/se6.ogg");
+		this.se7 = new Audio("sounds/se7.ogg");
+		this.se8 = new Audio("sounds/se8.ogg");
+		this.se9 = new Audio("sounds/se9.ogg");
+		this.se10 = new Audio("sounds/se10.ogg");
+		this.se11 = new Audio("sounds/se11.ogg");
+		this.se12 = new Audio("sounds/se12.ogg");
+		this.se13 = new Audio("sounds/se13.ogg");
 	};
 	this.start = function() {
 		arena = new Background(0,0,360,330,0,0,720,660,0,0);
-		controller = new Logic(0,true,0,false,0,0);
-		hero = new Player(true,361,1331,20,38,340,420,42,72,0,false,false,false,false,3,0,1,0,100,10,10,0,700,0,0,0,false,false,false,false,false,false,false,false,0,false,0,false);
+		controller = new Logic(true,false,0,false,true,false,0,true,false,0,0,0,false,0,0,0,0,false,false)
+		hero = new Player(true,361,1331,20,38,360,300,42,72,0,false,false,false,false,3,0,1,0,100,10,10,0,100,0,0,0,false,false,false,false,false,false,false,false,0,false,0,false,false,false);
 		attack1 = new Playerattacks(false,562,1327,74,74,152,142,152,142,0,0,1);
 		attack2 = new Playerattacks(false,562,1327,74,74,152,142,152,142,0,0,2);
 		shine = new Effects(false,0,676,20,38,300,300,42,72,0,0);
@@ -4270,44 +7464,47 @@ var LostWorld = function(canvas) {
 		people = new Npc(false,0,676,20,38,300,300,42,72,0,20,1,2,0);
 		people1 = new Npc(false,0,676,20,38,300,300,42,72,0,20,1,2,0);
 		people2 = new Npc(false,0,676,20,38,300,300,42,72,0,20,1,0,0);
-		enemy1 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,4,0,0,false);
-		enemy2 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,3,0,0,false);
-		enemy3 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,2,0,0,false);
-		enemy4 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,2,0,0,false);
-		enemy5 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,4,0,0,false);
-		enemy6 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,3,0,0,false);
-		enemy7 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,2,0,0,false);
-		enemy8 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,2,0,0,false);
+		enemy1 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy2 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy3 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy4 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy5 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy6 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy7 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
+		enemy8 = new Antagonist(false,0,676,20,38,300,300,42,72,0,20,1,1,1,1,1,4,0,0,false,false);
 		boss = new Antleader(false,0,676,20,38,300,300,42,72,0,0,0,1,1,1,0,0,false);
 		bosspart1 = new Leaderparts(false,0,676,20,38,300,300,42,72,0,20,1,1,1,0);
 		bosspart2 = new Leaderparts(false,0,676,20,38,300,300,42,72,0,20,1,1,1,0);
 		bosspart3 = new Leaderparts(false,0,676,20,38,300,300,42,72,0,20,1,1,1,0);
 		bosspart4 = new Leaderparts(false,0,676,20,38,300,300,42,72,0,20,1,1,1,0);
-		bossbullet1 = new Leaderweapons(false,0,676,20,38,300,300,42,72,0,20,1,1,0);
-		bossbullet2 = new Leaderweapons(false,0,676,20,38,300,300,42,72,0,20,1,1,0);
-		bossbullet3 = new Leaderweapons(false,0,676,20,38,300,300,42,72,0,20,1,1,0);
-		exhibit1 = new Misc(true,361,1331,42,56,150,150,42,45,1,0);
-		exhibit2 = new Misc(true,361,1331,42,56,150,150,42,45,1,0);
-		exhibit3 = new Misc(false,361,1331,42,56,150,150,42,45,1,0);
-		dialog = new Infobox(true,1102,1329,221,42,100,100,442,82,1);
+		bossbullet1 = new Leaderweapons(false,0,676,20,38,300,300,42,72,0,20,1,0,0,1,0);
+		bossbullet2 = new Leaderweapons(false,0,676,20,38,300,300,42,72,0,20,1,0,0,1,0);
+		bossbullet3 = new Leaderweapons(false,0,676,20,38,300,300,42,72,0,20,1,0,0,1,0);
+		exhibit1 = new Misc(false,361,1331,42,56,82,222,42,45,1,0,0,0);
+		exhibit2 = new Misc(false,361,1331,42,56,150,150,42,45,1,0,0,0);
+		exhibit3 = new Misc(false,361,1331,42,56,150,150,42,45,1,0,0,0);
+		exhibit4 = new Misc(false,361,1331,42,56,150,150,42,45,1,0,0,0);
+		dialog = new Infobox(false,1102,1329,221,42,100,100,442,82,1);
 		slot1 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
 		slot2 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
 		slot3 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
 		slot4 = new Equipment(true,1102,1329,221,42,100,100,442,82,0);
-		item1 = new Items(true,1102,1329,221,42,100,100,442,82,0,0);
-		item2 = new Items(true,1102,1329,221,42,100,100,442,82,0,0);
-		item3 = new Items(true,1102,1329,221,42,100,100,442,82,0,0);
-		item4 = new Items(true,1102,1329,221,42,100,100,442,82,0,0);
-		item5 = new Items(true,1102,1329,221,42,100,100,442,82,0,0);
+		item1 = new Items(false,1102,1329,221,42,100,100,442,82,0,0);
+		item2 = new Items(false,1102,1329,221,42,100,100,442,82,0,0);
+		item3 = new Items(false,1102,1329,221,42,100,100,442,82,0,0);
+		item4 = new Items(false,1102,1329,221,42,100,100,442,82,0,0);
+		item5 = new Items(false,1102,1329,221,42,100,100,442,82,0,0);
 		hpbar = new Bars(true,1102,799,1451,42,100,100,442,82,1);
 		mpbar = new Bars(true,1102,799,1451,42,100,100,442,82,3);
 		powbar = new Bars(true,1102,799,1451,42,100,100,442,82,2);
-		bossbar = new Bars(true,1102,799,1451,42,100,100,442,82,1);
+		bossbar = new Bars(false,1102,799,1451,42,100,100,442,82,1);
 		avatar = new Bars(true,1102,799,1451,42,100,100,442,82,2);
 		layer1 = new Curtain(0,0,360,330,0,0,720,660,0,1);
 		this.entities.push(controller);
 		this.entities.push(arena);
 		this.entities.push(exhibit3);
+		this.entities.push(exhibit4);
+		this.entities.push(people);
 		this.entities.push(bosspart4);
 		this.entities.push(bosspart3);
 		this.entities.push(bosspart1);
@@ -4333,7 +7530,6 @@ var LostWorld = function(canvas) {
 		this.entities.push(avatar);
 		this.entities.push(attack1);
 		this.entities.push(attack2);
-		this.entities.push(people);
 		this.entities.push(exhibit1);
 		this.entities.push(exhibit2);
 		this.entities.push(people1);
@@ -4347,13 +7543,40 @@ var LostWorld = function(canvas) {
 		this.entities.push(enemy7);
 		this.entities.push(enemy8);
 		this.entities.push(shine);
+		this.entities.push(shine5);
 		this.entities.push(shine1);
 		this.entities.push(shine2);
 		this.entities.push(shine3);
 		this.entities.push(shine4);
-		this.entities.push(shine5);
 		this.entities.push(dialog);
 		this.entities.push(layer1);
+			window.addEventListener("keydown", function(event){
+				switch(event.keyCode){
+					case 39:
+						if(controller.choose==true){
+							controller.lang=1;
+							
+						}
+					break;
+					case 37:
+						if(controller.choose==true){
+							controller.lang=0;
+						}
+					break;
+					case 13:
+						if(controller.choose==true){
+							controller.timer=0;
+							controller.choose=false;
+							exhibit1.active=false;							
+						}
+						if(controller.title==true){
+							controller.activating=true;
+							controller.title=false;
+							controller.timer=300;
+						}
+					break;
+				}
+			},false)
 		if(hero.active==true){
 			window.addEventListener("keydown", function(event){
 				switch(event.keyCode){
@@ -4397,69 +7620,85 @@ var LostWorld = function(canvas) {
 						controller.hint=true;
 					break;
 					case 88:
-						if(hero.freeze==false){
-							if(hero.magic==true){
-								if(hero.fight==true){
-									if(hero.mana>0){
-										hero.bewitch=true;
+						if(controller.tutorial==true||controller.ingame==true){
+							if(hero.dead==false){
+								if(hero.freeze==false){
+									if(hero.magic==true){
+										if(hero.fight==true){
+											if(hero.mana>0){
+												hero.bewitch=true;
+											}
+										}
 									}
-								}
-							}
-							if(hero.bewitch==true){
-								attack1.active=false;
-								hero.mana-=1;
-								if(hero.fight==true){
-									attack2.active=true;
-									hero.fight=false;
-									if(attack2.active==true){
-										attack2.skin=3;
-										attack2.movement=hero.movement;
+									if(hero.bewitch==true){
+										attack1.active=false;
+										hero.mana-=1;
+										that.se1.pause();
+										that.se3.play();
+										if(hero.fight==true){
+											attack2.active=true;
+											hero.fight=false;
+											if(attack2.active==true){
+												attack2.skin=3;
+												attack2.movement=hero.movement;
+											}
+										}
+									}else{
+										if(hero.power<9){
+											hero.power+=1;
+										}else{
+											hero.power=0;
+										}
+										if(hero.power>=9){
+											hero.power=9;
+											attack2.skin=2;
+											attack2.active=true;
+											hero.speed.x=0;
+											hero.speed.y=0;
+											that.se6.play();
+										}
+										if(attack2.animate>=20){
+											hero.power=0;
+										}
 									}
-								}
-							}else{
-								if(hero.power<9){
-									hero.power+=1;
-								}else{
-									hero.power=0;
-								}
-								if(hero.power>=9){
-									hero.power=9;
-									attack2.skin=2;
-									attack2.active=true;
-									hero.speed.x=0;
-									hero.speed.y=0;
-								}
-								if(attack2.animate>=20){
-									hero.power=0;
 								}
 							}
 						}
 					break;
 					case 90:
-						if(hero.freeze==false){
-							attack1.skin=1;
-							attack1.active=true;
-							hero.speed.x=0;
-							hero.speed.y=0;
-							hero.fight=true;
-							hero.drink=true;
+						if(controller.tutorial==true||controller.ingame==true){
+							if(hero.dead==false){
+								if(hero.freeze==false){
+									attack1.skin=1;
+									attack1.active=true;
+									hero.speed.x=0;
+									hero.speed.y=0;
+									hero.fight=true;
+									hero.drink=true;
+								}
+								that.se1.play();
+							}
 						}
 					break;
 					case 67:
-						if(hero.freeze==false){
-							if(hero.drink==true){
-								if(hero.potion>0){
-									if(hero.mana<10){
-										hero.mana=10;
-										hero.potion-=1;
-										hero.drink=false;
+						if(hero.dead==false){
+							if(hero.freeze==false){
+								if(hero.drink==true){
+									if(hero.potion>0){
+										if(hero.mana<10){
+											hero.mana=10;
+											hero.potion-=1;
+											hero.drink=false;
+											that.se7.play();
+										}
 									}
-								}
-							}else{
-								if(hero.apple>0){
-									if(hero.health<10){
-										hero.apple-=1
-										hero.health=10;
+								}else{
+									if(hero.apple>0){
+										if(hero.health<10){
+											hero.apple-=1
+											hero.health=10;
+											that.se7.play();
+										}
 									}
 								}
 							}
@@ -4487,7 +7726,7 @@ var LostWorld = function(canvas) {
 					hero.power=0;
 				break;
 				case 90:
-					hero.fight=false;
+					//hero.fight=false;
 					hero.drink=false;
 				break;
 				case 88:
@@ -4503,307 +7742,422 @@ var LostWorld = function(canvas) {
 			dialog.skin=0;
 		}
 			if(hero.active==true){
-				if(hero.level<11){
-				hero.next=hero.level*176;
-				}else{
-					hero.level=10;	
+				hpbar.skin=1;
+				mpbar.skin=3;
+				powbar.skin=2;
+				if(hero.health<=0){
+					hero.dead=true;
+					avatar.skin=5;
+					attack1.active=false;
+					attack2.active=false;
+					layer1.active=false;
+					that.se11.pause();
+					that.se12.play();
 				}
-				if(hero.exp>hero.next){
-					controller.checkexp=hero.exp-hero.next;
-					hero.exp=controller.checkexp;
-					hero.level+=1;
-				}
-				if(hero.freeze==false){
-					if(hero.health>0){
-						avatar.skin=0;
+				if(hero.dead==false){
+					if(hero.level<11){
+					hero.next=hero.level*176;
 					}else{
-						avatar.skin=5	
+						hero.level=10;	
 					}
-					if(hero.bewitch==false){
-						if(hero.animate>=0&&hero.animate<=24){
-							hero.animate+=1;
+					if(hero.exp>hero.next){
+						controller.checkexp=hero.exp-hero.next;
+						hero.exp=controller.checkexp;
+						hero.level+=1;
+					}
+					if(hero.freeze==false){
+						if(hero.health>0){
+							avatar.skin=0;
 						}else{
-							hero.animate=0;
+							avatar.skin=5	
 						}
-						if(hero.moveDown==true){
-							if(hero.hit==false){
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=446;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=466;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=486;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=506;
-									hero.sourceY=2035;
-								}
+						if(hero.bewitch==false){
+							if(hero.animate>=0&&hero.animate<=24){
+								hero.animate+=1;
 							}else{
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=446;
-									hero.sourceY=2035;
+								hero.animate=0;
+							}
+							if(hero.fight==false){
+								attack1.sourceX=4520;
+								attack1.sourceY=2000;
+								if(hero.moveDown==true){
+									if(hero.hit==false){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=446;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=466;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=486;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=506;
+											hero.sourceY=2035;
+										}
+									}else{
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=446;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=486;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+									}
 								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
+								if(hero.moveUp==true){
+									if(hero.hit==false){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=366;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=386;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=406;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=426;
+											hero.sourceY=2035;
+										}
+									}else{
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=366;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=406;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}	
+									}
 								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=486;
-									hero.sourceY=2035;
+								if(hero.moveRight==true){
+									if(hero.hit==false){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=467;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=447;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=427;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=446;
+											hero.sourceY=1996;
+										}
+									}else{
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=467;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=427;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}	
+									}
 								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
+								if(hero.moveLeft==true){
+									if(hero.hit==false){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=366;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=386;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=406;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=386;
+											hero.sourceY=1996;
+										}
+									}else{
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=366;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=406;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+									}
 								}
 							}
-						}
-						if(hero.moveUp==true){
-							if(hero.hit==false){
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=366;
-									hero.sourceY=2035;
+							if(!hero.moveUp && !hero.moveDown){
+								hero.speed.y = 0;
+								if(hero.movement==3){
+									if(hero.hit==true){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=446;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=486;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+									}
 								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=386;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=406;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=426;
-									hero.sourceY=2035;
-								}
-							}else{
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=366;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=406;
-									hero.sourceY=2035;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
-								}	
-							}
-						}
-						if(hero.moveRight==true){
-							if(hero.hit==false){
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=466;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=446;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=426;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=446;
-									hero.sourceY=1996;
-								}
-							}else{
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=466;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=426;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
-								}	
-							}
-						}
-						if(hero.moveLeft==true){
-							if(hero.hit==false){
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=366;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=386;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=406;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=386;
-									hero.sourceY=1996;
-								}
-							}else{
-								if(hero.animate>=0&&hero.animate<=6){
-									hero.sourceX=366;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=6&&hero.animate<=12){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
-								}
-								if(hero.animate>=12&&hero.animate<=18){
-									hero.sourceX=406;
-									hero.sourceY=1996;
-								}
-								if(hero.animate>=18&&hero.animate<=24){
-									hero.sourceX=4520;
-									hero.sourceY=2000;
+								if(hero.movement==2){
+									if(hero.hit==true){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=366;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=406;
+											hero.sourceY=2035;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}	
+									}
 								}
 							}
-						}
-						if(!hero.moveUp && !hero.moveDown){
-							hero.speed.y = 0;
-						}
-						if(!hero.moveRight && !hero.moveLeft){
-							hero.speed.x = 0;
+							if(!hero.moveRight && !hero.moveLeft){
+								hero.speed.x = 0;
+								if(hero.movement==1){
+									if(hero.hit==true){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=466;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=426;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;	
+										}
+									}
+								}
+								if(hero.movement==0){
+									if(hero.hit==true){
+										if(hero.animate>=0&&hero.animate<=6){
+											hero.sourceX=366;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=6&&hero.animate<=12){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+										if(hero.animate>=12&&hero.animate<=18){
+											hero.sourceX=406;
+											hero.sourceY=1996;
+										}
+										if(hero.animate>=18&&hero.animate<=24){
+											hero.sourceX=4520;
+											hero.sourceY=2000;
+										}
+									}
+								}
+							}
+						}else{
+							hero.speed.x=0;
+							hero.speed.y=0;
+							if(hero.movement==0){
+								attack2.x=hero.x+55;
+								attack2.y=hero.y+15;
+							}
+							if(hero.movement==1){
+								attack2.x=hero.x-50;
+								attack2.y=hero.y+15;
+							}
+							if(hero.movement==2){
+								attack2.x=hero.x+12;
+								attack2.y=hero.y+50;
+							}
+							if(hero.movement==3){
+								attack2.x=hero.x+12;
+								attack2.y=hero.y-50;
+							}
+							if(hero.animate<20){
+								hero.animate+=1;
+								hero.sourceWidth=40;
+								hero.sourceHeight=40;
+								hero.width=80;
+								hero.height=75;
+							}else{
+								hero.sourceWidth=20;
+								hero.sourceHeight=38;
+								hero.width=42;
+								hero.height=72;
+								hero.animate=0;
+								hero.bewitch=false;
+							}
+							if(hero.movement==3){
+								if(hero.animate>=0&&hero.animate<=20){
+									hero.sourceX=729;
+									hero.sourceY=2302;
+								}
+							}
+							if(hero.movement==2){
+								if(hero.animate>=0&&hero.animate<=20){
+									hero.sourceX=685;
+									hero.sourceY=2302;
+								}
+							}
+							if(hero.movement==1){
+								if(hero.animate>=0&&hero.animate<=20){
+									hero.sourceX=726;
+									hero.sourceY=2348;
+								}
+							}
+							if(hero.movement==0){
+								if(hero.animate>=0&&hero.animate<=20){
+									hero.sourceX=679;
+									hero.sourceY=2348;
+								}
+							}
 						}
 					}else{
+						avatar.skin=4;
+						if(hero.movement==1){
+							if(hero.hit==false){
+								hero.sourceX=2598;
+								hero.sourceY=2254;
+							}else{
+								if(hero.animate>=0&&hero.animate<=8){
+									hero.sourceX=2598;
+									hero.sourceY=2254;
+								}
+								if(hero.animate>=8&&hero.animate<=8){
+									hero.sourceX=4520;
+									hero.sourceY=2000;
+								}
+								if(hero.animate>=16&&hero.animate<=24){
+									hero.sourceX=2598;
+									hero.sourceY=2254;
+								}
+								if(hero.animate<=24){
+									hero.animate=0;
+								}							
+							}
+						}
+						if(hero.movement==2){
+							if(hero.hit==false){
+								hero.sourceX=2575;
+								hero.sourceY=2293;
+							}else{
+								if(hero.animate>=0&&hero.animate<=8){
+									hero.sourceX=2575;
+									hero.sourceY=2293;
+								}
+								if(hero.animate>=8&&hero.animate<=8){
+									hero.sourceX=4520;
+									hero.sourceY=2000;
+								}
+								if(hero.animate>=16&&hero.animate<=24){
+									hero.sourceX=2575;
+									hero.sourceY=2293;
+								}
+								if(hero.animate<=24){
+									hero.animate=0;
+								}							
+							}
+						}
+						if(hero.movement==3){
+							if(hero.hit==false){
+								hero.sourceX=2598;
+								hero.sourceY=2293;
+							}else{
+								if(hero.animate>=0&&hero.animate<=8){
+									hero.sourceX=2598;
+									hero.sourceY=2293;
+								}
+								if(hero.animate>=8&&hero.animate<=8){
+									hero.sourceX=4520;
+									hero.sourceY=2000;
+								}
+								if(hero.animate>=16&&hero.animate<=24){
+									hero.sourceX=2598;
+									hero.sourceY=2293;
+								}
+								if(hero.animate<=24){
+									hero.animate=0;
+								}			
+							}
+						}
+					}
+				}else{
+					if(controller.timer2<=200){
+						controller.timer2+=1;
+						hero.sourceX=487;
+						hero.sourceY=1996;
+						hero.sourceWidth=35;
+						hero.width=70;
 						hero.speed.x=0;
 						hero.speed.y=0;
-						if(hero.movement==0){
-							attack2.x=hero.x+55;
-							attack2.y=hero.y+15;
-						}
-						if(hero.movement==1){
-							attack2.x=hero.x-50;
-							attack2.y=hero.y+15;
-						}
-						if(hero.movement==2){
-							attack2.x=hero.x+12;
-							attack2.y=hero.y+50;
-						}
-						if(hero.movement==3){
-							attack2.x=hero.x+12;
-							attack2.y=hero.y-50;
-						}
-						if(hero.animate<20){
-							hero.animate+=1;
-							hero.sourceWidth=40;
-							hero.sourceHeight=40;
-							hero.width=80;
-							hero.height=75;
-						}else{
-							hero.sourceWidth=20;
-							hero.sourceHeight=38;
-							hero.width=42;
-							hero.height=72;
-							hero.animate=0;
-							hero.bewitch=false;
-						}
-						if(hero.movement==3){
-							if(hero.animate>=0&&hero.animate<=20){
-								hero.sourceX=729;
-								hero.sourceY=2302;
-							}
-						}
-						if(hero.movement==2){
-							if(hero.animate>=0&&hero.animate<=20){
-								hero.sourceX=685;
-								hero.sourceY=2302;
-							}
-						}
-						if(hero.movement==1){
-							if(hero.animate>=0&&hero.animate<=20){
-								hero.sourceX=726;
-								hero.sourceY=2348;
-							}
-						}
-						if(hero.movement==0){
-							if(hero.animate>=0&&hero.animate<=20){
-								hero.sourceX=679;
-								hero.sourceY=2348;
-							}
-						}
+					}else if(controller.timer2==192){
+						layer1.active=true;
+						layer1.skin=4;
 					}
-				}else{
-					avatar.skin=4;
-					if(hero.movement==1){
-						if(hero.hit==false){
-							hero.sourceX=2598;
-							hero.sourceY=2254;
-						}else{
-							if(hero.animate>=0&&hero.animate<=8){
-								hero.sourceX=2598;
-								hero.sourceY=2254;
-							}
-							if(hero.animate>=8&&hero.animate<=8){
-								hero.sourceX=4520;
-								hero.sourceY=2000;
-							}
-							if(hero.animate>=16&&hero.animate<=24){
-								hero.sourceX=2598;
-								hero.sourceY=2254;
-							}
-							if(hero.animate<=24){
-								hero.animate=0;
-							}							
-						}
-					}
-					if(hero.movement==2){
-						if(hero.hit==false){
-							hero.sourceX=2575;
-							hero.sourceY=2293;
-						}else{
-							if(hero.animate>=0&&hero.animate<=8){
-								hero.sourceX=2575;
-								hero.sourceY=2293;
-							}
-							if(hero.animate>=8&&hero.animate<=8){
-								hero.sourceX=4520;
-								hero.sourceY=2000;
-							}
-							if(hero.animate>=16&&hero.animate<=24){
-								hero.sourceX=2575;
-								hero.sourceY=2293;
-							}
-							if(hero.animate<=24){
-								hero.animate=0;
-							}							
-						}
-					}
-					if(hero.movement==3){
-						if(hero.hit==false){
-							hero.sourceX=2598;
-							hero.sourceY=2293;
-						}else{
-							if(hero.animate>=0&&hero.animate<=8){
-								hero.sourceX=2598;
-								hero.sourceY=2293;
-							}
-							if(hero.animate>=8&&hero.animate<=8){
-								hero.sourceX=4520;
-								hero.sourceY=2000;
-							}
-							if(hero.animate>=16&&hero.animate<=24){
-								hero.sourceX=2598;
-								hero.sourceY=2293;
-							}
-							if(hero.animate<=24){
-								hero.animate=0;
-							}			
-						}
+					if(controller.timer2>=200){
+						controller.gameover=true;
+						controller.timer2=0;
 					}
 				}
 			}else{
@@ -4816,6 +8170,7 @@ var LostWorld = function(canvas) {
 		hero.y = Math.max(0, Math.min(hero.y + hero.speed.y, that.gameMap.height - hero.height));
 		//wywolywanie funkcji dla poszczegolnych obiektow
 		that.draw();
+		controller.states();
 		controller.help();
 		hero.movements();
 		slot1.animating();
@@ -4856,6 +8211,7 @@ var LostWorld = function(canvas) {
 		exhibit1.animating();
 		exhibit2.animating();
 		exhibit3.animating();
+		exhibit4.animating();
 		shine.animating();
 		shine1.animating();
 		shine2.animating();
@@ -4879,28 +8235,51 @@ var LostWorld = function(canvas) {
 				if(hero.movement==0){
 					attack1.x=hero.x-19;
 					attack1.y=hero.y;
+					hero.active=false;
 				}
 				if(hero.movement==1){
 					attack1.x=hero.x-55;
 					attack1.y=hero.y;
+					hero.active=false;
 				}
 				if(hero.movement==2){
 					attack1.x=hero.x;
 					attack1.y=hero.y-17;
+					hero.active=false;
 				}
 				if(hero.movement==3){
 					attack1.x=hero.x;
 					attack1.y=hero.y-17;
-				}	
+					hero.active=false;
+				}
+				if(attack1.animate<=1){
+					if(hero.movement==0){
+						hero.sourceX=366;
+						hero.sourceY=1996;
+					}
+					if(hero.movement==1){
+						hero.sourceX=467;
+						hero.sourceY=1996;
+					}
+					if(hero.movement==2){
+						hero.sourceX=366;
+						hero.sourceY=2035;
+					}
+					if(hero.movement==3){
+						hero.sourceX=466;
+						hero.sourceY=2035;
+					}
+				}
 			}
 		}else{
 			hero.active=true;
+			hero.fight=false;
 			if(hero.movement==0){
 				hero.sourceX=366;
 				hero.sourceY=1996;
 			}
 			if(hero.movement==1){
-				hero.sourceX=466;
+				hero.sourceX=467;
 				hero.sourceY=1996;
 			}
 			if(hero.movement==2){
@@ -4940,7 +8319,7 @@ var LostWorld = function(canvas) {
 			}
 		}else{
 			hero.active=true;
-		}	
+		}
 		//wyswietlanie energii i many gracza
 		hpbar.animate=hero.health;
 		if(hero.health>10){
@@ -4968,6 +8347,8 @@ var LostWorld = function(canvas) {
 		}
 		if(hero.magic==true){
 			slot4.skin=5;
+		}else{
+			slot4.skin=0;
 		}
 		if(hero.key==false){
 			if(hero.carrot==true){
@@ -5001,6 +8382,7 @@ var LostWorld = function(canvas) {
 		}
 		//kolizja z itemami
 		if(hero.y-item1.y>-70&&hero.y-item1.y<item1.height+10&&hero.x-item1.x>-50&&hero.x-item1.x<item1.width+10){
+			that.se5.play();
 			if(item1.skin==1){
 				hero.gold+=5;
 				item1.active=false;
@@ -5027,6 +8409,7 @@ var LostWorld = function(canvas) {
 			}
 		}
 		if(hero.y-item2.y>-70&&hero.y-item2.y<item2.height+10&&hero.x-item2.x>-50&&hero.x-item2.x<item2.width+10){
+			that.se5.play();
 			if(item2.skin==1){
 				hero.gold+=5;
 				item2.active=false;
@@ -5053,6 +8436,7 @@ var LostWorld = function(canvas) {
 			}
 		}
 		if(hero.y-item3.y>-70&&hero.y-item3.y<item3.height+10&&hero.x-item3.x>-50&&hero.x-item3.x<item3.width+10){
+			that.se5.play();
 			if(item3.skin==1){
 				hero.gold+=5;
 				item3.active=false;
@@ -5079,6 +8463,7 @@ var LostWorld = function(canvas) {
 			}
 		}
 		if(hero.y-item4.y>-70&&hero.y-item4.y<item4.height+10&&hero.x-item4.x>-50&&hero.x-item4.x<item4.width+10){
+			that.se5.play();
 			if(item4.skin==1){
 				hero.gold+=5;
 				item4.active=false;
@@ -5105,6 +8490,7 @@ var LostWorld = function(canvas) {
 			}
 		}
 		if(hero.y-item5.y>-70&&hero.y-item5.y<item5.height+10&&hero.x-item5.x>-50&&hero.x-item5.x<item5.width+10){
+			that.se5.play();
 			if(item5.skin==1){
 				hero.gold+=5;
 				item5.active=false;
@@ -5127,6 +8513,73 @@ var LostWorld = function(canvas) {
 				if(hero.potion<9){
 					hero.potion+=1;
 					item5.active=false;
+				}
+			}
+		}
+		//kolizje z ludzmi
+		if(people.y+people.height>hero.y&&people.y<hero.y+hero.height&&people.x+people.width>hero.x&&people.x<hero.x+hero.width){
+			if(hero.x-people.x>-50){
+				if(hero.x<573){
+					hero.x+=30;
+				}
+			}
+			if(hero.x-people.x<people.width+10){
+				if(hero.x>110){
+					hero.x-=30;
+				}
+			}
+			if(hero.y-people.y>-50){
+				if(hero.y<482){
+					hero.y+=30;
+				}
+			}
+			if(hero.y-people.y<people.height+10){
+				if(hero.y>225){
+					hero.y-=10;
+				}
+			}
+		}
+		if(people1.y+people1.height>hero.y&&people1.y<hero.y+hero.height&&people1.x+people1.width>hero.x&&people1.x<hero.x+hero.width){
+			if(hero.x-people1.x>-50){
+				if(hero.x<573){
+					hero.x+=30;
+				}
+			}
+			if(hero.x-people1.x<people1.width+10){
+				if(hero.x>110){
+					hero.x-=30;
+				}
+			}
+			if(hero.y-people1.y>-50){
+				if(hero.y<482){
+					hero.y+=30;
+				}
+			}
+			if(hero.y-people1.y<people1.height+10){
+				if(hero.y>225){
+					hero.y-=10;
+				}
+			}
+		}
+		if(people2.y+people2.height>hero.y&&people2.y<hero.y+hero.height&&people2.x+people2.width>hero.x&&people2.x<hero.x+hero.width){
+			if(hero.x-people2.x>-50){
+				if(hero.x<573){
+					hero.x+=30;
+				}
+			}
+			if(hero.x-people2.x<people2.width+10){
+				if(hero.x>110){
+					hero.x-=30;
+				}
+			}
+			if(hero.y-people2.y>-50){
+				if(hero.y<482){
+					hero.y+=30;
+				}
+			}
+			if(hero.y-people2.y<people2.height+10){
+				if(hero.y>225){
+					hero.y-=10;
 				}
 			}
 		}
@@ -5242,10 +8695,1120 @@ var LostWorld = function(canvas) {
 				}
 			}
 		}
+		//ataki wrogów
+		if(enemy1.active==true){
+			if(enemy1.skin==2){
+				if(hero.x-enemy1.x<70&&hero.x-enemy1.x>-70&&hero.y-enemy1.y<70&&hero.y-enemy1.y>-70){
+					if(enemy1.hit==false){
+						enemy1.attack=true;
+						enemy1.movement=0;
+						if(hero.x-enemy1.x>30&&hero.x-enemy1.x<70){
+							enemy1.movex=1;
+							enemy1.movey=0;
+						}
+						if(hero.x-enemy1.x<-30&&hero.x-enemy1.x>-70){
+							enemy1.movex=2;
+							enemy1.movey=0;
+						}
+						if(hero.y-enemy1.y>30&&hero.y-enemy1.y<70){
+							enemy1.movex=0;
+							enemy1.movey=1;
+						}
+						if(hero.y-enemy1.y<-30&&hero.y-enemy1.y>-70){
+							enemy1.movex=0;
+							enemy1.movey=2;
+						}
+					}else{
+					enemy1.attack=false;	
+					}
+				}else{
+					enemy1.attack=false;	
+				}
+			}
+			if(enemy1.skin==3){
+				enemy5.skin=19;
+				if(enemy5.active==false){
+					enemy5.x=enemy1.x;
+					enemy5.y=enemy1.y;
+				}
+				if(hero.x-enemy1.x<150&&hero.x-enemy1.x>-150&&hero.y-enemy1.y<150&&hero.y-enemy1.y>-150){
+					if(enemy1.hit==false){
+						if(enemy5.active==false){
+							enemy1.attack=true;
+							if(enemy1.movement==1){
+								enemy5.x=enemy1.x+5;
+								enemy5.y=enemy1.y+15;
+							}
+							if(enemy1.movement==2){
+								enemy5.x=enemy1.x-25;
+								enemy5.y=enemy1.y+15;
+							}
+							if(enemy1.movement==3){
+								enemy5.x=enemy1.x+15;
+								enemy5.y=enemy1.y-40;
+							}
+							if(enemy1.movement==4){
+								enemy5.x=enemy1.x+20;
+								enemy5.y=enemy1.y+20;
+							}
+							if(hero.x-enemy1.x>50&&hero.x-enemy1.x<150){
+								enemy1.movement=1;
+								enemy5.active=true;
+								enemy5.movement=1;
+							}
+							if(hero.x-enemy1.x<-50&&hero.x-enemy1.x>-150){
+								enemy1.movement=2;
+								enemy5.active=true;
+								enemy5.movement=2;
+							}
+							if(hero.y-enemy1.y>50&&hero.y-enemy1.y<150){
+								enemy1.movement=3;
+								enemy5.active=true;
+								enemy5.movement=3;
+							}
+							if(hero.y-enemy1.y<-50&&hero.y-enemy1.y>-150){
+								enemy1.movement=4;
+								enemy5.active=true;
+								enemy5.movement=4;
+							}
+						}else{
+						enemy1.attack=false;	
+						}
+					}else{
+						enemy1.attack=false;	
+					}
+				}
+			}
+			if(enemy1.skin==4||enemy1.skin==12){
+				if(hero.x-enemy1.x<100&&hero.x-enemy1.x>-100&&hero.y-enemy1.y<100&&hero.y-enemy1.y>-100){
+					if(enemy1.hit==false){
+						enemy1.attack=true;
+						enemy1.movement=0;
+						if(hero.x-enemy1.x>50&&hero.x-enemy1.x<100){
+							enemy1.movex=1;
+							enemy1.movey=0;
+						}
+						if(hero.x-enemy1.x<-50&&hero.x-enemy1.x>-100){
+							enemy1.movex=2;
+							enemy1.movey=0;
+						}
+						if(hero.y-enemy1.y>50&&hero.y-enemy1.y<100){
+							enemy1.movex=0;
+							enemy1.movey=1;
+						}
+						if(hero.y-enemy1.y<-50&&hero.y-enemy1.y>-100){
+							enemy1.movex=0;
+							enemy1.movey=2;
+						}
+					}else{
+					enemy1.attack=false;	
+					}
+				}else{
+					enemy1.attack=false;	
+				}
+			}
+			if(enemy1.skin==8){
+				enemy5.skin=18;
+				if(enemy5.active==false){
+					enemy5.x=enemy1.x;
+					enemy5.y=enemy1.y;
+				}
+				if(hero.x-enemy1.x<100&&hero.x-enemy1.x>-100&&hero.y-enemy1.y<100&&hero.y-enemy1.y>-100){
+					if(enemy1.hit==false){
+						if(enemy5.active==false){
+							enemy1.attack=true;
+							enemy1.movement=0;
+							if(enemy1.movex==1){
+								enemy5.x=enemy1.x+20;
+								enemy5.y=enemy1.y+20;
+							}
+							if(enemy1.movex==2){
+								enemy5.x=enemy1.x-20;
+								enemy5.y=enemy1.y+20;
+							}
+							if(enemy1.movey==1){
+								enemy5.x=enemy1.x+10;
+								enemy5.y=enemy1.y+40;
+							}
+							if(enemy1.movey==2){
+								enemy5.x=enemy1.x+10;
+								enemy5.y=enemy1.y-40;
+							}
+							if(hero.x-enemy1.x>50&&hero.x-enemy1.x<100){
+								enemy1.movex=1;
+								enemy1.movey=0;
+								enemy5.active=true;
+								enemy5.movement=1;
+							}
+							if(hero.x-enemy1.x<-50&&hero.x-enemy1.x>-100){
+								enemy1.movex=2;
+								enemy1.movey=0;
+								enemy5.active=true;
+								enemy5.movement=2;
+							}
+							if(hero.y-enemy1.y>50&&hero.y-enemy1.y<100){
+								enemy1.movex=0;
+								enemy1.movey=1;
+								enemy5.active=true;
+								enemy5.movement=3;
+							}
+							if(hero.y-enemy1.y<-50&&hero.y-enemy1.y>-100){
+								enemy1.movex=0;
+								enemy1.movey=2;
+								enemy5.active=true;
+								enemy5.movement=4;
+							}
+						}else{
+						enemy1.attack=false;	
+						}
+					}else{
+						enemy1.attack=false;	
+					}
+				}
+			}
+			if(enemy1.skin==9){
+				enemy5.skin=23;
+				if(enemy5.active==false){
+					enemy5.x=enemy1.x;
+					enemy5.y=enemy1.y;
+				}
+				if(hero.x-enemy1.x<150&&hero.x-enemy1.x>-150&&hero.y-enemy1.y<150&&hero.y-enemy1.y>-150){
+					if(enemy1.hit==false){
+						if(enemy5.active==false){
+							enemy1.attack=true;
+							if(enemy1.movement==1){
+								enemy5.x=enemy1.x+5;
+								enemy5.y=enemy1.y+15;
+							}
+							if(enemy1.movement==2){
+								enemy5.x=enemy1.x-25;
+								enemy5.y=enemy1.y+15;
+							}
+							if(enemy1.movement==3){
+								enemy5.x=enemy1.x+15;
+								enemy5.y=enemy1.y-40;
+							}
+							if(enemy1.movement==4){
+								enemy5.x=enemy1.x+20;
+								enemy5.y=enemy1.y+20;
+							}
+							if(hero.x-enemy1.x>50&&hero.x-enemy1.x<150){
+								enemy1.movement=1;
+								enemy5.active=true;
+								enemy5.movement=1;
+							}
+							if(hero.x-enemy1.x<-50&&hero.x-enemy1.x>-150){
+								enemy1.movement=2;
+								enemy5.active=true;
+								enemy5.movement=2;
+							}
+							if(hero.y-enemy1.y>50&&hero.y-enemy1.y<150){
+								enemy1.movement=3;
+								enemy5.active=true;
+								enemy5.movement=3;
+							}
+							if(hero.y-enemy1.y<-50&&hero.y-enemy1.y>-150){
+								enemy1.movement=4;
+								enemy5.active=true;
+								enemy5.movement=4;
+							}
+						}else{
+						enemy1.attack=false;	
+						}
+					}else{
+						enemy1.attack=false;	
+					}
+				}
+			}
+			if(enemy1.skin==10){
+				if(hero.x-enemy1.x<70&&hero.x-enemy1.x>-70&&hero.y-enemy1.y<70&&hero.y-enemy1.y>-70){
+					if(enemy1.hit==false){
+						enemy1.attack=true;
+						enemy1.movement=0;
+						if(hero.x-enemy1.x>30&&hero.x-enemy1.x<70){
+							enemy1.movex=1;
+							enemy1.movey=0;
+						}
+						if(hero.x-enemy1.x<-30&&hero.x-enemy1.x>-70){
+							enemy1.movex=2;
+							enemy1.movey=0;
+						}
+						if(hero.y-enemy1.y>30&&hero.y-enemy1.y<70){
+							enemy1.movex=0;
+							enemy1.movey=1;
+						}
+						if(hero.y-enemy1.y<-30&&hero.y-enemy1.y>-70){
+							enemy1.movex=0;
+							enemy1.movey=2;
+						}
+					}else{
+					enemy1.attack=false;	
+					}
+				}else{
+					enemy1.attack=false;	
+				}
+			}
+			if(enemy1.skin==11){
+				if(hero.x-enemy1.x<100&&hero.x-enemy1.x>-100&&hero.y-enemy1.y<100&&hero.y-enemy1.y>-100){
+					if(enemy1.hit==false){
+						enemy1.attack=true;
+						enemy1.movement=0;
+						if(hero.x-enemy1.x>50&&hero.x-enemy1.x<100){
+							enemy1.movement=1;
+						}
+						if(hero.x-enemy1.x<-50&&hero.x-enemy1.x>-100){
+							enemy1.movement=2;
+						}
+						if(hero.y-enemy1.y>50&&hero.y-enemy1.y<100){
+							enemy1.movement=3;
+						}
+						if(hero.y-enemy1.y<-50&&hero.y-enemy1.y>-100){
+							enemy1.movement=4;
+						}
+					}else{
+					enemy1.attack=false;	
+					}
+				}else{
+					enemy1.attack=false;	
+				}
+			}
+		}
+		if(enemy2.active==true){
+			if(enemy2.skin==2){
+				if(hero.x-enemy2.x<70&&hero.x-enemy2.x>-70&&hero.y-enemy2.y<70&&hero.y-enemy2.y>-70){
+					if(enemy2.hit==false){
+						enemy2.attack=true;
+						enemy2.movement=0;
+						if(hero.x-enemy2.x>30&&hero.x-enemy2.x<70){
+							enemy2.movex=1;
+							enemy2.movey=0;
+						}
+						if(hero.x-enemy2.x<-30&&hero.x-enemy2.x>-70){
+							enemy2.movex=2;
+							enemy2.movey=0;
+						}
+						if(hero.y-enemy2.y>30&&hero.y-enemy2.y<70){
+							enemy2.movex=0;
+							enemy2.movey=1;
+						}
+						if(hero.y-enemy2.y<-30&&hero.y-enemy2.y>-70){
+							enemy2.movex=0;
+							enemy2.movey=2;
+						}
+					}else{
+					enemy2.attack=false;	
+					}
+				}else{
+					enemy2.attack=false;	
+				}
+			}
+			if(enemy2.skin==3){
+				enemy6.skin=19;
+				if(enemy6.active==false){
+					enemy6.x=enemy2.x;
+					enemy6.y=enemy2.y;
+				}
+				if(hero.x-enemy2.x<150&&hero.x-enemy2.x>-150&&hero.y-enemy2.y<150&&hero.y-enemy2.y>-150){
+					if(enemy2.hit==false){
+						if(enemy6.active==false){
+							enemy2.attack=true;
+							if(enemy2.movement==1){
+								enemy6.x=enemy2.x+5;
+								enemy6.y=enemy2.y+15;
+							}
+							if(enemy2.movement==2){
+								enemy6.x=enemy2.x-25;
+								enemy6.y=enemy2.y+15;
+							}
+							if(enemy2.movement==3){
+								enemy6.x=enemy2.x+15;
+								enemy6.y=enemy2.y-40;
+							}
+							if(enemy2.movement==4){
+								enemy6.x=enemy2.x+20;
+								enemy6.y=enemy2.y+20;
+							}
+							if(hero.x-enemy2.x>50&&hero.x-enemy2.x<150){
+								enemy2.movement=1;
+								enemy6.active=true;
+								enemy6.movement=1;
+							}
+							if(hero.x-enemy2.x<-50&&hero.x-enemy2.x>-150){
+								enemy2.movement=2;
+								enemy6.active=true;
+								enemy6.movement=2;
+							}
+							if(hero.y-enemy2.y>50&&hero.y-enemy2.y<150){
+								enemy2.movement=3;
+								enemy6.active=true;
+								enemy6.movement=3;
+							}
+							if(hero.y-enemy2.y<-50&&hero.y-enemy2.y>-150){
+								enemy2.movement=4;
+								enemy6.active=true;
+								enemy6.movement=4;
+							}
+						}else{
+						enemy2.attack=false;	
+						}
+					}else{
+						enemy2.attack=false;	
+					}
+				}
+			}
+			if(enemy2.skin==4||enemy2.skin==12){
+				if(hero.x-enemy2.x<100&&hero.x-enemy2.x>-100&&hero.y-enemy2.y<100&&hero.y-enemy2.y>-100){
+					if(enemy2.hit==false){
+						enemy2.attack=true;
+						enemy2.movement=0;
+						if(hero.x-enemy2.x>50&&hero.x-enemy2.x<100){
+							enemy2.movex=1;
+							enemy2.movey=0;
+						}
+						if(hero.x-enemy2.x<-50&&hero.x-enemy2.x>-100){
+							enemy2.movex=2;
+							enemy2.movey=0;
+						}
+						if(hero.y-enemy2.y>50&&hero.y-enemy2.y<100){
+							enemy2.movex=0;
+							enemy2.movey=1;
+						}
+						if(hero.y-enemy2.y<-50&&hero.y-enemy2.y>-100){
+							enemy2.movex=0;
+							enemy2.movey=2;
+						}
+					}else{
+					enemy2.attack=false;	
+					}
+				}else{
+					enemy2.attack=false;	
+				}
+			}
+			if(enemy2.skin==8){
+				enemy6.skin=18;
+				if(enemy6.active==false){
+					enemy6.x=enemy2.x;
+					enemy6.y=enemy2.y;
+				}
+				if(hero.x-enemy2.x<100&&hero.x-enemy2.x>-100&&hero.y-enemy2.y<100&&hero.y-enemy2.y>-100){
+					if(enemy2.hit==false){
+						if(enemy6.active==false){
+							enemy2.attack=true;
+							enemy2.movement=0;
+							if(enemy2.movex==1){
+								enemy6.x=enemy2.x+20;
+								enemy6.y=enemy2.y+20;
+							}
+							if(enemy2.movex==2){
+								enemy6.x=enemy2.x-20;
+								enemy6.y=enemy2.y+20;
+							}
+							if(enemy2.movey==1){
+								enemy6.x=enemy2.x+10;
+								enemy6.y=enemy2.y+40;
+							}
+							if(enemy2.movey==2){
+								enemy6.x=enemy2.x+10;
+								enemy6.y=enemy2.y-40;
+							}
+							if(hero.x-enemy2.x>50&&hero.x-enemy2.x<100){
+								enemy2.movex=1;
+								enemy2.movey=0;
+								enemy6.active=true;
+								enemy6.movement=1;
+							}
+							if(hero.x-enemy2.x<-50&&hero.x-enemy2.x>-100){
+								enemy2.movex=2;
+								enemy2.movey=0;
+								enemy6.active=true;
+								enemy6.movement=2;
+							}
+							if(hero.y-enemy2.y>50&&hero.y-enemy2.y<100){
+								enemy2.movex=0;
+								enemy2.movey=1;
+								enemy6.active=true;
+								enemy6.movement=3;
+							}
+							if(hero.y-enemy2.y<-50&&hero.y-enemy2.y>-100){
+								enemy2.movex=0;
+								enemy2.movey=2;
+								enemy6.active=true;
+								enemy6.movement=4;
+							}
+						}else{
+						enemy2.attack=false;	
+						}
+					}else{
+						enemy2.attack=false;	
+					}
+				}
+			}
+			if(enemy2.skin==9){
+				enemy6.skin=23;
+				if(enemy6.active==false){
+					enemy6.x=enemy2.x;
+					enemy6.y=enemy2.y;
+				}
+				if(hero.x-enemy2.x<150&&hero.x-enemy2.x>-150&&hero.y-enemy2.y<150&&hero.y-enemy2.y>-150){
+					if(enemy2.hit==false){
+						if(enemy6.active==false){
+							enemy2.attack=true;
+							if(enemy2.movement==1){
+								enemy6.x=enemy2.x+5;
+								enemy6.y=enemy2.y+15;
+							}
+							if(enemy2.movement==2){
+								enemy6.x=enemy2.x-25;
+								enemy6.y=enemy2.y+15;
+							}
+							if(enemy2.movement==3){
+								enemy6.x=enemy2.x+15;
+								enemy6.y=enemy2.y-40;
+							}
+							if(enemy2.movement==4){
+								enemy6.x=enemy2.x+20;
+								enemy6.y=enemy2.y+20;
+							}
+							if(hero.x-enemy2.x>50&&hero.x-enemy2.x<150){
+								enemy2.movement=1;
+								enemy6.active=true;
+								enemy6.movement=1;
+							}
+							if(hero.x-enemy2.x<-50&&hero.x-enemy2.x>-150){
+								enemy2.movement=2;
+								enemy6.active=true;
+								enemy6.movement=2;
+							}
+							if(hero.y-enemy2.y>50&&hero.y-enemy2.y<150){
+								enemy2.movement=3;
+								enemy6.active=true;
+								enemy6.movement=3;
+							}
+							if(hero.y-enemy2.y<-50&&hero.y-enemy2.y>-150){
+								enemy2.movement=4;
+								enemy6.active=true;
+								enemy6.movement=4;
+							}
+						}else{
+						enemy2.attack=false;	
+						}
+					}else{
+						enemy2.attack=false;	
+					}
+				}
+			}
+			if(enemy2.skin==10){
+				if(hero.x-enemy2.x<70&&hero.x-enemy2.x>-70&&hero.y-enemy2.y<70&&hero.y-enemy2.y>-70){
+					if(enemy2.hit==false){
+						enemy2.attack=true;
+						enemy2.movement=0;
+						if(hero.x-enemy2.x>30&&hero.x-enemy2.x<70){
+							enemy2.movex=1;
+							enemy2.movey=0;
+						}
+						if(hero.x-enemy2.x<-30&&hero.x-enemy2.x>-70){
+							enemy2.movex=2;
+							enemy2.movey=0;
+						}
+						if(hero.y-enemy2.y>30&&hero.y-enemy2.y<70){
+							enemy2.movex=0;
+							enemy2.movey=1;
+						}
+						if(hero.y-enemy2.y<-30&&hero.y-enemy2.y>-70){
+							enemy2.movex=0;
+							enemy2.movey=2;
+						}
+					}else{
+					enemy2.attack=false;	
+					}
+				}else{
+					enemy2.attack=false;	
+				}
+			}
+			if(enemy2.skin==11){
+				if(hero.x-enemy2.x<100&&hero.x-enemy2.x>-100&&hero.y-enemy2.y<100&&hero.y-enemy2.y>-100){
+					if(enemy2.hit==false){
+						enemy2.attack=true;
+						enemy2.movement=0;
+						if(hero.x-enemy2.x>50&&hero.x-enemy2.x<100){
+							enemy2.movement=1;
+						}
+						if(hero.x-enemy2.x<-50&&hero.x-enemy2.x>-100){
+							enemy2.movement=2;
+						}
+						if(hero.y-enemy2.y>50&&hero.y-enemy2.y<100){
+							enemy2.movement=3;
+						}
+						if(hero.y-enemy2.y<-50&&hero.y-enemy2.y>-100){
+							enemy2.movement=4;
+						}
+					}else{
+					enemy2.attack=false;	
+					}
+				}else{
+					enemy2.attack=false;	
+				}
+			}
+		}
+		if(enemy3.active==true){
+			if(enemy3.skin==2){
+				if(hero.x-enemy3.x<70&&hero.x-enemy3.x>-70&&hero.y-enemy3.y<70&&hero.y-enemy3.y>-70){
+					if(enemy3.hit==false){
+						enemy3.attack=true;
+						enemy3.movement=0;
+						if(hero.x-enemy3.x>30&&hero.x-enemy3.x<70){
+							enemy3.movex=1;
+							enemy3.movey=0;
+						}
+						if(hero.x-enemy3.x<-30&&hero.x-enemy3.x>-70){
+							enemy3.movex=2;
+							enemy3.movey=0;
+						}
+						if(hero.y-enemy3.y>30&&hero.y-enemy3.y<70){
+							enemy3.movex=0;
+							enemy3.movey=1;
+						}
+						if(hero.y-enemy3.y<-30&&hero.y-enemy3.y>-70){
+							enemy3.movex=0;
+							enemy3.movey=2;
+						}
+					}else{
+					enemy3.attack=false;	
+					}
+				}else{
+					enemy3.attack=false;	
+				}
+			}
+			if(enemy3.skin==3){
+				enemy7.skin=19;
+				if(enemy7.active==false){
+					enemy7.x=enemy3.x;
+					enemy7.y=enemy3.y;
+				}
+				if(hero.x-enemy3.x<150&&hero.x-enemy3.x>-150&&hero.y-enemy3.y<150&&hero.y-enemy3.y>-150){
+					if(enemy3.hit==false){
+						if(enemy7.active==false){
+							enemy3.attack=true;
+							if(enemy3.movement==1){
+								enemy7.x=enemy3.x+5;
+								enemy7.y=enemy3.y+15;
+							}
+							if(enemy3.movement==2){
+								enemy7.x=enemy3.x-25;
+								enemy7.y=enemy3.y+15;
+							}
+							if(enemy3.movement==3){
+								enemy7.x=enemy3.x+15;
+								enemy7.y=enemy3.y-40;
+							}
+							if(enemy3.movement==4){
+								enemy7.x=enemy3.x+20;
+								enemy7.y=enemy3.y+20;
+							}
+							if(hero.x-enemy3.x>50&&hero.x-enemy3.x<150){
+								enemy3.movement=1;
+								enemy7.active=true;
+								enemy7.movement=1;
+							}
+							if(hero.x-enemy3.x<-50&&hero.x-enemy3.x>-150){
+								enemy3.movement=2;
+								enemy7.active=true;
+								enemy7.movement=2;
+							}
+							if(hero.y-enemy3.y>50&&hero.y-enemy3.y<150){
+								enemy3.movement=3;
+								enemy7.active=true;
+								enemy7.movement=3;
+							}
+							if(hero.y-enemy3.y<-50&&hero.y-enemy3.y>-150){
+								enemy3.movement=4;
+								enemy7.active=true;
+								enemy7.movement=4;
+							}
+						}else{
+						enemy3.attack=false;	
+						}
+					}else{
+						enemy3.attack=false;	
+					}
+				}
+			}
+			if(enemy3.skin==4||enemy3.skin==12){
+				if(hero.x-enemy3.x<100&&hero.x-enemy3.x>-100&&hero.y-enemy3.y<100&&hero.y-enemy3.y>-100){
+					if(enemy3.hit==false){
+						enemy3.attack=true;
+						enemy3.movement=0;
+						if(hero.x-enemy3.x>50&&hero.x-enemy3.x<100){
+							enemy3.movex=1;
+							enemy3.movey=0;
+						}
+						if(hero.x-enemy3.x<-50&&hero.x-enemy3.x>-100){
+							enemy3.movex=2;
+							enemy3.movey=0;
+						}
+						if(hero.y-enemy3.y>50&&hero.y-enemy3.y<100){
+							enemy3.movex=0;
+							enemy3.movey=1;
+						}
+						if(hero.y-enemy3.y<-50&&hero.y-enemy3.y>-100){
+							enemy3.movex=0;
+							enemy3.movey=2;
+						}
+					}else{
+					enemy3.attack=false;	
+					}
+				}else{
+					enemy3.attack=false;	
+				}
+			}
+			if(enemy3.skin==8){
+				enemy7.skin=18;
+				if(enemy7.active==false){
+					enemy7.x=enemy3.x;
+					enemy7.y=enemy3.y;
+				}
+				if(hero.x-enemy3.x<100&&hero.x-enemy3.x>-100&&hero.y-enemy3.y<100&&hero.y-enemy3.y>-100){
+					if(enemy3.hit==false){
+						if(enemy7.active==false){
+							enemy3.attack=true;
+							enemy3.movement=0;
+							if(enemy3.movex==1){
+								enemy7.x=enemy3.x+20;
+								enemy7.y=enemy3.y+20;
+							}
+							if(enemy3.movex==2){
+								enemy7.x=enemy3.x-20;
+								enemy7.y=enemy3.y+20;
+							}
+							if(enemy3.movey==1){
+								enemy7.x=enemy3.x+10;
+								enemy7.y=enemy3.y+40;
+							}
+							if(enemy3.movey==2){
+								enemy7.x=enemy3.x+10;
+								enemy7.y=enemy3.y-40;
+							}
+							if(hero.x-enemy3.x>50&&hero.x-enemy3.x<100){
+								enemy3.movex=1;
+								enemy3.movey=0;
+								enemy7.active=true;
+								enemy7.movement=1;
+							}
+							if(hero.x-enemy3.x<-50&&hero.x-enemy3.x>-100){
+								enemy3.movex=2;
+								enemy3.movey=0;
+								enemy7.active=true;
+								enemy7.movement=2;
+							}
+							if(hero.y-enemy3.y>50&&hero.y-enemy3.y<100){
+								enemy3.movex=0;
+								enemy3.movey=1;
+								enemy7.active=true;
+								enemy7.movement=3;
+							}
+							if(hero.y-enemy3.y<-50&&hero.y-enemy3.y>-100){
+								enemy3.movex=0;
+								enemy3.movey=2;
+								enemy7.active=true;
+								enemy7.movement=4;
+							}
+						}else{
+						enemy3.attack=false;	
+						}
+					}else{
+						enemy3.attack=false;	
+					}
+				}
+			}
+			if(enemy3.skin==9){
+				enemy7.skin=23;
+				if(enemy7.active==false){
+					enemy7.x=enemy3.x;
+					enemy7.y=enemy3.y;
+				}
+				if(hero.x-enemy3.x<150&&hero.x-enemy3.x>-150&&hero.y-enemy3.y<150&&hero.y-enemy3.y>-150){
+					if(enemy3.hit==false){
+						if(enemy7.active==false){
+							enemy3.attack=true;
+							if(enemy3.movement==1){
+								enemy7.x=enemy3.x+5;
+								enemy7.y=enemy3.y+15;
+							}
+							if(enemy3.movement==2){
+								enemy7.x=enemy3.x-25;
+								enemy7.y=enemy3.y+15;
+							}
+							if(enemy3.movement==3){
+								enemy7.x=enemy3.x+15;
+								enemy7.y=enemy3.y-40;
+							}
+							if(enemy3.movement==4){
+								enemy7.x=enemy3.x+20;
+								enemy7.y=enemy3.y+20;
+							}
+							if(hero.x-enemy3.x>50&&hero.x-enemy3.x<150){
+								enemy3.movement=1;
+								enemy7.active=true;
+								enemy7.movement=1;
+							}
+							if(hero.x-enemy3.x<-50&&hero.x-enemy3.x>-150){
+								enemy3.movement=2;
+								enemy7.active=true;
+								enemy7.movement=2;
+							}
+							if(hero.y-enemy3.y>50&&hero.y-enemy3.y<150){
+								enemy3.movement=3;
+								enemy7.active=true;
+								enemy7.movement=3;
+							}
+							if(hero.y-enemy3.y<-50&&hero.y-enemy3.y>-150){
+								enemy3.movement=4;
+								enemy7.active=true;
+								enemy7.movement=4;
+							}
+						}else{
+						enemy3.attack=false;	
+						}
+					}else{
+						enemy3.attack=false;	
+					}
+				}
+			}
+			if(enemy3.skin==10){
+				if(hero.x-enemy3.x<70&&hero.x-enemy3.x>-70&&hero.y-enemy3.y<70&&hero.y-enemy3.y>-70){
+					if(enemy3.hit==false){
+						enemy3.attack=true;
+						enemy3.movement=0;
+						if(hero.x-enemy3.x>30&&hero.x-enemy3.x<70){
+							enemy3.movex=1;
+							enemy3.movey=0;
+						}
+						if(hero.x-enemy3.x<-30&&hero.x-enemy3.x>-70){
+							enemy3.movex=2;
+							enemy3.movey=0;
+						}
+						if(hero.y-enemy3.y>30&&hero.y-enemy3.y<70){
+							enemy3.movex=0;
+							enemy3.movey=1;
+						}
+						if(hero.y-enemy3.y<-30&&hero.y-enemy3.y>-70){
+							enemy3.movex=0;
+							enemy3.movey=2;
+						}
+					}else{
+					enemy3.attack=false;	
+					}
+				}else{
+					enemy3.attack=false;	
+				}
+			}
+			if(enemy3.skin==11){
+				if(hero.x-enemy3.x<100&&hero.x-enemy3.x>-100&&hero.y-enemy3.y<100&&hero.y-enemy3.y>-100){
+					if(enemy3.hit==false){
+						enemy3.attack=true;
+						enemy3.movement=0;
+						if(hero.x-enemy3.x>50&&hero.x-enemy3.x<100){
+							enemy3.movement=1;
+						}
+						if(hero.x-enemy3.x<-50&&hero.x-enemy3.x>-100){
+							enemy3.movement=2;
+						}
+						if(hero.y-enemy3.y>50&&hero.y-enemy3.y<100){
+							enemy3.movement=3;
+						}
+						if(hero.y-enemy3.y<-50&&hero.y-enemy3.y>-100){
+							enemy3.movement=4;
+						}
+					}else{
+					enemy3.attack=false;	
+					}
+				}else{
+					enemy3.attack=false;	
+				}
+			}
+		}
+		if(enemy4.active==true){
+			if(enemy4.skin==2){
+				if(hero.x-enemy4.x<70&&hero.x-enemy4.x>-70&&hero.y-enemy4.y<70&&hero.y-enemy4.y>-70){
+					if(enemy4.hit==false){
+						enemy4.attack=true;
+						enemy4.movement=0;
+						if(hero.x-enemy4.x>30&&hero.x-enemy4.x<70){
+							enemy4.movex=1;
+							enemy4.movey=0;
+						}
+						if(hero.x-enemy4.x<-30&&hero.x-enemy4.x>-70){
+							enemy4.movex=2;
+							enemy4.movey=0;
+						}
+						if(hero.y-enemy4.y>30&&hero.y-enemy4.y<70){
+							enemy4.movex=0;
+							enemy4.movey=1;
+						}
+						if(hero.y-enemy4.y<-30&&hero.y-enemy4.y>-70){
+							enemy4.movex=0;
+							enemy4.movey=2;
+						}
+					}else{
+					enemy4.attack=false;	
+					}
+				}else{
+					enemy4.attack=false;	
+				}
+			}
+			if(enemy4.skin==3){
+				enemy8.skin=19;
+				if(enemy8.active==false){
+					enemy8.x=enemy4.x;
+					enemy8.y=enemy4.y;
+				}
+				if(hero.x-enemy4.x<150&&hero.x-enemy4.x>-150&&hero.y-enemy4.y<150&&hero.y-enemy4.y>-150){
+					if(enemy4.hit==false){
+						if(enemy8.active==false){
+							enemy4.attack=true;
+							if(enemy4.movement==1){
+								enemy8.x=enemy4.x+5;
+								enemy8.y=enemy4.y+15;
+							}
+							if(enemy4.movement==2){
+								enemy8.x=enemy4.x-25;
+								enemy8.y=enemy4.y+15;
+							}
+							if(enemy4.movement==3){
+								enemy8.x=enemy4.x+15;
+								enemy8.y=enemy4.y-40;
+							}
+							if(enemy4.movement==4){
+								enemy8.x=enemy4.x+20;
+								enemy8.y=enemy4.y+20;
+							}
+							if(hero.x-enemy4.x>50&&hero.x-enemy4.x<150){
+								enemy4.movement=1;
+								enemy8.active=true;
+								enemy8.movement=1;
+							}
+							if(hero.x-enemy4.x<-50&&hero.x-enemy4.x>-150){
+								enemy4.movement=2;
+								enemy8.active=true;
+								enemy8.movement=2;
+							}
+							if(hero.y-enemy4.y>50&&hero.y-enemy4.y<150){
+								enemy4.movement=3;
+								enemy8.active=true;
+								enemy8.movement=3;
+							}
+							if(hero.y-enemy4.y<-50&&hero.y-enemy4.y>-150){
+								enemy4.movement=4;
+								enemy8.active=true;
+								enemy8.movement=4;
+							}
+						}else{
+						enemy4.attack=false;	
+						}
+					}else{
+						enemy4.attack=false;	
+					}
+				}
+			}
+			if(enemy4.skin==4||enemy4.skin==12){
+				if(hero.x-enemy4.x<100&&hero.x-enemy4.x>-100&&hero.y-enemy4.y<100&&hero.y-enemy4.y>-100){
+					if(enemy4.hit==false){
+						enemy4.attack=true;
+						enemy4.movement=0;
+						if(hero.x-enemy4.x>50&&hero.x-enemy4.x<100){
+							enemy4.movex=1;
+							enemy4.movey=0;
+						}
+						if(hero.x-enemy4.x<-50&&hero.x-enemy4.x>-100){
+							enemy4.movex=2;
+							enemy4.movey=0;
+						}
+						if(hero.y-enemy4.y>50&&hero.y-enemy4.y<100){
+							enemy4.movex=0;
+							enemy4.movey=1;
+						}
+						if(hero.y-enemy4.y<-50&&hero.y-enemy4.y>-100){
+							enemy4.movex=0;
+							enemy4.movey=2;
+						}
+					}else{
+					enemy4.attack=false;	
+					}
+				}else{
+					enemy4.attack=false;	
+				}
+			}
+			if(enemy4.skin==8){
+				enemy8.skin=18;
+				if(enemy8.active==false){
+					enemy8.x=enemy4.x;
+					enemy8.y=enemy4.y;
+				}
+				if(hero.x-enemy4.x<100&&hero.x-enemy4.x>-100&&hero.y-enemy4.y<100&&hero.y-enemy4.y>-100){
+					if(enemy4.hit==false){
+						if(enemy8.active==false){
+							enemy4.attack=true;
+							enemy4.movement=0;
+							if(enemy4.movex==1){
+								enemy8.x=enemy4.x+20;
+								enemy8.y=enemy4.y+20;
+							}
+							if(enemy4.movex==2){
+								enemy8.x=enemy4.x-20;
+								enemy8.y=enemy4.y+20;
+							}
+							if(enemy4.movey==1){
+								enemy8.x=enemy4.x+10;
+								enemy8.y=enemy4.y+40;
+							}
+							if(enemy4.movey==2){
+								enemy8.x=enemy4.x+10;
+								enemy8.y=enemy4.y-40;
+							}
+							if(hero.x-enemy4.x>50&&hero.x-enemy4.x<100){
+								enemy4.movex=1;
+								enemy4.movey=0;
+								enemy8.active=true;
+								enemy8.movement=1;
+							}
+							if(hero.x-enemy4.x<-50&&hero.x-enemy4.x>-100){
+								enemy4.movex=2;
+								enemy4.movey=0;
+								enemy8.active=true;
+								enemy8.movement=2;
+							}
+							if(hero.y-enemy4.y>50&&hero.y-enemy4.y<100){
+								enemy4.movex=0;
+								enemy4.movey=1;
+								enemy8.active=true;
+								enemy8.movement=3;
+							}
+							if(hero.y-enemy4.y<-50&&hero.y-enemy4.y>-100){
+								enemy4.movex=0;
+								enemy4.movey=2;
+								enemy8.active=true;
+								enemy8.movement=4;
+							}
+						}else{
+						enemy4.attack=false;	
+						}
+					}else{
+						enemy4.attack=false;	
+					}
+				}
+			}
+			if(enemy4.skin==9){
+				enemy8.skin=23;
+				if(enemy8.active==false){
+					enemy8.x=enemy4.x;
+					enemy8.y=enemy4.y;
+				}
+				if(hero.x-enemy4.x<150&&hero.x-enemy4.x>-150&&hero.y-enemy4.y<150&&hero.y-enemy4.y>-150){
+					if(enemy4.hit==false){
+						if(enemy8.active==false){
+							enemy4.attack=true;
+							if(enemy4.movement==1){
+								enemy8.x=enemy4.x+5;
+								enemy8.y=enemy4.y+15;
+							}
+							if(enemy4.movement==2){
+								enemy8.x=enemy4.x-25;
+								enemy8.y=enemy4.y+15;
+							}
+							if(enemy4.movement==3){
+								enemy8.x=enemy4.x+15;
+								enemy8.y=enemy4.y-40;
+							}
+							if(enemy4.movement==4){
+								enemy8.x=enemy4.x+20;
+								enemy8.y=enemy4.y+20;
+							}
+							if(hero.x-enemy4.x>50&&hero.x-enemy4.x<150){
+								enemy4.movement=1;
+								enemy8.active=true;
+								enemy8.movement=1;
+							}
+							if(hero.x-enemy4.x<-50&&hero.x-enemy4.x>-150){
+								enemy4.movement=2;
+								enemy8.active=true;
+								enemy8.movement=2;
+							}
+							if(hero.y-enemy4.y>50&&hero.y-enemy4.y<150){
+								enemy4.movement=3;
+								enemy8.active=true;
+								enemy8.movement=3;
+							}
+							if(hero.y-enemy4.y<-50&&hero.y-enemy4.y>-150){
+								enemy4.movement=4;
+								enemy8.active=true;
+								enemy8.movement=4;
+							}
+						}else{
+						enemy4.attack=false;	
+						}
+					}else{
+						enemy4.attack=false;	
+					}
+				}
+			}
+			if(enemy4.skin==10){
+				if(hero.x-enemy4.x<70&&hero.x-enemy4.x>-70&&hero.y-enemy4.y<70&&hero.y-enemy4.y>-70){
+					if(enemy4.hit==false){
+						enemy4.attack=true;
+						enemy4.movement=0;
+						if(hero.x-enemy4.x>30&&hero.x-enemy4.x<70){
+							enemy4.movex=1;
+							enemy4.movey=0;
+						}
+						if(hero.x-enemy4.x<-30&&hero.x-enemy4.x>-70){
+							enemy4.movex=2;
+							enemy4.movey=0;
+						}
+						if(hero.y-enemy4.y>30&&hero.y-enemy4.y<70){
+							enemy4.movex=0;
+							enemy4.movey=1;
+						}
+						if(hero.y-enemy4.y<-30&&hero.y-enemy4.y>-70){
+							enemy4.movex=0;
+							enemy4.movey=2;
+						}
+					}else{
+					enemy4.attack=false;	
+					}
+				}else{
+					enemy4.attack=false;	
+				}
+			}
+			if(enemy4.skin==11){
+				if(hero.x-enemy4.x<100&&hero.x-enemy4.x>-100&&hero.y-enemy4.y<100&&hero.y-enemy4.y>-100){
+					if(enemy4.hit==false){
+						enemy4.attack=true;
+						enemy4.movement=0;
+						if(hero.x-enemy4.x>50&&hero.x-enemy4.x<100){
+							enemy4.movement=1;
+						}
+						if(hero.x-enemy4.x<-50&&hero.x-enemy4.x>-100){
+							enemy4.movement=2;
+						}
+						if(hero.y-enemy4.y>50&&hero.y-enemy4.y<100){
+							enemy4.movement=3;
+						}
+						if(hero.y-enemy4.y<-50&&hero.y-enemy4.y>-100){
+							enemy4.movement=4;
+						}
+					}else{
+					enemy4.attack=false;	
+					}
+				}else{
+					enemy4.attack=false;	
+				}
+			}
+		}
 		//kolizje z wrogami
 		if(enemy1.y+enemy1.height>hero.y&&enemy1.y<hero.y+hero.height&&enemy1.x+enemy1.width>hero.x&&enemy1.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy1.movement==1){
@@ -5298,6 +9861,7 @@ var LostWorld = function(canvas) {
 		if(enemy2.y+enemy2.height>hero.y&&enemy2.y<hero.y+hero.height&&enemy2.x+enemy2.width>hero.x&&enemy2.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy2.movement==1){
@@ -5350,6 +9914,7 @@ var LostWorld = function(canvas) {
 		if(enemy3.y+enemy3.height>hero.y&&enemy3.y<hero.y+hero.height&&enemy3.x+enemy3.width>hero.x&&enemy3.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy3.movement==1){
@@ -5402,6 +9967,7 @@ var LostWorld = function(canvas) {
 		if(enemy4.y+enemy4.height>hero.y&&enemy4.y<hero.y+hero.height&&enemy4.x+enemy4.width>hero.x&&enemy4.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy4.movement==1){
@@ -5454,6 +10020,7 @@ var LostWorld = function(canvas) {
 		if(enemy5.y+enemy5.height>hero.y&&enemy5.y<hero.y+hero.height&&enemy5.x+enemy5.width>hero.x&&enemy5.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy5.movement==1){
@@ -5509,6 +10076,7 @@ var LostWorld = function(canvas) {
 		if(enemy6.y+enemy6.height>hero.y&&enemy6.y<hero.y+hero.height&&enemy6.x+enemy6.width>hero.x&&enemy6.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy6.movement==1){
@@ -5564,6 +10132,7 @@ var LostWorld = function(canvas) {
 		if(enemy7.y+enemy7.height>hero.y&&enemy7.y<hero.y+hero.height&&enemy7.x+enemy7.width>hero.x&&enemy7.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy7.movement==1){
@@ -5619,6 +10188,7 @@ var LostWorld = function(canvas) {
 		if(enemy8.y+enemy8.height>hero.y&&enemy8.y<hero.y+hero.height&&enemy8.x+enemy8.width>hero.x&&enemy8.x<hero.x+hero.width){
 			if(hero.hit==false){
 				hero.health-=1;
+				that.se11.play();
 				layer1.active=true;
 				layer1.skin=1;
 				if(enemy8.movement==1){
@@ -5675,6 +10245,7 @@ var LostWorld = function(canvas) {
 			if(boss.y+boss.height>hero.y&&boss.y<hero.y+hero.height&&boss.x+boss.width>hero.x&&boss.x<hero.x+hero.width){
 				if(hero.hit==false){
 					hero.health-=1;
+					that.se11.play();
 					layer1.active=true;
 					layer1.skin=1;
 					if(hero.y-boss.y>-50){
@@ -5704,6 +10275,7 @@ var LostWorld = function(canvas) {
 				if(hero.hit==false){
 					if(boss.skin==3){
 						hero.health-=1;
+						that.se11.play();
 					}
 					bossbullet1.skin=7;
 					bossbullet1.x=boss.x+40;
@@ -5737,6 +10309,7 @@ var LostWorld = function(canvas) {
 				if(hero.hit==false){
 					if(boss.skin==3){
 						hero.health-=1;
+						that.se11.play();
 					}
 					bossbullet2.skin=7;
 					bossbullet2.x=boss.x+40;
@@ -5770,6 +10343,7 @@ var LostWorld = function(canvas) {
 				if(hero.hit==false){
 					if(boss.skin>1){
 						hero.health-=1;
+						that.se11.play();
 					}
 					bossbullet3.skin=7;
 					bossbullet3.x=boss.x+40;
@@ -5801,6 +10375,12 @@ var LostWorld = function(canvas) {
 			}
 		}
 		//atakowanie wrogów
+		if(shine.skin==1||shine1.skin==1||shine2.skin==1||shine3.skin==1||shine4.skin==1||shine5.skin==1){
+			that.se2.play();
+		}
+		if(shine.skin==2||shine1.skin==2||shine2.skin==2||shine3.skin==2||shine4.skin==2||shine5.skin==2){
+			that.se4.play();
+		}
 		if(enemy1.active==true&&attack1.active==true){
 			if(enemy1.y+enemy1.height>attack1.y&&enemy1.y<attack1.y+attack1.height&&enemy1.x+enemy1.width>attack1.x&&enemy1.x<attack1.x+attack1.width){
 				if(hero.level>=1&&hero.level<=2){
@@ -6141,7 +10721,7 @@ var LostWorld = function(canvas) {
 			if(boss.y+boss.height>attack1.y&&boss.y<attack1.y+attack1.height&&boss.x+boss.width>attack1.x&&boss.x<attack1.x+attack1.width){
 				if(boss.skin==1){
 					if(boss.hit==false){
-						boss.health-=4;
+						boss.health-=2;
 						boss.movement=1;
 						shine.active=true;
 						shine.skin=1;
@@ -6154,42 +10734,74 @@ var LostWorld = function(canvas) {
 						hero.x-=50;
 					}
 				}
+				if(boss.skin==2){
+					if(boss.hit==false){
+						boss.health-=2;
+						boss.movement=1;
+						shine.active=true;
+						shine.skin=1;
+						shine.x=attack1.x+10;
+						shine.y=attack1.y+10;
+					}
+					boss.hit=true;
+					if(hero.x>boss.x+50){
+						attack1.x+=50;
+						hero.x+=50;
+					}
+					if(hero.x<boss.x-50){
+						attack1.x-=50;
+						hero.x-=50;
+					}
+				}
 				if(boss.skin==3){
 					if(boss.hit==false){
-						boss.health-=4;
+						boss.health-=2;
 					}
 					attack1.y+=50;
 					hero.y+=50;
 				}
-				if(boss.health<=0){
-					hero.kills+=1;
-					item1.active=true;
-					item1.skin=3;
-					item1.x=330;
-					item1.y=400;
-					item2.active=true;
-					item2.skin=3;
-					item2.x=390;
-					item2.y=400;
-					item3.active=true;
-					item3.skin=3;
-					item3.x=360;
-					item3.y=370;
-					item4.active=true;
-					item4.skin=3;
-					item4.x=360;
-					item4.y=430;
-					boss.active=false;
-					bosspart1.active=false;
-					bosspart2.active=false;
-					bosspart3.active=false;
-					bosspart4.active=false;
-					controller.bdefeat=1;
+				if(boss.skin==5){
+					if(boss.hit==false){
+						boss.health-=1;
+						boss.movement=1;
+						shine.active=true;
+						shine.skin=1;
+						shine.x=attack1.x+10;
+						shine.y=attack1.y+10;
+					}
+					boss.hit=true;
+					if(hero.x>boss.x+50){
+						attack1.x+=50;
+						hero.x+=50;
+					}
+					if(hero.x<boss.x-50){
+						attack1.x-=50;
+						hero.x-=50;
+					}
+				}
+				if(boss.skin==7){
+					if(boss.hit==false){
+						boss.health-=1;
+						boss.movement=1;
+						shine.active=true;
+						shine.skin=1;
+						shine.x=attack1.x+10;
+						shine.y=attack1.y+10;
+					}
+					boss.hit=true;
+					if(hero.x>boss.x+50){
+						attack1.x+=50;
+						hero.x+=50;
+					}
+					if(hero.x<boss.x-50){
+						attack1.x-=50;
+						hero.x-=50;
+					}
 				}
 			}
 		}
 		//drugi i trzeci atak
-if(enemy1.active==true&&attack2.active==true){
+		if(enemy1.active==true&&attack2.active==true){
 			if(enemy1.y+enemy1.height>attack2.y&&enemy1.y<attack2.y+attack2.height&&enemy1.x+enemy1.width>attack2.x&&enemy1.x<attack2.x+attack2.width){
 				if(hero.level>=1&&hero.level<=2){
 					if(enemy1.hit==false){
@@ -6529,7 +11141,7 @@ if(enemy1.active==true&&attack2.active==true){
 			if(boss.y+boss.height>attack2.y&&boss.y<attack2.y+attack2.height&&boss.x+boss.width>attack2.x&&boss.x<attack2.x+attack2.width){
 				if(boss.skin==1){
 					if(boss.hit==false){
-						boss.health-=6;
+						boss.health-=3;
 						boss.movement=1;
 						shine.active=true;
 						shine.skin=1;
@@ -6542,3348 +11154,3972 @@ if(enemy1.active==true&&attack2.active==true){
 						hero.x-=50;
 					}
 				}
+				if(boss.skin==2){
+					if(boss.hit==false){
+						boss.health-=3;
+						boss.movement=1;
+						shine.active=true;
+						shine.skin=1;
+						shine.x=attack2.x+10;
+						shine.y=attack2.y+10;
+					}
+					boss.hit=true;
+					if(hero.x>boss.x+50){
+						attack1.x+=50;
+						hero.x+=50;
+					}
+					if(hero.x<boss.x-50){
+						attack1.x-=50;
+						hero.x-=50;
+					}
+				}
 				if(boss.skin==3){
 					if(boss.hit==false){
-						boss.health-=6;
+						boss.health-=3;
 					}
 					attack2.y+=50;
 					hero.y+=50;
 				}
-				if(boss.health<=0){
-					hero.kills+=1;
-					item1.active=true;
-					item1.skin=3;
-					item1.x=330;
-					item1.y=400;
-					item2.active=true;
-					item2.skin=3;
-					item2.x=390;
-					item2.y=400;
-					item3.active=true;
-					item3.skin=3;
-					item3.x=360;
-					item3.y=370;
-					item4.active=true;
-					item4.skin=3;
-					item4.x=360;
-					item4.y=430;
-					boss.active=false;
-					bosspart1.active=false;
-					bosspart2.active=false;
-					bosspart3.active=false;
-					bosspart4.active=false;
-					controller.bdefeat=1;
+				if(boss.skin==5){
+					if(boss.hit==false){
+						boss.health-=1;
+						boss.movement=1;
+						shine.active=true;
+						shine.skin=1;
+						shine.x=attack2.x+10;
+						shine.y=attack2.y+10;
+					}
+					boss.hit=true;
+					if(hero.x>boss.x+50){
+						attack1.x+=50;
+						hero.x+=50;
+					}
+					if(hero.x<boss.x-50){
+						attack1.x-=50;
+						hero.x-=50;
+					}
+				}
+				if(boss.skin==7){
+					if(boss.hit==false){
+						boss.health-=1;
+						boss.movement=1;
+						shine.active=true;
+						shine.skin=1;
+						shine.x=attack2.x+10;
+						shine.y=attack2.y+10;
+					}
+					boss.hit=true;
+					if(hero.x>boss.x+50){
+						attack2.x+=50;
+						hero.x+=50;
+					}
+					if(hero.x<boss.x-50){
+						attack2.x-=50;
+						hero.x-=50;
+					}
 				}
 			}
 		}
-		//ustawianie obiektow na mapach
-		if(controller.floor==0){
-			arena.sourceX = 4344;
+		//tutorial
+		if(controller.tutorial==true){
+			that.bgm2.pause();
+			that.bgm1.play();
+			that.bgm1.loop=true;
+			controller.activating=false;
+			controller.ingame=false;
+			arena.sourceX = 3981;
 			arena.sourceY = 0;
-			people.active=false;
-			exhibit1.active=true;
-			exhibit1.x=80;
-			exhibit1.y=426;
-			exhibit1.skin=1;
-			exhibit2.active=true;
-			exhibit2.x=562;
-			exhibit2.y=426;
-			exhibit2.skin=1;
-			dialog.skin=1;
-			//blokowanie wejscia na trony
-			if(hero.y>=60&&hero.y<=360){
-				if(hero.x>=280&&hero.x<=285){
-					hero.x=280;
-				}
-				if(hero.x>=405&&hero.x<=410){
-					hero.x=410;
+			if(hero.y>367){
+				hero.y=367;
+			}
+			if(controller.keychecker==0){
+				exhibit1.active=true;
+				exhibit1.skin=11;
+				exhibit1.x=468;
+				exhibit1.y=486;
+				hero.health=5;
+				hero.mana=5;
+				if(hero.moveDown==true){
+					controller.keychecker=1;	
 				}
 			}
-			if(hero.x>=280&&hero.x<=405){
-				if(hero.y>=295&&hero.y<=360){
-					hero.y=360;
+			if(controller.keychecker==1){
+				exhibit1.skin=12;
+				exhibit1.x=505;
+				exhibit1.y=522;
+				if(hero.moveLeft==true){
+					controller.keychecker=2;	
 				}
 			}
-			if(hero.y>=60&&hero.y<=300){
-				if(hero.x>=190&&hero.x<=195){
-					hero.x=190;
-				}
-				if(hero.x>=485&&hero.x<=490){
-					hero.x=490;
-				}
-			}
-			if(hero.x>=190&&hero.x<=490){
-				if(hero.y>=225&&hero.y<=300){
-					hero.y=300;
+			if(controller.keychecker==2){
+				exhibit1.skin=13;
+				exhibit1.x=468;
+				exhibit1.y=558;
+				if(hero.moveUp==true){
+					controller.keychecker=3;	
 				}
 			}
-			//blokowanie wejscia na pochodnie
-			//LEWA POCHODNIA
-			if(hero.y>=450&&hero.y<=550){
-				if(hero.x>=175&&hero.x<=180){
-					hero.x=180;
+			if(controller.keychecker==3){
+				exhibit1.skin=14;
+				exhibit1.x=432;
+				exhibit1.y=522;
+				if(hero.moveRight==true){
+					controller.keychecker=4;	
 				}
 			}
-			if(hero.x>=50&&hero.x<=180){
-				if(hero.y>=450&&hero.y<=455){
-					hero.y=450;
+			if(controller.keychecker==4){
+				exhibit1.skin=15;
+				exhibit1.x=151;
+				exhibit1.y=522;
+				if(hero.fight==true){
+					controller.keychecker=5;	
 				}
 			}
-			//PRAWA POCHODNIA
-			if(hero.y>=450&&hero.y<=550){
-				if(hero.x>=510&&hero.x<=515){
-					hero.x=510;
+			if(controller.keychecker==5){
+				exhibit1.skin=16;
+				exhibit1.x=189;
+				exhibit1.y=522;
+				if(hero.power>=9){
+					controller.keychecker=6;
+					hero.health=5;
+					hero.apple=1;
 				}
 			}
-			if(hero.x>=510&&hero.x<=640){
-				if(hero.y>=450&&hero.y<=455){
-					hero.y=450;
+			if(controller.keychecker==6){
+				exhibit1.skin=17;
+				exhibit1.x=229;
+				exhibit1.y=522;
+				if(hero.health>=10){
+					controller.keychecker=7;	
 				}
 			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
+			if(controller.keychecker==7){
+				exhibit1.skin=18;
+				exhibit1.x=309;
+				exhibit1.y=522;
+				if(controller.hint==true){
+					controller.keychecker=8;
+					exhibit2.animate=exhibit1.animate;
+					exhibit2.skin=15;
+					exhibit2.active=true;					
+				}
+			}
+			if(controller.keychecker==8){
+				exhibit1.skin=16;
+				exhibit1.x=189;
+				exhibit1.y=522;
+				exhibit2.skin=15;
+				exhibit2.x=151;
+				exhibit2.y=522;
+				hero.magic=true;
+				if(hero.bewitch==true){
+					controller.keychecker=9;
+					hero.potion=1;
+					hero.magic=false;
+				}
+			}
+			if(controller.keychecker==9){
+				exhibit1.skin=17;
+				exhibit1.x=229;
+				exhibit1.y=522;
+				exhibit2.skin=15;
+				exhibit2.x=151;
+				exhibit2.y=522;
+				if(hero.mana>=10){
 					layer1.active=true;
 					layer1.skin=2;
-					controller.floor=1;
-					hero.y=180;
-					people.active=false;
-					dialog.skin=0;
+					hero.x=335;
+					hero.y=450;
+					hero.movement=3;
+					controller.ingame=true;
+					controller.floor=0;
 				}
 			}
 		}
-		//wyświetlanie energii bossa
-		if(boss.active==true){
+		if(controller.brand==true){
+			if(controller.timer>0&&controller.timer<=8){
+				arena.sourceX = 0;
+				arena.sourceY = 0;
+				layer1.active=true;
+				layer1.skin=3;
+			}
+			if(controller.timer>392&&controller.timer<=400){
+				layer1.active=true;
+				layer1.skin=3;
+			}
+		}
+		if(controller.choose==true){
+			exhibit1.active=true;
+			exhibit1.y=254;
+			exhibit1.skin=26;
+			if(controller.lang==0){
+				exhibit1.x=82;
+			}
+			if(controller.lang==1){
+				exhibit1.x=388;
+			}
+		}
+		if(controller.brand==true||controller.intro==true||controller.title==true||controller.ending==true){
+			controller.ingame=false;
+			hero.active=false;
+			slot1.active=false;
+			slot2.active=false;
+			slot3.active=false;
+			slot4.active=false;
+			hpbar.active=false;
+			mpbar.active=false;
+			powbar.active=false;
+			avatar.active=false;
+			boss.active=false;
+			bossbullet1.active=false;
+			bossbullet2.active=false;
+			bossbullet3.active=false;
+			bossbar.active=false;
+			enemy1.active=false;
+			enemy2.active=false;
+			people.active=false;
+			item1.active=false;
+			item2.active=false;
+			item3.active=false;
+			item4.active=false;
+			hero.health=5;
+			hero.x=350;
+			hero.y=280;
+			that.se5.pause();
+		}
+		if(controller.intro==true){
+			if(controller.choose==false){
+				if(controller.timer>0){
+					that.bgm3.play();
+				}
+				if(controller.timer>150&&controller.timer<=550){
+					arena.sourceX = 0;
+					arena.sourceY = 0;
+				}
+				if(controller.timer>142&&controller.timer<=150||controller.timer>642&&controller.timer<=650||controller.timer>841&&controller.timer<=849||controller.timer>992&&controller.timer<=1000){
+					layer1.active=true;
+					layer1.x=0;
+					layer1.y=0;
+					layer1.skin=3;
+				}
+				if(controller.timer>0&&controller.timer<=150){
+					arena.sourceX = 1085;
+					arena.sourceY = 0;
+					exhibit1.skin=24;
+					exhibit1.timemove=300;
+					exhibit2.skin=25;
+				}
+				if(controller.timer==150){
+					exhibit1.active=true;
+					exhibit1.x=50;
+					exhibit1.y=370;
+					exhibit2.active=true;
+					exhibit2.x=250;
+					exhibit2.y=250;
+				}
+				if(controller.timer>=592){
+					exhibit1.active=false;
+					exhibit2.active=false;
+					exhibit1.skin=0;
+					exhibit2.skin=0;
+				}
+				if(controller.timer>592&&controller.timer<=650){
+					layer1.active=true;
+					layer1.skin=4;
+					that.se10.play();
+				}
+				if(controller.timer>650&&controller.timer<=850){
+					arena.sourceX = 1448;
+					arena.sourceY = 0;
+				}
+				if(controller.timer>850&&controller.timer<=1000){
+					arena.sourceX = 3258;
+					arena.sourceY = 666;
+				}
+				if(controller.timer>=1000){
+					controller.intro=false;
+					controller.title=true;
+					controller.timer=0;
+				}
+			}else{
+				arena.sourceX=2896;
+				arena.sourceY=1665;	
+			}
+		}
+		if(controller.ending==true){
+			if(controller.timer>0){
+				that.bgm12.play();
+			}
+			if(controller.timer>0&&controller.timer<=350){
+				arena.sourceX = 0;
+				arena.sourceY = 0;
+			}
+			if(controller.timer>350&&controller.timer<=650){
+				arena.sourceX = 3982;
+				arena.sourceY = 1665;
+			}
+			if(controller.timer>650&&controller.timer<=1200){
+				arena.sourceX = 1086;
+				arena.sourceY = 0;
+			}
+
+			if(controller.timer>1200&&controller.timer<=2500){
+				arena.sourceX = 1086;
+				arena.sourceY = 999;
+			}
+			if(controller.timer==660){
+				exhibit1.active=true;
+				exhibit1.skin=29;
+				exhibit1.x=100;
+				exhibit1.y=350;
+			}
+			if(controller.timer==760){
+				exhibit1.active=true;
+				exhibit1.skin=33;
+				exhibit1.x=100;
+				exhibit1.y=350;
+			}
+			if(controller.timer==860){
+				exhibit1.active=true;
+				exhibit1.skin=31;
+				exhibit1.x=100;
+				exhibit1.y=350;
+			}
+			if(controller.timer==960){
+				exhibit1.active=true;
+				exhibit1.skin=31;
+				exhibit1.x=100;
+				exhibit1.y=350;
+			}
+			if(controller.timer==1060){
+				exhibit1.active=true;
+				exhibit1.skin=29;
+				exhibit1.x=100;
+				exhibit1.y=350;
+			}
+			if(exhibit1.animate>=5&&exhibit1.animate<=12||exhibit2.animate>=5&&exhibit2.animate<=12){
+				arena.sourceX = 4344;
+				arena.sourceY = 1665;
+			}
+			if(controller.timer==710){
+				exhibit2.active=true;
+				exhibit2.skin=31;
+				exhibit2.x=550;
+				exhibit2.y=350;
+			}
+			if(controller.timer==810){
+				exhibit2.active=true;
+				exhibit2.skin=35;
+				exhibit2.x=550;
+				exhibit2.y=350;
+			}
+			if(controller.timer==910){
+				exhibit2.active=true;
+				exhibit2.skin=29;
+				exhibit2.x=550;
+				exhibit2.y=350;
+			}
+			if(controller.timer==1010){
+				exhibit2.active=true;
+				exhibit2.skin=33;
+				exhibit2.x=550;
+				exhibit2.y=350;
+			}
+			if(controller.timer==1110){
+				exhibit2.active=true;
+				exhibit2.skin=31;
+				exhibit2.x=550;
+				exhibit2.y=350;
+			}
+			if(controller.timer>0&&controller.timer<=8||controller.timer>642&&controller.timer<=650||controller.timer>1192&&controller.timer<=1200){
+				layer1.active=true;
+				layer1.skin=3;
+			}
+		}
+		if(controller.title==true){
+			that.bgm3.pause();
+			that.bgm13.pause();
+			that.bgm2.play();
+			that.bgm2.loop=true;
+			controller.timer+=1;
+			if(controller.timer>0&&controller.timer<=100){
+				arena.sourceX = 2896;
+				arena.sourceY = 0;
+			}
+			if(controller.timer>100&&controller.timer<=110){
+				arena.sourceX = 3258;
+				arena.sourceY = 0;
+			}
+			if(controller.timer>110&&controller.timer<=120){
+				arena.sourceX = 3620;
+				arena.sourceY = 0;
+			}
+			if(controller.timer>120&&controller.timer<=130){
+				arena.sourceX = 3258;
+				arena.sourceY = 0;
+			}
+			if(controller.timer>130){
+				controller.timer=0;
+			}
+		}
+		if(controller.gameover==true){
+			that.bgm5.pause();
+			that.bgm6.pause();
+			that.bgm7.pause();
+			that.bgm8.pause();
+			that.bgm9.pause();
+			that.bgm10.pause();
+			that.bgm13.play();
+			that.bgm13.loop=true;
+			arena.sourceX = 0;
+			arena.sourceY = 0;
+			controller.floor=-1;
+			controller.ingame=false;
+			hero.active=false;
+			slot1.active=false;
+			slot2.active=false;
+			slot3.active=false;
+			slot4.active=false;
+			hpbar.active=false;
+			mpbar.active=false;
+			powbar.active=false;
+			avatar.active=false;
+			boss.active=false;
+			bossbullet1.active=false;
+			bossbullet2.active=false;
+			bossbullet3.active=false;
+			bossbar.active=false;
+			enemy1.active=false;
+			enemy2.active=false;
+			enemy3.active=false;
+			enemy4.acitve=false;
+			enemy5.active=false;
+			enemy6.active=false;
+			enemy7.active=false;
+			enemy8.acitve=false;
+			people.active=false;
+			people1.active=false;
+			people2.active=false;
+			item1.active=false;
+			item2.active=false;
+			item3.active=false;
+			item4.active=false;
+			exhibit1.active=false;
+			exhibit2.active=false;
+			exhibit3.active=false;
+			exhibit4.active=false;
+			hero.key=false;
+			hero.carrot=false;
+			hero.apple=0;
+			hero.potion=0;
+			hero.magic=false;
+			hero.level=1;
+			hero.exp=0;
+			hero.kills=0;
+			hero.gold=100;
+			if(controller.timer<=800){
+				controller.timer+=1;	
+			}else{
+				controller.timer=0;
+				hero.sourceWidth=20;
+				hero.width=42;
+				controller.gameover=false;
+				controller.title=true;
+			}
+		}
+		if(controller.activating==true){
+			controller.title=false;
+			layer1.active=true;
+			layer1.skin=3;
+			if(layer1.animate>=15){
+				hero.active=true;
+				slot1.active=true;
+				slot2.active=true;
+				slot3.active=true;
+				slot4.active=true;
+				hpbar.active=true;
+				mpbar.active=true;
+				powbar.active=true;
+				avatar.active=true;
+				controller.tutorial=true;
+			}
+		}
+		if(controller.ingame==true){
+			controller.tutorial=false;
+			if(controller.floor==0){
+				that.bgm1.pause();
+				that.bgm4.play();
+				that.bgm4.loop=true;
+				arena.sourceX = 4344;
+				arena.sourceY = 0;
+				people.active=false;
+				exhibit1.active=true;
+				exhibit1.x=80;
+				exhibit1.y=426;
+				exhibit1.skin=1;
+				exhibit2.active=true;
+				exhibit2.x=562;
+				exhibit2.y=426;
+				exhibit2.skin=1;
+				dialog.active=true;
+				dialog.skin=1;
+				//blokowanie wejscia na trony
+				if(hero.y>=60&&hero.y<=360){
+					if(hero.x>=280&&hero.x<=285){
+						hero.x=280;
+					}
+					if(hero.x>=405&&hero.x<=410){
+						hero.x=410;
+					}
+				}
+				if(hero.x>=280&&hero.x<=405){
+					if(hero.y>=295&&hero.y<=360){
+						hero.y=360;
+					}
+				}
+				if(hero.y>=60&&hero.y<=300){
+					if(hero.x>=190&&hero.x<=195){
+						hero.x=190;
+					}
+					if(hero.x>=485&&hero.x<=490){
+						hero.x=490;
+					}
+				}
+				if(hero.x>=190&&hero.x<=490){
+					if(hero.y>=225&&hero.y<=300){
+						hero.y=300;
+					}
+				}
+				//blokowanie wejscia na pochodnie
+				//LEWA POCHODNIA
+				if(hero.y>=450&&hero.y<=550){
+					if(hero.x>=175&&hero.x<=180){
+						hero.x=180;
+					}
+				}
+				if(hero.x>=50&&hero.x<=180){
+					if(hero.y>=450&&hero.y<=455){
+						hero.y=450;
+					}
+				}
+				//PRAWA POCHODNIA
+				if(hero.y>=450&&hero.y<=550){
+					if(hero.x>=510&&hero.x<=515){
+						hero.x=510;
+					}
+				}
+				if(hero.x>=510&&hero.x<=640){
+					if(hero.y>=450&&hero.y<=455){
+						hero.y=450;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=1;
+						hero.y=180;
+						people.active=false;
+						dialog.skin=0;
+					}
+				}
+			}
+			//wyświetlanie energii bossa
+			if(boss.active==true){
 				if(boss.health>=0){
 					bossbar.active=true;
 					bossbar.skin=6;
 					bossbar.animate=boss.health;
 				}
-		}else{
-			bossbar.active=false;
-		}
-		//regeneracja energii wrogów
-		if(layer1.active==true){
-			if(layer1.skin==2){
-				if(controller.floor>=11){
-					enemy1.health=enemy1.fullhealth;
-					enemy2.health=enemy2.fullhealth;
-					enemy3.health=enemy3.fullhealth;
-					enemy4.health=enemy4.fullhealth;
-					enemy1.hit=false;
-					enemy2.hit=false;
-					enemy3.hit=false;
-					enemy4.hit=false;
-					item1.active=false;
-					item2.active=false;
-					item3.active=false;
-					item4.active=false;
-				}
-			}
-		}
-		if(controller.floor==1){
-			arena.sourceX = 362;
-			arena.sourceY = 333;
-			exhibit1.x=23;
-			exhibit1.y=331;
-			exhibit2.active=false;
-			if(hero.key==false){
-				exhibit1.skin=2;
-			}else{
-				exhibit1.skin=0;
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=0;
-					hero.y=520;
-					exhibit3.active=false;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=3;
-					hero.y=180;
-					exhibit2.active=true;
-					exhibit3.active=false;
-					dialog.skin=0;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=2;
-					hero.x=70;
-					exhibit3.active=false;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					if(hero.key==true){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=18;
-					hero.x=615;
-					exhibit1.active=true;
-					exhibit3.active=false;
-					dialog.skin=0;
-					}
-				}
-			}
-		}
-		if(controller.floor==2){
-			arena.sourceX = 0;
-			arena.sourceY = 333;
-			people.skin=1;
-			people.active=true;
-			people.x=400;
-			people.y=400;
-			people1.active=false;
-			exhibit1.active=true;
-			exhibit1.x=80;
-			exhibit1.y=426;
-			exhibit1.skin=1;
-			exhibit2.active=true;
-			exhibit2.x=562;
-			exhibit2.y=426;
-			exhibit2.skin=1;
-			dialog.skin=2;
-			hero.health=10;
-			hero.mana=10;
-			//blokowanie wejscia na pomnik
-			if(hero.y>=60&&hero.y<=300){
-				if(hero.x>=280&&hero.x<=285){
-					hero.x=280;
-				}
-				if(hero.x>=405&&hero.x<=410){
-					hero.x=410;
-				}
-			}
-			if(hero.x>=280&&hero.x<=405){
-				if(hero.y>=295&&hero.y<=300){
-					hero.y=300;
-				}
-			}
-			if(hero.y>=60&&hero.y<=230){
-				if(hero.x>=225&&hero.x<=230){
-					hero.x=225;
-				}
-				if(hero.x>=450&&hero.x<=455){
-					hero.x=455;
-				}
-			}
-			if(hero.x>=225&&hero.x<=455){
-				if(hero.y>=225&&hero.y<=230){
-					hero.y=230;
-				}
-			}
-			//blokowanie wejscia na pochodnie
-			//LEWA POCHODNIA
-			if(hero.y>=450&&hero.y<=550){
-				if(hero.x>=175&&hero.x<=180){
-					hero.x=180;
-				}
-			}
-			if(hero.x>=50&&hero.x<=180){
-				if(hero.y>=450&&hero.y<=455){
-					hero.y=450;
-				}
-			}
-			//PRAWA POCHODNIA
-			if(hero.y>=450&&hero.y<=550){
-				if(hero.x>=510&&hero.x<=515){
-					hero.x=510;
-				}
-			}
-			if(hero.x>=510&&hero.x<=640){
-				if(hero.y>=450&&hero.y<=455){
-					hero.y=450;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					hero.x=615;
-					controller.floor=1;
-					people.active=false;
-					dialog.skin=0;
-				}
-			}
-		}
-		if(controller.floor==3){
-			arena.sourceX = 724;
-			arena.sourceY = 333;
-			exhibit1.x=190;
-			exhibit1.y=160;
-			exhibit1.skin=1;
-			exhibit2.x=450;
-			exhibit2.y=160;
-			exhibit2.skin=1;
-			//blokowanie wejscia na pochodnie
-			//LEWA POCHODNIA
-			if(hero.y>=190&&hero.y<=305){
-				if(hero.x>=150&&hero.x<=155){
-					hero.x=150;
-				}
-				if(hero.x>=275&&hero.x<=280){
-					hero.x=280;
-				}
-			}
-			if(hero.x>=150&&hero.x<=280){
-				if(hero.y>=190&&hero.y<=200){
-					hero.y=190;
-				}
-				if(hero.y>=300&&hero.y<=305){
-					hero.y=305;
-				}
-			}
-			//PRAWA POCHODNIA
-			if(hero.y>=190&&hero.y<=305){
-				if(hero.x>=405&&hero.x<=410){
-					hero.x=405;
-				}
-				if(hero.x>=535&&hero.x<=540){
-					hero.x=540;
-				}
-			}
-			if(hero.x>=405&&hero.x<=540){
-				if(hero.y>=190&&hero.y<=200){
-					hero.y=190;
-				}
-				if(hero.y>=300&&hero.y<=305){
-					hero.y=305;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=1;
-					hero.y=520;
-					people.active=false;
-					dialog.skin=0;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=4;
-					hero.y=180;
-					people.active=true;
-					people.x=300;
-					people.y=450;
-					people.movement=1;
-					people1.active=true;
-					people1.x=300;
-					people1.y=250;
-					people1.movement=2;
-					exhibit1.active=false;
-					exhibit2.active=false;
-					exhibit3.active=true;
-				}
-			}
-		}
-		if(controller.floor==4){
-			arena.sourceX = 1086;
-			arena.sourceY = 333;
-			people.skin=2;
-			people1.skin=5;
-			exhibit3.x=180;
-			exhibit3.y=345;
-			exhibit3.skin=3;
-			dialog.skin=3;
-			//blokowanie wejscia do fontanny
-			if(hero.y>=275&&hero.y<=415){
-				if(hero.x>=140&&hero.x<=145){
-					hero.x=140;
-				}
-				if(hero.x>=525&&hero.x<=550){
-					hero.x=550;
-				}
-			}
-			if(hero.x>=140&&hero.x<=550){
-				if(hero.y>=275&&hero.y<=285){
-					hero.y=275;
-				}
-				if(hero.y>=410&&hero.y<=415){
-					hero.y=415;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=3;
-					hero.y=520;
-					people.active=false;
-					people1.active=false;
-					exhibit1.active=true;
-					exhibit2.active=true;
-					exhibit3.active=false;
-					dialog.skin=0;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=5;
-					hero.x=615;
-					exhibit3.active=false;
-					dialog.skin=0;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=6;
-					hero.x=70;
-					if(hero.carrot==false){
-						people.skin=3;
-						people.x=300;
-						people.y=300;
-						people.movement=3;
-						dialog.skin=4;
-					}else{
-						people.skin=0;
-						dialog.skin=0;
-					}
-					people1.active=false;
-					exhibit1.active=false;
-					exhibit2.active=false;
-					exhibit3.active=false;
-				}
-			}
-		}
-		if(controller.floor==5){
-			arena.sourceX = 1448;
-			arena.sourceY = 333;
-			people.active=false;
-			people1.active=false;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=4;
-					hero.x=70;
-					exhibit3.active=true;
-					people.active=true;
-					people.x=300;
-					people.y=450;
-					people.movement=1;
-					people1.active=true;
-					people1.x=300;
-					people1.y=250;
-					people1.movement=2;
-				}
-			}
-			if(hero.y<=270){
-				hero.y=270;
-			}
-			if(hero.x>235&&hero.x<335){
-				if(hero.y<290){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=11;
-					hero.y=520;
-					people.skin=4;
-					people.x=300;
-					people.y=300;
-					people.movement=3;
-				}
-			}
-		}
-		if(controller.floor==6){
-			arena.sourceX = 1810;
-			arena.sourceY = 333;
-			if(hero.key==false){
-				if(hero.carrot==true){
-					hero.following=true;
-				}
-			}
-			if(hero.y>=150&&hero.y<=490){
-				if(hero.x>=405&&hero.x<=410){
-					hero.x=405;
-				}
-			}
-			if(hero.x>=405&&hero.x<=660){
-				if(hero.y>=465&&hero.y<=470){
-					hero.y=470;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=7;
-					hero.y=180;
-					people.active=true;
-					people.skin=4;
-					people.x=300;
-					people.y=300;
-					people.movement=1;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=4;
-					hero.x=615;
-					exhibit3.active=true;
-					people.active=true
-					people.x=300;
-					people.y=450;
-					people.movement=1;
-					people1.active=true;
-					people1.x=300;
-					people1.y=250;
-					people1.movement=2;
-					dialog.skin=2;
-				}
-			}
-		}
-		if(controller.floor==7){
-			arena.sourceX = 2172;
-			arena.sourceY = 333;
-			if(hero.x<=188){
-				hero.x=188;
-			}
-			if(hero.x>=490){
-				hero.x=490;
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=6;
-					hero.y=520;
-					if(hero.carrot==false){
-						people.skin=3;
-						people.x=300;
-						people.y=300;
-						people.movement=3;
-						dialog.skin=4;
-					}else{
-						people.skin=0;
-						dialog.skin=0;
-					}
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=8;
-					hero.y=180;
-					people.skin=10;
-					people.x=627;
-					people.y=300;
-				}
-			}
-		}
-		if(controller.floor==8){
-			arena.sourceX = 2534;
-			arena.sourceY = 333;
-			if(hero.y>=365){
-				hero.y=365;
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=7;
-					hero.y=520;
-					people.skin=4;
-					people.x=300;
-					people.y=300;
-					people.movement=1;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=9;
-					hero.x=615;
-					exhibit1.active=true;
-					people.skin=6;
-					people.x=300;
-					people.y=220;
-					people.movement=1;
-				}
-			}
-		}
-		if(controller.floor==9){
-			arena.sourceX = 2896;
-			arena.sourceY = 333;
-			exhibit1.x=280;
-			exhibit1.y=185;
-			exhibit1.skin=4;
-			//blokowanie wejscia na drzewo
-			if(hero.y>=240&&hero.y<=440){
-				if(hero.x>=195&&hero.x<=200){
-					hero.x=195;
-				}
-				if(hero.x>=495&&hero.x<=500){
-					hero.x=500;
-				}
-			}
-			if(hero.x>=195&&hero.x<=500){
-				if(hero.y>=240&&hero.y<=245){
-					hero.y=240;
-				}
-				if(hero.y>=435&&hero.y<=440){
-					hero.y=440;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=10;
-					hero.x=615;
-					people.skin=0;
-					exhibit1.active=false;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=8;
-					hero.x=70;
-					exhibit1.active=false;
-					people.skin=10;
-					people.x=627;
-					people.y=300;
-				}
-			}
-		}
-		if(controller.floor==10){
-			arena.sourceX = 3258;
-			arena.sourceY = 333;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=12;
-					hero.x=615;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					//enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=5;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					//enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=7;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					//enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=7;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=9;
-					hero.x=70;
-					exhibit1.active=true;
-					people.active=true;
-					people.skin=6;
-					people.x=300;
-					people.y=220;
-					people.movement=1;
-				}
-			}
-		}
-		if(controller.floor==11){
-			arena.sourceX = 3620;
-			arena.sourceY = 333;
-			people.active=true;
-			people.x=250;
-			people.y=315;
-			people.skin=7;
-			dialog.skin=5;
-			if(hero.y<=377){
-				hero.y=377;
-			}
-			//zakupy
-			if(hero.x>=120&&hero.x<=180){
-				if(hero.y<=377){
-					if(hero.gold>=70){
-						if(hero.apple<9){
-							hero.apple+=1;
-							hero.gold-=70;
-							hero.y=387;
+				if(boss.health<=0){
+					that.bgm9.pause();
+					if(boss.skin<=3||boss.skin==7){
+						if(layer1.active==true){
+							if(layer1.skin==5){
+								that.se10.play();	
+							}
+						}
+						if(controller.timer2<=50){
+							controller.timer2+=1;
+							shine5.active=true;
+							if(boss.skin==1){
+								shine5.skin=3;
+								layer1.active=true;
+								layer1.skin=5;
+							}
+							if(boss.skin==2){
+								shine5.skin=4;
+								layer1.active=true;
+								layer1.skin=5;
+							}
+							if(boss.skin==3){
+								shine5.skin=5;
+								layer1.active=true;
+								layer1.skin=5;
+							}
+							if(boss.skin==5){
+								layer1.active=true;
+								layer1.skin=4;
+							}
+							if(boss.skin==6){
+								enemy1.active=true;
+								enemy1.x=-280;
+								enemy2.active=true;
+								enemy2.x=880;
+								if(boss.movement==3){	
+									layer1.active=true;
+									layer1.skin=4;
+									enemy1.skin=21;
+									enemy1.x=-280;
+									enemy1.y=hero.y-50;
+									enemy2.skin=22;
+									enemy2.x=880;
+									enemy2.y=hero.y-50;
+								}
+							}
+							if(boss.skin==7){
+								layer1.active=true;
+								layer1.skin=5;
+								enemy1.active=false;
+								enemy2.active=false;
+								bosspart1.active=false;
+								bosspart2.active=false;
+							}
+							if(controller.timer2<=5){
+								shine5.x=boss.x;
+								shine5.y=boss.y;
+							}else{
+								boss.skin=0;
+								bosspart1.active=false;
+								bosspart2.active=false;
+								bosspart3.active=false;
+								bosspart4.active=false;
+							}
+							if(controller.timer2==0||controller.timer2==15||controller.timer2==30||controller.timer2==45){
+								shine1.active=true;
+								shine1.skin=2;
+								shine2.active=true;
+								shine2.skin=2;
+								if(shine5.skin==3){
+									shine1.x=shine5.x;
+									shine1.y=shine5.y+50;
+									shine2.x=shine5.x+100;
+									shine2.y=shine5.y+50;
+								}
+								if(shine5.skin==4||shine5.skin==5){
+									shine1.x=shine5.x-30;
+									shine1.y=shine5.y+35;
+									shine2.x=shine5.x+50;
+									shine2.y=shine5.y+35;
+								}
+							}
+							if(controller.timer2==5||controller.timer2==20||controller.timer2==35||controller.timer2==50){
+								shine3.active=true;
+								shine3.skin=2;
+								shine4.active=true;
+								shine4.skin=2;
+								if(shine5.skin==3){
+									shine3.x=shine5.x+50;
+									shine3.y=shine5.y;
+									shine4.x=shine5.x+50;
+									shine4.y=shine5.y+100;
+								}
+								if(shine5.skin==4||shine5.skin==5){
+									shine3.x=shine5.x+10;
+									shine3.y=shine5.y;
+									shine4.x=shine5.x+10;
+									shine4.y=shine5.y+70;
+								}
+							}
+						}else{
+							if(boss.skin<=2){
+								exhibit4.movement=4;
+							}
+							shine5.active=false;
+							boss.active=false;
+							hero.kills+=1;
+							exhibit4.timemove=110;
+							item1.active=true;
+							item1.skin=3;
+							item1.x=330;
+							item1.y=400;
+							item2.active=true;
+							item2.skin=3;
+							item2.x=390;
+							item2.y=400;
+							item3.active=true;
+							item3.skin=3;
+							item3.x=360;
+							item3.y=370;
+							item4.active=true;
+							item4.skin=3;
+							item4.x=360;
+							item4.y=430;
+							controller.bdefeat+=1;	
 						}
 					}
-				}
-			}
-			if(hero.x>=305&&hero.x<=375){
-				if(hero.y<=377){
-					if(hero.gold>=500){
-						if(hero.magic==false){
-							hero.magic=true;
-							hero.gold-=500;
-							hero.y=387;
-						}
-					}
-				}
-			}
-			if(hero.x>=490&&hero.x<=550){
-				if(hero.y<=377){
-					if(hero.gold>=50){
-						if(hero.potion<9){
-							hero.potion+=1;
-							hero.gold-=50;
-							hero.y=387;
-						}
-					}
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=5;
-					hero.y=295;
-				}
-			}
-		}
-		if(controller.floor==12){
-			arena.sourceX = 3982;
-			arena.sourceY = 333;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=13;
-					hero.x=615;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=8;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=7;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=7;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=10;
-					hero.x=70;
-					exhibit1.skin=0;
-					exhibit2.skin=0;
-
-				}
-			}
-		}
-		if(controller.floor==13){
-			arena.sourceX = 4344;
-			arena.sourceY = 333;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=12;
-					hero.x=70;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=5;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=7;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=7;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=14;
-					hero.y=180;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=8;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=8;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=8;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==14){
-			arena.sourceX = 0;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=15;
-					hero.x=70;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=7;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=8;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=7;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=13;
-					hero.y=520;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=8;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=7;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=7;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==15){
-			arena.sourceX = 362;
-			arena.sourceY = 666;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=16;
-					hero.y=520;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=8;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=5;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=14;
-					hero.x=615;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=8;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=8;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=8;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==16){
-			arena.sourceX = 724;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=17;
-					hero.x=615;
-					people.active=true;
-					exhibit1.skin=0;
-					exhibit2.skin=0;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.acitve=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=15;
-					hero.y=180;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=7;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=8;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=7;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==17){
-			arena.sourceX = 1086;
-			arena.sourceY = 666;
-			people.skin=8;
-			people.x=120;
-			people.y=350;
-			dialog.skin=6;
-			enemy1.active=false;
-			enemy2.active=false;
-			enemy3.active=false;
-			enemy4.active=false;
-			if(hero.key==false){
-				if(hero.carrot==false){
-					hero.carrot=true;
-				}
-				if(hero.following==true){
-					hero.key=true;
-					hero.gold+=200;
-				}
-				
-			}else{
-				people2.skin=9;
-				people2.movement=0;
-				people2.x=120;
-				people2.y=450;
-				dialog.skin=7;
-			}
-			//blokowanie wejscia na stół
-			if(hero.y>=255&&hero.y<=415){
-				if(hero.x>=170&&hero.x<=175){
-					hero.x=170;
-				}
-				if(hero.x>=310&&hero.x<=320){
-					hero.x=320;
-				}
-			}
-			if(hero.x>=170&&hero.x<=320){
-				if(hero.y>=255&&hero.y<=265){
-					hero.y=255;
-				}
-				if(hero.y>=410&&hero.y<=415){
-					hero.y=415;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=16;
-					hero.x=70;
-					exhibit1.skin=7;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=7;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					people.active=false;
-					dialog.skin=0;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=8;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=8;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=5;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-					if(hero.key==true){
-						people2.skin=0;
-					}
-				}
-			}
-		}
-		//PODZIEMIA
-		if(controller.floor==18){
-			arena.sourceX = 1448;
-			arena.sourceY = 666;
-			exhibit1.skin=6;
-			exhibit1.x=23;
-			exhibit1.y=378;
-			exhibit2.active=false;
-			if(hero.y<=290){
-				hero.y=290;
-			}
-			if(hero.y>=350){
-				hero.y=350;
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=19;
-					hero.x=615;
-					exhibit1.active=true;
-					exhibit2.active=true;
-					exhibit1.skin=8;
-					exhibit1.x=180;
-					exhibit1.y=145;
-					exhibit2.skin=8;
-					exhibit2.x=500;
-					exhibit2.y=145;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=250;
-					enemy1.skin=5;
-					enemy2.active=true;
-					enemy2.x=570;
-					enemy2.y=520;
-					enemy2.skin=5;
-					enemy2.movement=2;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=1;
-					hero.x=70;
-					people.active=false;
-					dialog.skin=0;
-					exhibit1.active=true;
-					exhibit2.active=true;
-				}
-			}
-		}
-		if(controller.floor==19){
-			arena.sourceX = 1810;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=18;
-					hero.x=70;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=20;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==20){
-			arena.sourceX = 2534;
-			arena.sourceY = 666;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=19;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=250;
-					enemy1.skin=5;
-					enemy2.active=true;
-					enemy2.x=570;
-					enemy2.y=520;
-					enemy2.skin=5;
-					enemy2.movement=2;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=21;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=23;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=4;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=49;
-					hero.x=70;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-		}
-		if(controller.floor==21){
-			arena.sourceX = 2896;
-			arena.sourceY = 666;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=20;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=25;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=3;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=11;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=11;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=24;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=11;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=12;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=11;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=12;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		//RUINY
-		if(controller.floor==22){
-			arena.sourceX = 3258;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=20;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==23){
-			arena.sourceX = 2172;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=20;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=38;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==24){
-			arena.sourceX = 2534;
-			arena.sourceY = 1332;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=21;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=32;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=500;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==25){
-			arena.sourceX = 2172;
-			arena.sourceY = 1332;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=21;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=26;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=370;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==26){
-			arena.sourceX = 2896;
-			arena.sourceY = 1332;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=25;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=3;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=11;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=11;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=27;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=31;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=11;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=11;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==27){
-			arena.sourceX = 3258;
-			arena.sourceY = 1332;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=26;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=370;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=570;
-					enemy2.y=520;
-					enemy2.skin=5;
-					enemy2.movement=2;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=28;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==28){
-			arena.sourceX = 3620;
-			arena.sourceY = 1332;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=27;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=250;
-					enemy1.skin=5;
-					enemy2.active=true;
-					enemy2.x=570;
-					enemy2.y=520;
-					enemy2.skin=5;
-					enemy2.movement=2;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=29;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=250;
-					enemy2.skin=15;
-					enemy2.movement=0;
-					enemy3.active=true;
-					enemy3.x=90;
-					enemy3.y=250;
-					enemy3.skin=15;
-					enemy3.movement=0;
-					enemy4.active=true;
-					enemy4.x=490;
-					enemy4.y=450;
-					enemy4.skin=15;
-					enemy4.movement=0;
-				}
-			}
-		}
-		if(controller.floor==29){
-			arena.sourceX = 3982;
-			arena.sourceY = 1332;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=30;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=28;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=4;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=35;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=11;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=11;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==30){
-			arena.sourceX = 4344;
-			arena.sourceY = 1332;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=29;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=250;
-					enemy2.skin=15;
-					enemy2.movement=0;
-					enemy3.active=true;
-					enemy3.x=90;
-					enemy3.y=250;
-					enemy3.skin=15;
-					enemy3.movement=0;
-					enemy4.active=true;
-					enemy4.x=490;
-					enemy4.y=450;
-					enemy4.skin=15;
-					enemy4.movement=0;
-				}
-				if(hero.y>=365&&hero.y<=505){
-					if(hero.x>=405&&hero.x<=410){
-						layer1.active=true;
-						layer1.skin=2;
-						controller.floor=36;
-						hero.x=110;
-						hero.y=375;
-					}
-					if(hero.x>=520&&hero.x<=530){
-						layer1.active=true;
-						layer1.skin=2;
-						controller.floor=36;
-						hero.x=110;
-						hero.y=375;
-					}
-				}
-				if(hero.x>=405&&hero.x<=530){
-					if(hero.y>=365&&hero.y<=375){
-						layer1.active=true;
-						layer1.skin=2;
-						controller.floor=36;
-							hero.x=110;
-							hero.y=375;
-					}
-					if(hero.y>=500&&hero.y<=505){
-						layer1.active=true;
-						layer1.skin=2;
-						controller.floor=36;
-							hero.x=110;
-							hero.y=375;
-					}
-				}
-			}
-		}
-		if(controller.floor==31){
-			arena.sourceX = 0;
-			arena.sourceY = 1665;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=26;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=370;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=4;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=32;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=500;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=11;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=11;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==32){
-			arena.sourceX = 362;
-			arena.sourceY = 1665;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=24;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=11;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=12;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=11;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=12;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=33;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=31;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=4;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==33){
-			arena.sourceX = 724;
-			arena.sourceY = 1665;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=32;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=500;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=570;
-					enemy2.y=520;
-					enemy2.skin=5;
-					enemy2.movement=2;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=34;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=250;
-					enemy2.skin=15;
-					enemy2.movement=0;
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=4;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=11;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==34){
-			arena.sourceX = 1086;
-			arena.sourceY = 1665;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=33;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=4;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=2;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=4;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=35;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==35){
-			arena.sourceX = 1448;
-			arena.sourceY = 1665;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=34;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=250;
-					enemy2.skin=15;
-					enemy2.movement=0;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=29;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=450;
-					enemy1.skin=15;
-					enemy1.movement=0;
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=250;
-					enemy2.skin=15;
-					enemy2.movement=0;
-					enemy3.active=true;
-					enemy3.x=90;
-					enemy3.y=250;
-					enemy3.skin=15;
-					enemy3.movement=0;
-					enemy4.active=true;
-					enemy4.x=490;
-					enemy4.y=450;
-					enemy4.skin=15;
-					enemy4.movement=0;
-				}
-			}
-		}
-		//AKWEDUKT
-		if(controller.floor==36){
-			arena.sourceX = 2172;
-			arena.sourceY = 1665;
-			enemy1.active=false;
-			enemy2.active=false;
-			enemy3.active=false;
-			enemy4.active=false;
-			exhibit3.active=true;
-			exhibit3.skin=9;
-			exhibit3.x=58;
-			exhibit3.y=254;
-			//zablokowanie wejscia do wody
-			if(hero.x>=60&&hero.x<=625){
-				if(hero.y>=260&&hero.y<=270){
-					hero.y=270;
-				}
-				if(hero.y>=450&&hero.y<=460){
-					hero.y=450;
-				}
-			}
-			
-			if(hero.y>=305&&hero.y<=415){
-				if(hero.x>=60&&hero.x<=65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=30;
-					hero.x=350;
-					hero.y=400;
-					exhibit3.active=false;
-					exhibit3.skin=0;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=12;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=5;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=12;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>=80&&hero.x<=85){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=30;
-					hero.x=350;
-					hero.y=400;
-					exhibit3.active=false;
-					exhibit3.skin=0;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=12;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=5;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=12;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>=60&&hero.x<=85){
-				if(hero.y>=305&&hero.y<=310){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=30;
-					hero.x=350;
-					hero.y=400;
-					exhibit3.active=false;
-					exhibit3.skin=0;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=12;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=5;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=12;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.y>=405&&hero.y<=415){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=30;
-					hero.x=350;
-					hero.y=400;
-					exhibit3.active=false;
-					exhibit3.skin=0;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=5;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=12;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=5;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=12;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=37;
-					hero.x=70;
-					if(controller.bdefeat==0){
-						boss.active=true;
-						boss.skin=1;
-						boss.x=500;
-						boss.y=300;
-						boss.health=84;
-						bosspart1.active=true;
-						bosspart1.skin=1;
-						bosspart1.movement=1;
-						bosspart1.x=580;
-						bosspart2.active=true;
-						bosspart2.skin=1;
-						bosspart2.movement=2;
-						bosspart2.x=580;
-						bosspart3.active=true;
-						bosspart3.skin=1;
-						bosspart3.movement=3;
-						bosspart3.x=580;
-						bosspart4.active=true;
-						bosspart4.skin=1;
-						bosspart4.movement=4;
-						bosspart4.x=580;
-					}
-				}
-			}
-		}
-		if(controller.floor==37){
-			arena.sourceX = 2534;
-			arena.sourceY = 1665;
-			enemy1.active=false;
-			enemy2.active=false;
-			enemy3.active=false;
-			enemy4.active=false;
-			exhibit3.skin=10;
-			exhibit3.x=58;
-			exhibit3.y=254;
-			//zablokowanie wejscia do wody
-			if(hero.x>=60&&hero.x<=625){
-				if(hero.y>=200&&hero.y<=270){
-					hero.y=270;
-				}
-				if(hero.y>=450&&hero.y<=600){
-					hero.y=450;
-				}
-				if(hero.x>=450&&hero.x<=600){
-					hero.x=450;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=36;
-					hero.x=615;
-					boss.active=false;
-					bosspart1.active=false;
-					bosspart2.active=false;
-					bosspart3.active=false;
-					bosspart4.active=false;
-				}
-			}
-		}
-		if(boss.active==true){
-			if(boss.skin==1){
-				if(boss.movement==1||boss.movement==2||boss.movement==5){
-					if(boss.y>hero.y){
-						boss.y-=2;
-					}
-					if(boss.y<hero.y){
-						boss.y+=2;
-					}
-					if(boss.y==hero.y){
-						boss.y=hero.y;
-					}
-				}
-				if(hero.x>=350){
-					if(boss.x>hero.x){
-						boss.movement=2;
-					}else{
+					if(boss.skin==5){
+						boss.skin=6;
 						boss.movement=1;
-						hero.x=boss.x-50;
+						controller.bdefeat=4;
+					}
+					if(boss.skin==6){
+							enemy1.active=true;
+							enemy1.x=-280;
+							enemy2.active=true;
+							enemy2.x=880;
+						if(boss.movement==3){	
+							layer1.active=true;
+							layer1.skin=4;
+							enemy1.skin=21;
+							enemy1.x=-280;
+							enemy1.y=hero.y-50;
+							enemy2.skin=22;
+							enemy2.x=880;
+							enemy2.y=hero.y-50;
+						}
+					}
+					if(boss.skin==7){
+						controller.bdefeat=5;
+						enemy1.active=false;
+						enemy2.active=false;
+						bosspart1.active=false;
+						bosspart2.active=false;
+						layer1.active=true;
+						layer1.skin=5;
+						
 					}
 				}
-				if(boss.movement==5){
-					bossbullet1.active=true;
-					bossbullet1.x=boss.x-20;
-					bossbullet1.y=boss.y+70;
-					bossbullet2.active=true;
-					bossbullet2.x=boss.x-20;
-					bossbullet2.y=boss.y+70;
-					bossbullet3.active=true;
-					bossbullet3.x=boss.x-20;
-					bossbullet3.y=boss.y+70;
-					if(boss.animate>=22){
-						bossbullet1.skin=7;
-						bossbullet1.x=boss.x-20;
-						bossbullet1.y=boss.y+70;
-						bossbullet2.skin=7;
-						bossbullet2.x=boss.x-20;
-						bossbullet2.y=boss.y+70;
-						bossbullet3.skin=7;
-						bossbullet3.x=boss.x-20;
-						bossbullet3.y=boss.y+70;
+			}else{
+				bossbar.active=false;
+			}
+			//regeneracja energii wrogów
+			if(layer1.active==true){
+				if(layer1.skin==2){
+					if(controller.floor>=11){
+						enemy1.health=enemy1.fullhealth;
+						enemy2.health=enemy2.fullhealth;
+						enemy3.health=enemy3.fullhealth;
+						enemy4.health=enemy4.fullhealth;
+						enemy5.active=false;
+						enemy6.active=false;
+						enemy7.active=false;
+						enemy8.active=false;
+						enemy1.hit=false;
+						enemy2.hit=false;
+						enemy3.hit=false;
+						enemy4.hit=false;
+						item1.active=false;
+						item2.active=false;
+						item3.active=false;
+						item4.active=false;
+					}
+				}
+			}
+			if(controller.floor==1){
+				that.bgm4.play();
+				that.bgm4.loop=true;
+				arena.sourceX = 362;
+				arena.sourceY = 333;
+				exhibit1.x=23;
+				exhibit1.y=331;
+				exhibit2.active=false;
+				if(hero.key==false){
+					exhibit1.skin=2;
+				}else{
+					exhibit1.skin=0;
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=0;
+						hero.y=520;
+						exhibit3.active=false;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=3;
+						hero.y=180;
+						exhibit2.active=true;
+						exhibit3.active=false;
+						dialog.skin=0;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=2;
+						hero.x=70;
+						exhibit3.active=false;
+						that.se7.play();
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						if(hero.key==true){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=18;
+						hero.x=615;
+						exhibit3.active=false;
+						exhibit4.active=false;
+						exhibit1.active=true;
+						dialog.skin=0;
+						}
+					}
+				}
+			}
+			if(controller.floor==2){
+				arena.sourceX = 0;
+				arena.sourceY = 333;
+				people.skin=1;
+				people.active=true;
+				people.x=400;
+				people.y=400;
+				people1.active=false;
+				exhibit1.active=true;
+				exhibit1.x=80;
+				exhibit1.y=426;
+				exhibit1.skin=1;
+				exhibit2.active=true;
+				exhibit2.x=562;
+				exhibit2.y=426;
+				exhibit2.skin=1;
+				dialog.skin=2;
+				hero.health=10;
+				hero.mana=10;
+				//blokowanie wejscia na pomnik
+				if(hero.y>=60&&hero.y<=300){
+					if(hero.x>=280&&hero.x<=285){
+						hero.x=280;
+					}
+					if(hero.x>=405&&hero.x<=410){
+						hero.x=410;
+					}
+				}
+				if(hero.x>=280&&hero.x<=405){
+					if(hero.y>=295&&hero.y<=300){
+						hero.y=300;
+					}
+				}
+				if(hero.y>=60&&hero.y<=230){
+					if(hero.x>=225&&hero.x<=230){
+						hero.x=225;
+					}
+					if(hero.x>=450&&hero.x<=455){
+						hero.x=455;
+					}
+				}
+				if(hero.x>=225&&hero.x<=455){
+					if(hero.y>=225&&hero.y<=230){
+						hero.y=230;
+					}
+				}
+				//blokowanie wejscia na pochodnie
+				//LEWA POCHODNIA
+				if(hero.y>=450&&hero.y<=550){
+					if(hero.x>=175&&hero.x<=180){
+						hero.x=180;
+					}
+				}
+				if(hero.x>=50&&hero.x<=180){
+					if(hero.y>=450&&hero.y<=455){
+						hero.y=450;
+					}
+				}
+				//PRAWA POCHODNIA
+				if(hero.y>=450&&hero.y<=550){
+					if(hero.x>=510&&hero.x<=515){
+						hero.x=510;
+					}
+				}
+				if(hero.x>=510&&hero.x<=640){
+					if(hero.y>=450&&hero.y<=455){
+						hero.y=450;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						hero.x=615;
+						controller.floor=1;
+						people.active=false;
+						dialog.skin=0;
+					}
+				}
+			}
+			if(controller.floor==3){
+				arena.sourceX = 724;
+				arena.sourceY = 333;
+				exhibit1.x=190;
+				exhibit1.y=160;
+				exhibit1.skin=1;
+				exhibit2.x=450;
+				exhibit2.y=160;
+				exhibit2.skin=1;
+				//blokowanie wejscia na pochodnie
+				//LEWA POCHODNIA
+				if(hero.y>=190&&hero.y<=305){
+					if(hero.x>=150&&hero.x<=155){
+						hero.x=150;
+					}
+					if(hero.x>=275&&hero.x<=280){
+						hero.x=280;
+					}
+				}
+				if(hero.x>=150&&hero.x<=280){
+					if(hero.y>=190&&hero.y<=200){
+						hero.y=190;
+					}
+					if(hero.y>=300&&hero.y<=305){
+						hero.y=305;
+					}
+				}
+				//PRAWA POCHODNIA
+				if(hero.y>=190&&hero.y<=305){
+					if(hero.x>=405&&hero.x<=410){
+						hero.x=405;
+					}
+					if(hero.x>=535&&hero.x<=540){
+						hero.x=540;
+					}
+				}
+				if(hero.x>=405&&hero.x<=540){
+					if(hero.y>=190&&hero.y<=200){
+						hero.y=190;
+					}
+					if(hero.y>=300&&hero.y<=305){
+						hero.y=305;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=1;
+						hero.y=520;
+						people.active=false;
+						dialog.skin=0;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=4;
+						hero.y=180;
+						people.active=true;
+						people.skin=2;
+						people.x=300;
+						people.y=450;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=5;
+						people1.x=300;
+						people1.y=250;
+						people1.movement=2;
+						exhibit1.active=false;
+						exhibit2.active=false;
+						exhibit3.active=true;
+					}
+				}
+			}
+			if(controller.floor==4){
+				arena.sourceX = 1086;
+				arena.sourceY = 333;
+				exhibit3.x=180;
+				exhibit3.y=345;
+				exhibit3.skin=3;
+				dialog.skin=3;
+				//blokowanie wejscia do fontanny
+				if(hero.y>=275&&hero.y<=415){
+					if(hero.x>=140&&hero.x<=145){
+						hero.x=140;
+					}
+					if(hero.x>=525&&hero.x<=550){
+						hero.x=550;
+					}
+				}
+				if(hero.x>=140&&hero.x<=550){
+					if(hero.y>=275&&hero.y<=285){
+						hero.y=275;
+					}
+					if(hero.y>=410&&hero.y<=415){
+						hero.y=415;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=3;
+						hero.y=520;
+						people.active=false;
+						people1.active=false;
+						exhibit1.active=true;
+						exhibit2.active=true;
+						exhibit3.active=false;
+						dialog.skin=0;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=5;
+						hero.x=615;
+						exhibit3.active=false;
+						dialog.skin=0;
+						people.skin=13;
+						people.x=350;
+						people.y=400;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=14;
+						people1.x=120;
+						people1.y=300;
+						people1.movement=2;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=6;
+						hero.x=70;
+						if(hero.carrot==false){
+							people.skin=3;
+							people.x=300;
+							people.y=300;
+							people.movement=3;
+							dialog.skin=4;
+						}else{
+							people.skin=0;
+							dialog.skin=0;
+						}
+						people1.active=false;
+						exhibit1.active=false;
+						exhibit2.active=false;
+						exhibit3.active=false;
+					}
+				}
+			}
+			if(controller.floor==5){
+				arena.sourceX = 1448;
+				arena.sourceY = 333;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=4;
+						hero.x=70;
+						exhibit3.active=true;
+						people.active=true;
+						people.skin=2;
+						people.x=300;
+						people.y=450;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=5;
+						people1.x=300;
+						people1.y=250;
+						people1.movement=2;
+					}
+				}
+				if(hero.y<=270){
+					hero.y=270;
+				}
+				if(hero.x>235&&hero.x<335){
+					if(hero.y<290){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=11;
+						hero.y=520;
+						people.skin=4;
+						people.x=300;
+						people.y=300;
+						people.movement=3;
+						people1.active=false;
+					}
+				}
+			}
+			if(controller.floor==6){
+				arena.sourceX = 1810;
+				arena.sourceY = 333;
+				if(hero.key==false){
+					if(hero.carrot==true){
+						hero.following=true;
 					}else{
-						bossbullet1.skin=5;
-						bossbullet1.movement=1;
-						bossbullet2.skin=5;
-						bossbullet2.movement=2;
-						bossbullet3.skin=5;
-						bossbullet3.movement=3;
+						dialog.skin=4;
+					}
+				}
+				if(hero.y>=150&&hero.y<=490){
+					if(hero.x>=405&&hero.x<=410){
+						hero.x=405;
+					}
+				}
+				if(hero.x>=405&&hero.x<=660){
+					if(hero.y>=465&&hero.y<=470){
+						hero.y=470;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=7;
+						hero.y=180;
+						people.active=true;
+						people.skin=4;
+						people.x=300;
+						people.y=300;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=15;
+						people1.x=250;
+						people1.y=400;
+						people1.movement=2;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=4;
+						hero.x=615;
+						exhibit3.active=true;
+						people.active=true;
+						people.skin=2;
+						people.x=300;
+						people.y=450;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=5;
+						people1.x=300;
+						people1.y=250;
+						people1.movement=2;
+						dialog.skin=2;
 					}
 				}
 			}
-		}
-		//KATAKUMBY
-		if(controller.floor==38){
-			arena.sourceX = 1448;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=39;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=350;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=350;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=2;
-					enemy3.active=true;
-					enemy3.x=350;
-					enemy3.y=350;
-					enemy3.skin=14;
-					enemy3.movement=1;
-					enemy4.active=true;
-					enemy4.x=350;
-					enemy4.y=350;
-					enemy4.skin=14;
-					enemy4.movement=2;
+			if(controller.floor==7){
+				arena.sourceX = 2172;
+				arena.sourceY = 333;
+				if(hero.x<=188){
+					hero.x=188;
 				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=23;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
+				if(hero.x>=490){
+					hero.x=490;
 				}
-			}
-		}
-		if(controller.floor==39){
-			arena.sourceX = 1810;
-			arena.sourceY = 999;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=40;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=220;
-					enemy1.skin=10;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=90;
-					enemy2.y=520;
-					enemy2.skin=9;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=550;
-					enemy3.y=220;
-					enemy3.skin=9;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=550;
-					enemy4.y=500;
-					enemy4.skin=10;
-					enemy4.movement=2;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=46;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=220;
-					enemy1.skin=10;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=90;
-					enemy2.y=520;
-					enemy2.skin=9;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=550;
-					enemy3.y=220;
-					enemy3.skin=9;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=550;
-					enemy4.y=500;
-					enemy4.skin=10;
-					enemy4.movement=2;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=38;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==40){
-			arena.sourceX = 2172;
-			arena.sourceY = 999;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=39;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=350;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=350;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=2;
-					enemy3.active=true;
-					enemy3.x=350;
-					enemy3.y=350;
-					enemy3.skin=14;
-					enemy3.movement=1;
-					enemy4.active=true;
-					enemy4.x=350;
-					enemy4.y=350;
-					enemy4.skin=14;
-					enemy4.movement=2;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=41;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=250;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=450;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=250;
-					enemy3.y=350;
-					enemy3.skin=13;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=450;
-					enemy4.y=350;
-					enemy4.skin=13;
-					enemy4.movement=2;
-				}
-			}
-		}
-		if(controller.floor==41){
-			arena.sourceX = 2534;
-			arena.sourceY = 999;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=40;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=220;
-					enemy1.skin=10;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=90;
-					enemy2.y=520;
-					enemy2.skin=9;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=550;
-					enemy3.y=220;
-					enemy3.skin=9;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=550;
-					enemy4.y=500;
-					enemy4.skin=10;
-					enemy4.movement=2;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=42;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=10;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=10;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==42){
-			arena.sourceX = 2896;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=43;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=250;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=90;
-					enemy2.y=450;
-					enemy2.skin=13;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=600;
-					enemy3.y=250;
-					enemy3.skin=13;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=600;
-					enemy4.y=450;
-					enemy4.skin=13;
-					enemy4.movement=2;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=41;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=250;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=450;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=250;
-					enemy3.y=350;
-					enemy3.skin=13;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=450;
-					enemy4.y=350;
-					enemy4.skin=13;
-					enemy4.movement=2;
-				}
-			}
-		}
-		if(controller.floor==43){
-			arena.sourceX = 3258;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=42;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=10;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=10;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=44;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==44){
-			arena.sourceX = 3620;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=47;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=9;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=9;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=45;
-					hero.y=520;
-					enemy1.active=true;
-					enemy1.x=200;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=400;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=200;
-					enemy3.y=350;
-					enemy3.skin=13;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=400;
-					enemy4.y=350;
-					enemy4.skin=13;
-					enemy4.movement=2;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=43;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=250;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=90;
-					enemy2.y=500;
-					enemy2.skin=13;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=600;
-					enemy3.y=250;
-					enemy3.skin=13;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=600;
-					enemy4.y=500;
-					enemy4.skin=13;
-					enemy4.movement=2;
-				}
-			}
-		}
-		if(controller.floor==45){
-			arena.sourceX = 4344;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=46;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=90;
-					enemy1.y=220;
-					enemy1.skin=10;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=90;
-					enemy2.y=520;
-					enemy2.skin=9;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=550;
-					enemy3.y=220;
-					enemy3.skin=9;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=550;
-					enemy4.y=500;
-					enemy4.skin=10;
-					enemy4.movement=2;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=44;
-					hero.y=180;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==46){
-			arena.sourceX = 3982;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=45;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=200;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=400;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=1;
-					enemy3.active=true;
-					enemy3.x=200;
-					enemy3.y=350;
-					enemy3.skin=13;
-					enemy3.movement=2;
-					enemy4.active=true;
-					enemy4.x=400;
-					enemy4.y=350;
-					enemy4.skin=13;
-					enemy4.movement=2;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=39;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=350;
-					enemy1.y=350;
-					enemy1.skin=13;
-					enemy1.movement=1;
-					enemy2.active=true;
-					enemy2.x=350;
-					enemy2.y=350;
-					enemy2.skin=13;
-					enemy2.movement=2;
-					enemy3.active=true;
-					enemy3.x=350;
-					enemy3.y=350;
-					enemy3.skin=14;
-					enemy3.movement=1;
-					enemy4.active=true;
-					enemy4.x=350;
-					enemy4.y=350;
-					enemy4.skin=14;
-					enemy4.movement=2;
-				}
-			}
-		}
-		if(controller.floor==47){
-			arena.sourceX = 0;
-			arena.sourceY = 1332;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=48;
-					hero.x=615;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=44;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==48){
-			arena.sourceX = 724;
-			arena.sourceY = 1332;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=47;
-					hero.x=70;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=9;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=10;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=10;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=9;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-			}
-		}
-		if(controller.floor==49){
-			arena.sourceX = 3620;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=20;
-					hero.x=615;
-					enemy1.active=true;
-					enemy1.x=190;
-					enemy1.y=350;
-					enemy1.skin=2;
-					enemy1.movement=Math.floor(Math.random()*4+1);
-					enemy2.active=true;
-					enemy2.x=490;
-					enemy2.y=350;
-					enemy2.skin=2;
-					enemy2.movement=Math.floor(Math.random()*4+1);
-					enemy3.active=true;
-					enemy3.x=270;
-					enemy3.y=350;
-					enemy3.skin=3;
-					enemy3.movement=Math.floor(Math.random()*4+1);
-					enemy4.active=true;
-					enemy4.x=380;
-					enemy4.y=350;
-					enemy4.skin=3;
-					enemy4.movement=Math.floor(Math.random()*4+1);
-				}
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=50;
-					hero.x=70;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-		}
-		if(controller.floor==50){
-			arena.sourceX = 3982;
-			arena.sourceY = 666;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=49;
-					hero.x=615;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=51;
-					hero.y=180;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-		}
-		if(controller.floor==51){
-			arena.sourceX = 4344;
-			arena.sourceY = 666;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=50;
-					hero.y=520;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=52;
-					hero.y=180;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-		}
-		if(controller.floor==52){
-			arena.sourceX = 0;
-			arena.sourceY = 999;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=51;
-					hero.y=520;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.y>265&&hero.y<380){
-				if(hero.x>620){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=53;
-					hero.x=70;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-		}
-		if(controller.floor==53){
-			arena.sourceX = 362;
-			arena.sourceY = 999;
-			if(hero.y>265&&hero.y<380){
-				if(hero.x<65){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=52;
-					hero.x=615;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-				}
-			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=54;
-					hero.y=520;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-					if(controller.bdefeat==2){
-						boss.active=true;
-						boss.skin=3;
-						boss.x=350;
-						boss.y=180;
-						boss.health=84;
-						bossbullet1.skin=7;
-						bossbullet2.skin=7;
-						bossbullet3.skin=7;
-						bossbullet1.x=boss.x+40;
-						bossbullet1.y=boss.y+10;
-						bossbullet2.x=boss.x+20;
-						bossbullet2.y=boss.y+10;
-						bossbullet3.x=boss.x+40;
-						bossbullet3.y=boss.y+10;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=6;
+						hero.y=520;
+						people1.active=false;
+						if(hero.carrot==false){
+							people.skin=3;
+							people.x=300;
+							people.y=300;
+							people.movement=3;
+							dialog.skin=4;
+						}else{
+							people.skin=0;
+							dialog.skin=0;
+						}
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=8;
+						hero.y=180;
+						people.skin=10;
+						people.x=627;
+						people.y=300;
+						people1.active=false;
 					}
 				}
 			}
-		}
-		if(controller.floor==54){
-			arena.sourceX = 4344;
-			arena.sourceY = 666;
-			if(boss.active==true){
-				if(hero.y-boss.y<150){
-					boss.movement=2;
+			if(controller.floor==8){
+				arena.sourceX = 2534;
+				arena.sourceY = 333;
+				if(hero.y>=365){
+					hero.y=365;
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=7;
+						hero.y=520;
+						people.skin=4;
+						people.x=300;
+						people.y=300;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=15;
+						people1.x=250;
+						people1.y=400;
+						people1.movement=2;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=9;
+						hero.x=615;
+						exhibit1.active=true;
+						people.skin=6;
+						people.x=300;
+						people.y=220;
+						people.movement=1;
+						people1.active=false;
+					}
+				}
+			}
+			if(controller.floor==9){
+				arena.sourceX = 2896;
+				arena.sourceY = 333;
+				exhibit1.x=280;
+				exhibit1.y=185;
+				exhibit1.skin=4;
+				//blokowanie wejscia na drzewo
+				if(hero.y>=240&&hero.y<=440){
+					if(hero.x>=195&&hero.x<=200){
+						hero.x=195;
+					}
+					if(hero.x>=495&&hero.x<=500){
+						hero.x=500;
+					}
+				}
+				if(hero.x>=195&&hero.x<=500){
+					if(hero.y>=240&&hero.y<=245){
+						hero.y=240;
+					}
+					if(hero.y>=435&&hero.y<=440){
+						hero.y=440;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=10;
+						hero.x=615;
+						people.skin=0;
+						exhibit1.active=false;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=8;
+						hero.x=70;
+						exhibit1.active=false;
+						people.skin=10;
+						people.x=627;
+						people.y=300;
+						people1.active=false;
+					}
+				}
+			}
+			if(controller.floor==10){
+				that.bgm7.pause();
+				that.bgm4.play();
+				that.bgm4.loop=true;
+				arena.sourceX = 3258;
+				arena.sourceY = 333;
+				//zablokowanie wejscia na sciany
+				if(hero.x>=60&&hero.x<=350){
+					if(hero.y>=250&&hero.y<=260){
+						hero.y=260;
+					}
+					if(hero.y>=395&&hero.y<=405){
+						hero.y=395;
+					}
+				}
+				if(hero.y>=90&&hero.y<=250){
+					if(hero.x>=345&&hero.x<=355){
+						hero.x=355;
+					}
+				}
+				if(hero.y>=400&&hero.y<=600){
+					if(hero.x>=345&&hero.x<=355){
+						hero.x=355;
+					}
+				}
+				//zablokowanie wejscia na rosliny
+				if(hero.x>=340&&hero.x<=650){
+					if(hero.y>=470&&hero.y<=480){
+						hero.y=470;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=12;
+						hero.x=615;
+						controller.engrid=2;
+						enemy1.skin=5;
+						enemy2.skin=5;
+						enemy3.skin=5;
+						enemy4.skin=5;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=7;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=7;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=9;
+						hero.x=70;
+						exhibit1.active=true;
+						people.active=true;
+						people.skin=6;
+						people.x=300;
+						people.y=220;
+						people.movement=1;
+						people1.active=false;
+					}
+				}
+			}
+			if(controller.floor==11){
+				arena.sourceX = 3620;
+				arena.sourceY = 333;
+				people.active=true;
+				people.x=250;
+				people.y=315;
+				people.skin=7;
+				dialog.skin=5;
+				if(hero.y<=377){
+					hero.y=377;
+				}
+				//zakupy
+				if(hero.x>=120&&hero.x<=180){
+					if(hero.y<=377){
+						if(hero.gold>=70){
+							if(hero.apple<9){
+								hero.apple+=1;
+								hero.gold-=70;
+								hero.y=387;
+								that.se13.play();
+							}
+						}
+					}
+				}
+				if(hero.x>=305&&hero.x<=375){
+					if(hero.y<=377){
+						if(hero.gold>=500){
+							if(hero.magic==false){
+								hero.magic=true;
+								hero.gold-=500;
+								hero.y=387;
+								that.se13.play();
+							}
+						}
+					}
+				}
+				if(hero.x>=490&&hero.x<=550){
+					if(hero.y<=377){
+						if(hero.gold>=50){
+							if(hero.potion<9){
+								hero.potion+=1;
+								hero.gold-=50;
+								hero.y=387;
+								that.se13.play();
+							}
+						}
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=5;
+						hero.y=295;
+						people.skin=13;
+						people.x=350;
+						people.y=400;
+						people.movement=1;
+						people1.active=true;
+						people1.skin=14;
+						people1.x=120;
+						people1.y=300;
+						people1.movement=2;
+					}
+				}
+			}
+			if(controller.floor==12){
+				that.bgm4.pause();
+				that.bgm7.play();
+				that.bgm7.loop=true;
+				arena.sourceX = 3982;
+				arena.sourceY = 333;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=13;
+						hero.x=615;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=1;
+						enemy1.skin=8;
+						enemy2.skin=8;
+						enemy3.skin=7;
+						enemy4.skin=7;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=10;
+						hero.x=70;
+						exhibit1.skin=0;
+						exhibit2.skin=0;
+						exhibit3.active=false;
+						exhibit4.active=false;
+
+					}
+				}
+			}
+			if(controller.floor==13){
+				arena.sourceX = 4344;
+				arena.sourceY = 333;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=12;
+						hero.x=70;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=2;
+						enemy1.skin=5;
+						enemy2.skin=5;
+						enemy3.skin=5;
+						enemy4.skin=5;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=14;
+						hero.y=180;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=3;
+						enemy1.skin=8;
+						enemy2.skin=8;
+						enemy3.skin=8;
+						enemy4.skin=8;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==14){
+				arena.sourceX = 0;
+				arena.sourceY = 666;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=15;
+						hero.x=70;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=1;
+						enemy1.skin=8;
+						enemy2.skin=5;
+						enemy3.skin=5;
+						enemy4.skin=8;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=13;
+						hero.y=520;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=1;
+						enemy1.skin=8;
+						enemy2.skin=8;
+						enemy3.skin=7;
+						enemy4.skin=7;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+			}
+			if(controller.floor==15){
+				arena.sourceX = 362;
+				arena.sourceY = 666;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=16;
+						hero.y=520;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=3;
+						enemy1.skin=7;
+						enemy2.skin=7;
+						enemy3.skin=7;
+						enemy4.skin=7;
+						enemy1.movement=3;
+						enemy2.movement=4;
+						enemy3.movement=4;
+						enemy4.movement=3;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=14;
+						hero.x=615;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=3;
+						enemy1.skin=8;
+						enemy2.skin=8;
+						enemy3.skin=8;
+						enemy4.skin=8;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==16){
+				arena.sourceX = 724;
+				arena.sourceY = 666;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=17;
+						hero.x=615;
+						people.active=true;
+						exhibit1.skin=0;
+						exhibit2.skin=0;
+						dialog.active=true;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.acitve=false;
+						enemy4.active=false;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=15;
+						hero.y=180;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						controller.engrid=1;
+						enemy1.skin=8;
+						enemy2.skin=5;
+						enemy3.skin=5;
+						enemy4.skin=8;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+			}
+			if(controller.floor==17){
+				arena.sourceX = 1086;
+				arena.sourceY = 666;
+				people.skin=8;
+				people.x=120;
+				people.y=350;
+				dialog.skin=6;
+				enemy1.active=false;
+				enemy2.active=false;
+				enemy3.active=false;
+				enemy4.active=false;
+				if(hero.key==false){
+					if(hero.carrot==false){
+						hero.carrot=true;
+					}
+					if(hero.following==true){
+						hero.key=true;
+						hero.gold+=150;
+						hero.exp+=50;
+					}
+					
+				}else{
+					people2.skin=9;
+					people2.movement=0;
+					people2.x=120;
+					people2.y=450;
+					dialog.skin=7;
+				}
+				//blokowanie wejscia na stół
+				if(hero.y>=255&&hero.y<=415){
+					if(hero.x>=170&&hero.x<=175){
+						hero.x=170;
+					}
+					if(hero.x>=310&&hero.x<=320){
+						hero.x=320;
+					}
+				}
+				if(hero.x>=170&&hero.x<=320){
+					if(hero.y>=255&&hero.y<=265){
+						hero.y=255;
+					}
+					if(hero.y>=410&&hero.y<=415){
+						hero.y=415;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=16;
+						hero.x=70;
+						exhibit1.skin=7;
+						exhibit1.x=180;
+						exhibit1.y=145;
+						exhibit2.skin=7;
+						exhibit2.x=500;
+						exhibit2.y=145;
+						people.active=false;
+						dialog.skin=0;
+						controller.engrid=3;
+						enemy1.skin=7;
+						enemy2.skin=7;
+						enemy3.skin=7;
+						enemy4.skin=7;
+						enemy1.movement=3;
+						enemy2.movement=4;
+						enemy3.movement=4;
+						enemy4.movement=3;
+						if(hero.key==true){
+							people2.skin=0;
+						}
+					}
+				}
+			}
+			//PODZIEMIA
+			if(controller.floor==18){
+				that.bgm4.pause();
+				that.bgm8.pause();
+				arena.sourceX = 1448;
+				arena.sourceY = 666;
+				exhibit1.skin=6;
+				exhibit1.x=24;
+				exhibit1.y=378;
+				exhibit2.active=false;
+				if(hero.y<=290){
+					hero.y=290;
+				}
+				if(hero.y>=350){
+					hero.y=350;
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						exhibit1.active=false;
+						controller.floor=19;
+						hero.x=615;
+						controller.engrid=2;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=38;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=39;
+						exhibit4.x=500;
+						exhibit4.y=145;
+						enemy1.skin=5;
+						enemy3.skin=5;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=1;
+						exhibit1.active=false;
+						hero.x=70;
+						people.active=false;
+						dialog.skin=0;
+						exhibit1.active=true;
+						exhibit2.active=true;
+					}
+				}
+			}
+			if(controller.floor==19){
+				that.bgm8.play();
+				that.bgm8.loop=true;
+				arena.sourceX = 1810;
+				arena.sourceY = 666;
+				enemy2.active=false;
+				enemy4.active=false;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=18;
+						hero.x=70;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.active=false;
+						enemy4.active=false;
+						exhibit1.active=true;
+						exhibit3.active=false;
+						exhibit4.active=false;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=20;
+						hero.y=180;
+						controller.engrid=3;
+						enemy1.skin=2;
+						enemy2.skin=2;
+						enemy3.skin=3;
+						enemy4.skin=3;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+			}
+			if(controller.floor==20){
+				that.bgm11.pause();
+				that.bgm8.play();
+				that.bgm8.loop=true;
+				arena.sourceX = 2534;
+				arena.sourceY = 666;
+				exhibit3.active=true;
+				exhibit4.active=true;
+				exhibit3.skin=38;
+				exhibit3.x=180;
+				exhibit3.y=145;
+				exhibit4.skin=39;
+				exhibit4.x=500;
+				exhibit4.y=145;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=19;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.skin=5;
+						enemy3.skin=5;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=21;
+						hero.y=180;
+						controller.engrid=1;
+						enemy1.skin=4;
+						enemy2.skin=2;
+						enemy3.skin=2;
+						enemy4.skin=4;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=38;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=39;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=23;
+						hero.x=615;
+						controller.engrid=1;
+						enemy1.skin=4;
+						enemy2.skin=4;
+						enemy3.skin=4;
+						enemy4.skin=4;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+						exhibit4.active=false;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=49;
+						hero.x=70;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.active=false;
+						enemy4.active=false;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=37;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=37;
+						exhibit4.x=500;
+						exhibit4.y=145;
+						that.bgm11.play();
+					}
+				}
+			}
+			if(controller.floor==21){
+				that.bgm6.pause();
+				that.bgm8.play();
+				that.bgm8.loop=true;
+				arena.sourceX = 2896;
+				arena.sourceY = 666;				
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=20;
+						hero.y=520;
+						controller.engrid=3;
+						enemy1.skin=2;
+						enemy2.skin=2;
+						enemy3.skin=3;
+						enemy4.skin=3;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=25;
+						hero.x=615;
+						controller.engrid=1;
+						enemy1.skin=3;
+						enemy2.skin=11;
+						enemy3.skin=3;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=8;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=8;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=24;
+						hero.x=70;
+						controller.engrid=1;
+						enemy1.skin=11;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=8;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=8;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+			}
+			//RUINY
+			if(controller.floor==23){
+				that.bgm5.pause();
+				that.bgm8.play();
+				that.bgm8.loop=true;
+				arena.sourceX = 2172;
+				arena.sourceY = 666;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=20;
+						hero.x=70;
+						controller.engrid=3;
+						enemy1.skin=2;
+						enemy2.skin=2;
+						enemy3.skin=3;
+						enemy4.skin=3;
+						enemy1.movement=4;
+						enemy2.movement=4;
+						enemy3.movement=3;
+						enemy4.movement=3;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=38;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=39;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+				if(controller.bdefeat>=1){
+					exhibit3.active=false;
+					if(hero.x>260&&hero.x<430){
+						if(hero.y<180){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=38;
+							hero.y=520;
+							controller.engrid=2;
+							enemy1.skin=9;
+							enemy2.skin=9;
+							enemy3.skin=10;
+							enemy4.skin=10;
+							enemy1.movement=3;
+							enemy2.movement=4;
+							enemy3.movement=4;
+							enemy4.movement=3;
+							exhibit3.active=false;
+							exhibit4.active=false;
+						}
+					}
+				}else{
+					exhibit3.active=true;
+					exhibit3.skin=27;
+					exhibit3.x=288;
+					exhibit3.y=136;
+				}
+			}
+			if(controller.floor==24){
+				that.bgm8.pause();
+				that.bgm6.play();
+				that.bgm6.loop=true;
+				arena.sourceX = 2534;
+				arena.sourceY = 1332;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=21;
+						hero.x=615;
+						controller.engrid=1;
+						enemy1.skin=4;
+						enemy2.skin=2;
+						enemy3.skin=2;
+						enemy4.skin=4;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=38;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=39;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=32;
+						hero.y=180;
+						controller.engrid=2;
+						enemy1.skin=3;
+						enemy2.skin=15;
+						enemy3.skin=12;
+						enemy4.skin=3;
+						enemy1.movement=1;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==25){
+				that.bgm8.pause();
+				that.bgm6.play();
+				that.bgm6.loop=true;
+				arena.sourceX = 2172;
+				arena.sourceY = 1332;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=21;
+						hero.x=70;
+						controller.engrid=1;
+						enemy1.skin=4;
+						enemy2.skin=2;
+						enemy3.skin=2;
+						enemy4.skin=4;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=38;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=39;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=26;
+						hero.y=180;
+						controller.engrid=2;
+						enemy1.skin=15;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=15;
+						enemy2.movement=1;
+						enemy3.movement=2;
+					}
+				}
+			}
+			if(controller.floor==26){
+				arena.sourceX = 2896;
+				arena.sourceY = 1332;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=25;
+						hero.y=520;
+						controller.engrid=1;
+						enemy1.skin=3;
+						enemy2.skin=11;
+						enemy3.skin=3;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=27;
+						hero.y=180;
+						controller.engrid=3;
+						enemy1.skin=11;
+						enemy2.skin=11;
+						enemy3.skin=11;
+						enemy4.skin=11;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=31;
+						hero.x=70;
+						controller.engrid=4;
+						enemy1.skin=11;
+						enemy2.skin=11;
+						enemy3.skin=11;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=2;
+						enemy3.movement=2;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==27){
+				arena.sourceX = 3258;
+				arena.sourceY = 1332;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=26;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.skin=15;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=15;
+						enemy2.movement=1;
+						enemy3.movement=2;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=28;
+						hero.y=180;
+						controller.engrid=1;
+						enemy1.skin=3;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=3;
+						enemy1.movement=2;
+						enemy2.movement=3;
+						enemy3.movement=2;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==28){
+				arena.sourceX = 3620;
+				arena.sourceY = 1332;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=27;
+						hero.y=520;
+						controller.engrid=3;
+						enemy1.skin=11;
+						enemy2.skin=11;
+						enemy3.skin=11;
+						enemy4.skin=11;
+						enemy1.movement=4;
+						enemy2.movement=4;
+						enemy3.movement=4;
+						enemy4.movement=4;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=29;
+						hero.x=70;
+						controller.engrid=2;
+						enemy1.skin=15;
+						enemy2.skin=15;
+						enemy3.skin=15;
+						enemy4.skin=15;
+					}
+				}
+			}
+			if(controller.floor==29){
+				arena.sourceX = 3982;
+				arena.sourceY = 1332;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=30;
+						hero.y=180;
+						controller.engrid=2;
+						enemy1.skin=12;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=12;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=28;
+						hero.x=615;
+						controller.engrid=1;
+						enemy1.skin=3;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=3;
+						enemy1.movement=2;
+						enemy2.movement=3;
+						enemy3.movement=2;
+						enemy4.movement=3;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=35;
+						hero.x=70;
+						controller.engrid=3;
+						enemy1.skin=12;
+						enemy2.skin=3;
+						enemy3.skin=3;
+						enemy4.skin=12;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==30){
+				that.bgm6.play();
+				that.bgm6.loop=true;
+				arena.sourceX = 4344;
+				arena.sourceY = 1332;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=29;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.skin=15;
+						enemy2.skin=15;
+						enemy3.skin=15;
+						enemy4.skin=15;
+					}
+				}
+if(hero.y>=365&&hero.y<=505){
+						if(hero.x>=405&&hero.x<=530){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=36;
+							hero.x=110;
+							hero.y=375;
+							if(controller.bdefeat==0){
+								exhibit4.timemove=110;
+								exhibit4.y=330;
+							}else{
+								exhibit4.y=220;
+							}
+						}
+						if(hero.x>=520&&hero.x<=530){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=36;
+							hero.x=110;
+							hero.y=375;
+							if(controller.bdefeat==0){
+								exhibit4.timemove=110;
+								exhibit4.y=330;
+							}else{
+								exhibit4.y=220;
+							}
+						}
+					}
+					if(hero.x>=365&&hero.x<=530){
+						if(hero.y>=365&&hero.y<=375){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=36;
+							hero.x=110;
+							hero.y=375;
+							if(controller.bdefeat==0){
+								exhibit4.timemove=110;
+								exhibit4.y=330;
+							}else{
+								exhibit4.y=220;
+							}
+						}
+						if(hero.y>=500&&hero.y<=505){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=36;
+							hero.x=110;
+							hero.y=375;
+							if(controller.bdefeat==0){
+								exhibit4.timemove=110;
+								exhibit4.y=330;
+							}else{
+								exhibit4.y=220;
+							}
+						}
+					}
+			}
+			if(controller.floor==31){
+				arena.sourceX = 0;
+				arena.sourceY = 1665;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=26;
+						hero.x=615;
+						controller.engrid=2;
+						enemy1.skin=15;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=15;
+						enemy2.movement=2;
+						enemy3.movement=2;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=32;
+						hero.x=70;
+						controller.engrid=2;
+						enemy1.skin=3;
+						enemy2.skin=15;
+						enemy3.skin=12;
+						enemy4.skin=3;
+						enemy1.movement=1;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==32){
+				arena.sourceX = 362;
+				arena.sourceY = 1665;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=24;
+						hero.y=520;
+						controller.engrid=1;
+						enemy1.skin=11;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=33;
+						hero.y=180;
+						controller.engrid=1;
+						enemy1.skin=11;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=31;
+						hero.x=615;
+						controller.engrid=4;
+						enemy1.skin=11;
+						enemy2.skin=11;
+						enemy3.skin=11;
+						enemy4.skin=11;
+						enemy1.movement=1;
+						enemy2.movement=1;
+						enemy3.movement=1;
+						enemy4.movement=1;
+					}
+				}
+			}
+			if(controller.floor==33){
+				arena.sourceX = 724;
+				arena.sourceY = 1665;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=32;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.skin=3;
+						enemy2.skin=15;
+						enemy3.skin=12;
+						enemy4.skin=3;
+						enemy1.movement=1;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=34;
+						hero.x=70;
+						controller.engrid=2;
+						enemy1.skin=11;
+						enemy2.skin=11;
+						enemy3.skin=11;
+						enemy4.skin=11;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==34){
+				arena.sourceX = 1086;
+				arena.sourceY = 1665;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=33;
+						hero.x=615;
+						controller.engrid=1;
+						enemy1.skin=11;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=11;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=35;
+						hero.y=180;
+						controller.engrid=3;
+						enemy1.skin=12;
+						enemy2.skin=3;
+						enemy3.skin=3;
+						enemy4.skin=12;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==35){
+				arena.sourceX = 1448;
+				arena.sourceY = 1665;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=34;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.skin=11;
+						enemy2.skin=11;
+						enemy3.skin=11;
+						enemy4.skin=11;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=29;
+						hero.x=615;
+						controller.engrid=2;
+						enemy1.skin=15;
+						enemy2.skin=15;
+						enemy3.skin=15;
+						enemy4.skin=15;
+					}
+				}
+			}
+			//AKWEDUKT
+			if(controller.floor==36){
+				that.bgm6.pause();
+				that.bgm9.pause();
+				arena.sourceX = 2172;
+				arena.sourceY = 1665;
+				enemy1.active=false;
+				enemy2.active=false;
+				enemy3.active=false;
+				enemy4.active=false;
+				exhibit3.active=true;
+				exhibit3.skin=9;
+				exhibit3.x=58;
+				exhibit3.y=254;
+				exhibit4.active=true;
+				exhibit4.skin=22;
+				exhibit4.x=663;
+				if(exhibit4.movement==4){
+					if(exhibit4.timemove>0){
+						that.se8.play();
+					}
+				}
+				if(hero.x>450){
+					exhibit4.movement=4;
+				}
+				//zablokowanie wejscia do wody
+				if(hero.x>=60&&hero.x<=625){
+					if(hero.y>=260&&hero.y<=270){
+						hero.y=270;
+					}
+					if(hero.y>=450&&hero.y<=460){
+						hero.y=450;
+					}
+				}
+				if(hero.y>=305&&hero.y<=415){
+					if(hero.x>=60&&hero.x<=65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=30;
+						hero.x=350;
+						hero.y=400;
+						exhibit3.active=false;
+						exhibit3.skin=0;
+						exhibit4.active=false;
+						exhibit4.movement=0;
+						controller.engrid=2;
+						enemy1.skin=12;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=12;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=8;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=8;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+					if(hero.x>=80&&hero.x<=85){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=30;
+						hero.x=350;
+						hero.y=400;
+						exhibit3.active=false;
+						exhibit3.skin=0;
+						exhibit4.active=false;
+						exhibit4.movement=0;
+						controller.engrid=2;
+						enemy1.skin=12;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=12;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=8;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=8;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+				if(hero.x>=60&&hero.x<=85){
+					if(hero.y>=305&&hero.y<=310){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=30;
+						hero.x=350;
+						hero.y=400;
+						exhibit3.active=false;
+						exhibit3.skin=0;
+						exhibit4.active=false;
+						exhibit4.movement=0;
+						controller.engrid=2;
+						enemy1.skin=12;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=12;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=8;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=8;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+					if(hero.y>=405&&hero.y<=415){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=30;
+						hero.x=350;
+						hero.y=400;
+						exhibit3.active=false;
+						exhibit3.skin=0;
+						exhibit4.active=false;
+						exhibit4.movement=0;
+						controller.engrid=2;
+						enemy1.skin=12;
+						enemy2.skin=12;
+						enemy3.skin=12;
+						enemy4.skin=12;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=8;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=8;
+						exhibit4.x=500;
+						exhibit4.y=145;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=37;
+						hero.x=70;
+						if(controller.bdefeat==0){
+							exhibit4.y=330;
+							exhibit4.x=21;
+							exhibit4.movement=0;
+							controller.timer2=0;
+							boss.active=true;
+							boss.skin=1;
+							boss.x=500;
+							boss.y=300;
+							boss.health=84;
+							that.bgm9.play();
+							that.bgm9.loop=true;
+							bosspart1.active=true;
+							bosspart1.skin=1;
+							bosspart1.movement=1;
+							bosspart1.x=580;
+							bosspart2.active=true;
+							bosspart2.skin=1;
+							bosspart2.movement=2;
+							bosspart2.x=580;
+							bosspart3.active=true;
+							bosspart3.skin=1;
+							bosspart3.movement=3;
+							bosspart3.x=580;
+							bosspart4.active=true;
+							bosspart4.skin=1;
+							bosspart4.movement=4;
+							bosspart4.x=580;
+						}
+						if(controller.bdefeat>0){
+							exhibit4.y=220;
+							exhibit4.x=21;	
+						}
+					}
+				}
+			}
+			if(controller.floor==37){
+				arena.sourceX = 2534;
+				arena.sourceY = 1665;
+				enemy1.active=false;
+				enemy2.active=false;
+				enemy3.active=false;
+				enemy4.active=false;
+				exhibit3.skin=10;
+				exhibit3.x=58;
+				exhibit3.y=254;
+				//zablokowanie wejscia do wody
+				if(hero.x>=60&&hero.x<=625){
+					if(hero.y>=200&&hero.y<=270){
+						hero.y=270;
+					}
+					if(hero.y>=450&&hero.y<=600){
+						hero.y=450;
+					}
+					if(hero.x>=450&&hero.x<=600){
+						hero.x=450;
+					}
+				}
+				if(controller.bdefeat>0){
+					if(hero.y>265&&hero.y<380){
+						if(hero.x<65){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=36;
+							hero.x=615;
+							boss.active=false;
+							bosspart1.active=false;
+							bosspart2.active=false;
+							bosspart3.active=false;
+							bosspart4.active=false;
+						}
+					}
 				}
 				if(boss.active==true){
+					if(boss.skin==1){
+						if(boss.movement==1||boss.movement==2||boss.movement==5){
+							if(boss.y>hero.y){
+								boss.y-=2;
+							}
+							if(boss.y<hero.y){
+								boss.y+=2;
+							}
+							if(boss.y==hero.y){
+								boss.y=hero.y;
+							}
+						}
+						if(hero.x>=350){
+							if(boss.x>hero.x){
+								boss.movement=2;
+							}else{
+								boss.movement=1;
+								hero.x=boss.x-50;
+							}
+						}
+						if(boss.movement==5){
+							bossbullet1.active=true;
+							bossbullet1.x=boss.x-20;
+							bossbullet1.y=boss.y+70;
+							bossbullet2.active=true;
+							bossbullet2.x=boss.x-20;
+							bossbullet2.y=boss.y+70;
+							bossbullet3.active=true;
+							bossbullet3.x=boss.x-20;
+							bossbullet3.y=boss.y+70;
+							if(boss.animate>=22){
+								bossbullet1.skin=7;
+								bossbullet1.x=boss.x-20;
+								bossbullet1.y=boss.y+70;
+								bossbullet2.skin=7;
+								bossbullet2.x=boss.x-20;
+								bossbullet2.y=boss.y+70;
+								bossbullet3.skin=7;
+								bossbullet3.x=boss.x-20;
+								bossbullet3.y=boss.y+70;
+							}else{
+								bossbullet1.skin=5;
+								bossbullet1.movement=1;
+								bossbullet2.skin=5;
+								bossbullet2.movement=2;
+								bossbullet3.skin=5;
+								bossbullet3.movement=3;
+							}
+						}
+					}
+				}
+			}
+			//KATAKUMBY
+			if(controller.floor==38){
+				that.bgm8.pause();
+				that.bgm5.play();
+				that.bgm5.loop=true;
+				arena.sourceX = 1448;
+				arena.sourceY = 999;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=39;
+						hero.x=615;
+						controller.engrid=5;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=14;
+						enemy4.skin=14;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=23;
+						hero.y=180;
+						controller.engrid=1;
+						enemy1.skin=4;
+						enemy2.skin=4;
+						enemy3.skin=4;
+						enemy4.skin=4;
+						enemy1.movement=2;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=1;
+						exhibit3.active=true;
+						exhibit4.active=false;
+					}
+				}
+			}
+			if(controller.floor==39){
+				arena.sourceX = 1810;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Środek
+				if(hero.y>=275&&hero.y<=440&&hero.x>=142&&hero.x<=300){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Góra				
+				if(hero.y>=160&&hero.y<=300&&hero.x>=455&&hero.x<=550){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}				
+				if(hero.y>=225&&hero.y<=300&&hero.x>=395&&hero.x<=550){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Dół
+				if(hero.y>=420&&hero.y<=500&&hero.x>=395&&hero.x<=550){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.y>=500&&hero.y<=650&&hero.x>=455&&hero.x<=550){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=40;
+						hero.y=180;
+						controller.engrid=3;
+						enemy1.skin=20;
+						enemy2.skin=9;
+						enemy3.skin=9;
+						enemy4.skin=20;
+						enemy1.movement=4;
+						enemy2.movement=4;
+						enemy3.movement=4;
+						enemy4.movement=4;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=46;
+						hero.x=615;
+						controller.engrid=4;
+						enemy1.skin=10;
+						enemy2.skin=9;
+						enemy3.skin=9;
+						enemy4.skin=10;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=38;
+						hero.x=70;
+						controller.engrid=2;
+						enemy1.skin=9;
+						enemy2.skin=9;
+						enemy3.skin=10;
+						enemy4.skin=10;
+						enemy1.movement=3;
+						enemy2.movement=4;
+						enemy3.movement=4;
+						enemy4.movement=3;
+					}
+				}
+			}
+			if(controller.floor==40){
+				arena.sourceX = 2172;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				if(hero.y>=285&&hero.y<=440&&hero.x>=220&&hero.x<=450){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=39;
+						hero.y=520;
+						controller.engrid=5;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=14;
+						enemy4.skin=14;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=41;
+						hero.y=180;
+						controller.engrid=3;
+						enemy1.skin=14;
+						enemy2.skin=14;
+						enemy3.skin=14;
+						enemy4.skin=14;
+						enemy1.movement=1;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==41){
+				arena.sourceX = 2534;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Góra
+				if(hero.y>=165&&hero.y<=350&&hero.x>=180&&hero.x<=260){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Środek
+				if(hero.y>=290&&hero.y<=350&&hero.x>=180&&hero.x<=420){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Dół
+				if(hero.y>=290&&hero.y<=435&&hero.x>=350&&hero.x<=420){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=40;
+						hero.y=520;
+						controller.engrid=3;
+						enemy1.skin=20;
+						enemy2.skin=9;
+						enemy3.skin=9;
+						enemy4.skin=20;
+						enemy1.movement=3;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=42;
+						hero.x=615;
+						controller.engrid=4;
+						enemy1.skin=10;
+						enemy2.skin=10;
+						enemy3.skin=10;
+						enemy4.skin=10;
+						enemy1.movement=1;
+						enemy2.movement=1;
+						enemy3.movement=1;
+						enemy4.movement=1;
+					}
+				}
+			}
+			if(controller.floor==42){
+				arena.sourceX = 2896;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Lewo
+				if(hero.y>=285&&hero.y<=440&&hero.x>=125&&hero.x<=260){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Podłoga z kolcami
+				//Prawo
+				if(hero.y>=285&&hero.y<=440&&hero.x>=410&&hero.x<=545){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=43;
+						hero.x=615;
+						controller.engrid=2;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=13;
+						enemy4.skin=13;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=41;
+						hero.x=70;
+						controller.engrid=3;
+						enemy1.skin=14;
+						enemy2.skin=14;
+						enemy3.skin=14;
+						enemy4.skin=14;
+						enemy1.movement=1;
+						enemy2.movement=1;
+						enemy3.movement=2;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==43){
+				arena.sourceX = 3258;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Lewo Góra
+				if(hero.y>=165&&hero.y<=320&&hero.x>=205&&hero.x<=290){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Lewo Środek
+				if(hero.y>=260&&hero.y<=320&&hero.x>=205&&hero.x<=400){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Prawo Góra
+				if(hero.y>=165&&hero.y<=475&&hero.x>=460&&hero.x<=545){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Prawo Dół
+				if(hero.y>=400&&hero.y<=475&&hero.x>=130&&hero.x<=545){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=42;
+						hero.x=70;
+						controller.engrid=4;
+						enemy1.skin=10;
+						enemy2.skin=10;
+						enemy3.skin=10;
+						enemy4.skin=10;
+						enemy1.movement=2;
+						enemy2.movement=2;
+						enemy3.movement=2;
+						enemy4.movement=2;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=44;
+						hero.y=520;
+						controller.engrid=1;
+						enemy1.skin=20;
+						enemy2.skin=10;
+						enemy3.skin=10;
+						enemy4.skin=20;
+						enemy1.movement=4;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=4;
+					}
+				}
+			}
+			if(controller.floor==44){
+				that.bgm5.play();
+				that.bgm5.loop=true;
+				arena.sourceX = 3620;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Lewo Góra
+				if(hero.y>=160&&hero.y<=300&&hero.x>=150&&hero.x<=295){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Lewo Dół
+				if(hero.y>=400&&hero.y<=650&&hero.x>=150&&hero.x<=295){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Prawo Góra
+				if(hero.y>=160&&hero.y<=300&&hero.x>=400&&hero.x<=545){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Prawo Dół
+				if(hero.y>=400&&hero.y<=650&&hero.x>=400&&hero.x<=545){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=47;
+						hero.x=615;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.active=false;
+						enemy4.active=false;
+						if(controller.bdefeat==1){
+							exhibit4.timemove=110;
+							exhibit4.y=330;
+						}
+						if(controller.bdefeat<1){
+							exhibit4.y=330;
+						}
+						if(controller.bdefeat>1){
+							exhibit4.y=220;
+						}
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=45;
+						hero.y=520;
+						controller.engrid=3;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=13;
+						enemy4.skin=13;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=43;
+						hero.y=180;
+						controller.engrid=2;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=13;
+						enemy4.skin=13;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==45){
+				arena.sourceX = 4344;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Środek
+				if(hero.y>=290&&hero.y<=440&&hero.x>=130&&hero.x<=485){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Dół
+				if(hero.y>=405&&hero.y<=650&&hero.x>=405&&hero.x<=650){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=46;
+						hero.x=70;
+						controller.engrid=4;
+						enemy1.skin=10;
+						enemy2.skin=9;
+						enemy3.skin=9;
+						enemy4.skin=10;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=2;
+						enemy4.movement=1;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=44;
+						hero.y=180;
+						controller.engrid=1;
+						enemy1.skin=20;
+						enemy2.skin=10;
+						enemy3.skin=10;
+						enemy4.skin=20;
+						enemy1.movement=4;
+						enemy2.movement=3;
+						enemy3.movement=3;
+						enemy4.movement=4;
+					}
+				}
+			}
+			if(controller.floor==46){
+				arena.sourceX = 3982;
+				arena.sourceY = 999;
+				//Podłoga z kolcami
+				//Lewo Góra
+				if(hero.y>=160&&hero.y<=300&&hero.x>=120&&hero.x<=210){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Lewo Dół
+				if(hero.y>=400&&hero.y<=650&&hero.x>=120&&hero.x<=210){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Środek
+				if(hero.y>=285&&hero.y<=405&&hero.x>=290&&hero.x<=380){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Prawo Góra
+				if(hero.y>=160&&hero.y<=300&&hero.x>=460&&hero.x<=550){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				//Prawo Dół
+				if(hero.y>=400&&hero.y<=650&&hero.x>=460&&hero.x<=550){
+					hero.hit=true;
+					if(hero.hit==true){
+						if(hero.animate==24){
+							hero.health-=1;
+							that.se11.play();
+							layer1.active=true;
+							layer1.skin=1;
+						}
+					}
+				}
+				
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=45;
+						hero.x=615;
+						controller.engrid=3;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=13;
+						enemy4.skin=13;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=39;
+						hero.x=70;
+						controller.engrid=5;
+						enemy1.skin=13;
+						enemy2.skin=13;
+						enemy3.skin=14;
+						enemy4.skin=14;
+						enemy1.movement=1;
+						enemy2.movement=2;
+						enemy3.movement=1;
+						enemy4.movement=2;
+					}
+				}
+			}
+			if(controller.floor==47){
+				that.bgm5.pause();
+				arena.sourceX = 0;
+				arena.sourceY = 1332;
+				exhibit4.active=true;
+				exhibit4.skin=22;
+				exhibit4.x=21;
+				if(controller.bdefeat==1){
+					if(hero.x<350){
+						exhibit4.movement=4;
+					}
+					if(exhibit4.movement==4){
+						if(exhibit4.timemove>0){
+							that.se8.play();
+						}
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						exhibit3.active=false;
+						if(controller.bdefeat>=1){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=48;
+							hero.x=615;
+							exhibit4.y=330;
+							exhibit4.x=663;
+							exhibit4.movement=0;
+							enemy1.active=false;
+							enemy2.active=false;
+							enemy3.active=false;
+							enemy4.active=false;
+							if(controller.bdefeat<=1){
+								boss.active=true;
+								boss.skin=2;
+								boss.x=250;
+								boss.y=350;
+								boss.health=84;
+								that.bgm9.play();
+								that.bgm9.loop=true;
+								bossbullet1.skin=7;
+								bossbullet2.skin=7;
+								bossbullet3.skin=7;
+								bossbullet1.x=boss.x+40;
+								bossbullet1.y=boss.y+10;
+								bossbullet2.x=boss.x+20;
+								bossbullet2.y=boss.y+10;
+								bossbullet3.x=boss.x+40;
+								bossbullet3.y=boss.y+10;
+							}
+						}
+						if(controller.bdefeat>1){
+							exhibit4.y=220;
+							exhibit4.x=663;	
+						}
+					}
+				}
+				if(hero.x>620){
+					layer1.active=true;
+					layer1.skin=2;
+					controller.floor=44;
+					hero.x=70;
+					controller.engrid=1;
+					enemy1.skin=20;
+					enemy2.skin=10;
+					enemy3.skin=10;
+					enemy4.skin=20;
+					enemy1.movement=4;
+					enemy2.movement=3;
+					enemy3.movement=3;
+					enemy4.movement=4;
+					exhibit4.active=false;
+				}
+			}
+			if(controller.floor==48){
+				arena.sourceX = 362;
+				arena.sourceY = 1332;
+				//blokowanie wejscia na stół
+				if(hero.y>=235&&hero.y<=630){
+					if(hero.x>=50&&hero.x<=55){
+						hero.x=50;
+					}
+					if(hero.x>=145&&hero.x<=155){
+						hero.x=155;
+					}
+				}
+				if(hero.x>=50&&hero.x<=155){
+					if(hero.y>=235&&hero.y<=245){
+						hero.y=235;
+					}
+					if(hero.y>=620&&hero.y<=630){
+						hero.y=630;
+					}
+				}
+				if(boss.active==true){
+					if(boss.skin==2){
+						if(hero.y-bossbullet1.y>-50&&hero.y-bossbullet1.y<bossbullet1.height+10&&hero.x-bossbullet1.x>-50&&hero.x-bossbullet1.x<bossbullet1.width+10){
+							hero.freeze=true;
+							bossbullet1.skin=0;
+						}
+						if(boss.movement==3){
+							bossbullet1.active=true;
+							bossbullet1.x=boss.x+80;
+							bossbullet1.y=boss.y+57;
+							if(boss.animate>=24){
+								bossbullet1.skin=7;
+								bossbullet1.x=boss.x+80;
+								bossbullet1.y=boss.y+57;
+							}else{
+								bossbullet1.skin=8;
+							}
+						}
+						if(boss.movement==4){
+							bossbullet2.active=true;
+							bossbullet2.x=boss.x+50;
+							bossbullet2.y=boss.y+20;
+							if(boss.animate>=36){
+								bossbullet2.skin=7;
+								bossbullet2.x=boss.x+50;
+								bossbullet2.y=boss.y+20;
+							}else{
+								bossbullet2.skin=9;
+							}
+						}
+						if(bossbullet2.active==true){
+							if(hero.x<bossbullet2.x){
+								bossbullet2.movex=2;
+							}
+							if(hero.x>bossbullet2.x){
+								bossbullet2.movex=1;
+							}
+							if(hero.y<bossbullet2.y){
+								bossbullet2.movey=2;
+							}
+							if(hero.y>bossbullet2.y){
+								bossbullet2.movey=1;
+							}
+						}
+					}
+				}
+				if(controller.bdefeat>1){
+					if(hero.y>265&&hero.y<380){
+						if(hero.x>620){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=47;
+							hero.x=70;
+							enemy1.active=false;
+							enemy2.active=false;
+							enemy3.active=false;
+							enemy4.active=false;
+							exhibit3.active=false;
+							exhibit4.active=true;
+							exhibit3.skin=37;
+							exhibit3.x=180;
+							exhibit3.y=145;
+							exhibit4.skin=37;
+							exhibit4.x=500;
+							exhibit4.y=220;
+						}
+					}
+				}
+			}
+			if(controller.floor==49){
+				that.bgm8.pause();
+				that.bgm11.play();
+				that.bgm11.loop=true;
+				arena.sourceX = 3620;
+				arena.sourceY = 666;
+				//BLOKADA PRĄDOWA
+				if(controller.bdefeat<2){
+					exhibit1.active=true;
+					exhibit1.skin=21;
+					exhibit1.x=350;
+					exhibit1.y=170;
+					if(hero.x>=320){
+						hero.hit=true;
+						hero.x=310;
+						if(hero.hit==true){
+							if(hero.animate==24){
+								hero.health-=1;
+								that.se11.play();
+								layer1.active=true;
+								layer1.skin=1;
+							}
+						}
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=20;
+						hero.x=615;
+						exhibit1.active=false;
+						controller.engrid=3;
+						enemy1.skin=2;
+						enemy2.skin=2;
+						enemy3.skin=3;
+						enemy4.skin=3;
+						enemy1.movement=4;
+						enemy2.movement=4;
+						enemy3.movement=3;
+						enemy4.movement=3;
+					}
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=50;
+						hero.x=70;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+					}
+				}
+			}
+			if(controller.floor==50){
+				arena.sourceX = 3982;
+				arena.sourceY = 666;
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=49;
+						hero.x=615;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.active=false;
+						enemy4.active=false;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=51;
+						hero.y=180;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+					}
+				}
+			}
+			if(controller.floor==51){
+				arena.sourceX = 4344;
+				arena.sourceY = 666;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=50;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=52;
+						hero.y=180;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+					}
+				}
+			}
+			if(controller.floor==52){
+				arena.sourceX = 0;
+				arena.sourceY = 999;
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=51;
+						hero.y=520;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+					}
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x>620){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=53;
+						hero.x=70;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+						exhibit3.active=false;
+						if(controller.bdefeat==2){
+							exhibit4.timemove=110;
+							exhibit4.x=304;
+						}
+						if(controller.bdefeat<2){
+							exhibit4.x=304;
+						}
+						if(controller.bdefeat>2){
+							exhibit4.x=195;
+						}
+					}
+				}
+			}
+			if(controller.floor==53){
+				that.bgm11.play();
+				that.bgm11.loop=true;
+				arena.sourceX = 362;
+				arena.sourceY = 999;
+				exhibit4.active=true;
+				exhibit4.skin=23;
+				exhibit4.y=136;
+				if(exhibit4.movement==4){
+					if(exhibit4.timemove>0){
+						that.se8.play();
+					}
+				}
+				if(controller.bdefeat==2){
+					if(hero.x>=250&&hero.x<=400&&hero.y<290){
+						exhibit4.movement=4;
+					}
+				}
+				if(controller.bdefeat<2){
+					exhibit4.x=304;
+					exhibit4.timemove=0;
+				}
+				if(controller.bdefeat>=3){
+					exhibit4.x=190;
+					exhibit4.timemove=0;
+					that.se8.pause();
+				}
+				if(hero.y>265&&hero.y<380){
+					if(hero.x<65){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=52;
+						hero.x=615;
+						exhibit3.active=true;
+						exhibit4.active=true;
+						exhibit3.skin=37;
+						exhibit3.x=180;
+						exhibit3.y=145;
+						exhibit4.skin=37;
+						exhibit4.x=500;
+						exhibit4.y=145;
+						controller.engrid=2;
+						enemy1.active=true;
+						enemy1.skin=17;
+						enemy2.active=true;
+						enemy2.skin=17;
+						enemy3.active=true;
+						enemy3.skin=1;
+						enemy4.active=true;
+						enemy4.skin=1;
+					}
+				}
+				if(hero.x>260&&hero.x<430){
+					if(hero.y<180){
+						if(controller.bdefeat>=2){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=54;
+							hero.y=520;
+							enemy1.active=false;
+							enemy2.active=false;
+							enemy3.active=false;
+							enemy4.active=false;
+							exhibit4.active=false;
+						}
+						if(controller.bdefeat==2){
+							boss.active=true;
+							boss.skin=3;
+							boss.x=350;
+							boss.y=180;
+							boss.health=84;
+							that.bgm9.play();
+							that.bgm9.loop=true;
+							bossbullet1.skin=7;
+							bossbullet2.skin=7;
+							bossbullet3.skin=7;
+							bossbullet1.x=boss.x+40;
+							bossbullet1.y=boss.y+10;
+							bossbullet2.x=boss.x+20;
+							bossbullet2.y=boss.y+10;
+							bossbullet3.x=boss.x+40;
+							bossbullet3.y=boss.y+10;
+						}
+					}
+				}
+			}
+			if(controller.floor==54){
+				that.se9.pause();
+				that.bgm11.pause();
+				arena.sourceX = 4344;
+				arena.sourceY = 666;
+				if(boss.active==true){
+					if(hero.y-boss.y<150){
+						boss.movement=2;
+					}
 					if(boss.skin==3){
 						if(hero.y-bossbullet3.y>-50&&hero.y-bossbullet3.y<bossbullet3.height+10&&hero.x-bossbullet3.x>-50&&hero.x-bossbullet3.x<bossbullet3.width+10){
 							hero.freeze=true;
@@ -9946,57 +15182,365 @@ if(enemy1.active==true&&attack2.active==true){
 							}
 						}
 					}
+				}else{
+					if(hero.x>260&&hero.x<430){
+						if(hero.y<180){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=55;
+							hero.y=520;
+							enemy1.active=false;
+							enemy2.active=false;
+							enemy3.active=false;
+							enemy4.active=false;
+							boss.active=false;
+							exhibit4.active=true;
+							exhibit4.skin=28;
+							exhibit4.x=322;
+							exhibit4.y=182;
+						}
+						if(hero.y>530){
+							layer1.active=true;
+							layer1.skin=2;
+							controller.floor=53;
+							hero.y=180;
+							controller.engrid=2;
+							enemy1.active=true;
+							enemy1.skin=17;
+							enemy2.active=true;
+							enemy2.skin=17;
+							enemy3.active=true;
+							enemy3.skin=1;
+							enemy4.active=true;
+							enemy4.skin=1;
+							if(controller.bdefeat>=2){
+								exhibit4.x=322;
+								exhibit4.y=182;
+							}
+							boss.active=false;
+						}
+					}
 				}
 			}
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=55;
-					hero.y=520;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-					boss.active=false;
+			if(controller.floor==55){
+				that.se9.play();
+				that.se9.loop==true;
+				arena.sourceX = 724;
+				arena.sourceY = 999;
+				//blokowanie wejscia na kamienie
+				if(hero.y>=160&&hero.y<=255){
+					if(hero.x>=210&&hero.x<=215){
+						hero.x=210;
+					}
+					if(hero.x>=465&&hero.x<=470){
+						hero.x=470;
+					}
 				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=53;
-					hero.y=180;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
-					boss.active=false;
+				if(hero.x>=210&&hero.x<=470){
+					if(hero.y>=160&&hero.y<=165){
+						hero.y=160;
+					}
+					if(hero.y>=250&&hero.y<=255){
+						hero.y=255;
+					}
+				}
+				if(hero.x>280&&hero.x<400){
+					if(hero.y<270){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=56;
+						controller.timer2=0;
+						hero.y=520;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.active=false;
+						enemy4.active=false;
+						people.active=true;
+						people.skin=11;
+						people.movement=1;
+						people.x=350;
+						people.y=170;
+						exhibit4.active=false;
+						boss.active=true;
+						boss.skin=4;
+						dialog.active=true;
+						dialog.skin=9;
+						boss.x=320;
+						boss.y=250;
+						boss.movement=0;
+						boss.timemove=0;
+						boss.health=84;
+						that.bgm9.play();
+						that.bgm9.loop=true;
+					}
+					if(hero.y>530){
+						layer1.active=true;
+						layer1.skin=2;
+						controller.floor=54;
+						hero.y=180;
+						enemy1.active=false;
+						enemy2.active=false;
+						enemy3.active=false;
+						enemy4.active=false;
+						exhibit4.active=false;
+					}
 				}
 			}
-		}
-		if(controller.floor==55){
-			arena.sourceX = 724;
-			arena.sourceY = 999;
-			if(hero.x>260&&hero.x<430){
-				if(hero.y<180){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=50;
-					hero.y=520;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
+			if(controller.floor==56){
+				if(controller.bdefeat<=3){
+					if(controller.timer2<=100){
+						controller.timer2+=1;
+					}
+					if(controller.timer2>=100){
+						controller.timer2=0;
+					}
+					if(controller.timer2>=0&&controller.timer2<=50){
+						arena.sourceX = 3258;
+						arena.sourceY = 1665;
+					}
+					if(controller.timer2>=50&&controller.timer2<=100){
+						arena.sourceX = 3620;
+						arena.sourceY = 1665;
+					}
 				}
-				if(hero.y>530){
-					layer1.active=true;
-					layer1.skin=2;
-					controller.floor=54;
-					hero.y=180;
-					enemy1.active=false;
-					enemy2.active=false;
-					enemy3.active=false;
-					enemy4.active=false;
+				if(controller.bdefeat==4){
+					if(boss.skin==6){
+						bossbullet1.active=false;
+						bossbullet2.active=false;
+						bossbullet3.active=false;
+						enemy1.active=true;
+						enemy1.skin=21;
+						enemy1.x=-280;
+						enemy1.y=hero.y-50;
+						enemy2.active=true;
+						enemy2.skin=22;
+						enemy2.x=880;
+						enemy2.y=hero.y-50;
+					}
+					if(boss.skin==7){
+						enemy1.health=9999;
+						enemy2.health=9999;
+						enemy1.active=true;
+						enemy1.skin=21;
+						enemy2.active=true;
+						enemy2.skin=22;
+						if(controller.timer2<=120){
+							controller.timer2+=1;
+						}
+						if(controller.timer2>=120){
+							controller.timer2=0;
+						}
+						if(controller.timer2>=0&&controller.timer2<=30){
+							arena.sourceX = 724;
+							arena.sourceY = 1332;
+						}
+						if(controller.timer2>=30&&controller.timer2<=60||controller.timer2>=90&&controller.timer2<=120){
+							arena.sourceX = 1086;
+							arena.sourceY = 1332;
+						}
+						if(controller.timer2>=60&&controller.timer2<=90){
+							arena.sourceX = 1448;
+							arena.sourceY = 1332;
+						}
+					}
 				}
+				if(controller.bdefeat==5){
+					arena.sourceX = 1810;
+					arena.sourceY = 1332;
+					people.skin=12;
+					that.bgm10.pause();
+					if(hero.y>=160&&hero.y<=250){
+						if(hero.x>=280&&hero.x<=285){
+							controller.ending=true;
+							controller.ingame=false;
+						}
+						if(hero.x>=395&&hero.x<=400){
+							controller.ending=true;
+							controller.ingame=false;
+						}
+					}
+					if(hero.x>=280&&hero.x<=400){
+						if(hero.y>=160&&hero.y<=250){
+							controller.ending=true;
+							controller.ingame=false;
+						}
+					}
+				}
+				if(boss.active==true){
+					if(boss.skin==4){
+						if(dialog.active=true){
+							if(boss.timemove2>=200){
+								dialog.skin=0;
+							}
+						}
+						if(boss.animate>=20){
+							bossbullet1.active=true;
+							bossbullet1.skin=7;
+							bossbullet1.x=boss.x+20;
+							bossbullet1.y=boss.y+50;
+						}						
+					}
+					if(boss.skin==5){
+						if(boss.movement==7){
+							bossbullet1.active=true;
+							bossbullet1.skin=10;
+							bossbullet1.movement=0;
+							if(boss.animate>=50&&boss.animate<=60){
+								bossbullet1.skin=11;
+							}
+							if(bossbullet1.skin==7){
+								bossbullet1.x=boss.x+20;
+								bossbullet1.y=boss.y+50;
+							}
+							if(hero.x>bossbullet1.x){
+								bossbullet1.movex=1;
+							}else{
+								bossbullet1.movex=2;
+							}
+							if(hero.y>bossbullet1.y){
+								bossbullet1.movey=1;
+							}else{
+								bossbullet1.movey=2;
+							}
+						}else{
+							if(bossbullet1.skin==7){
+								bossbullet1.x=boss.x+20;
+								bossbullet1.y=boss.y+50;
+							}
+						}
+						if(boss.movement==9){
+							if(enemy1.active==false&&enemy2.active==false){
+								enemy1.active=true;
+								enemy1.skin=Math.floor(Math.random()*12+1);
+								enemy1.x=110;
+								enemy1.y=350;
+								enemy1.movement=2;
+								enemy2.active=true;
+								enemy2.skin=Math.floor(Math.random()*12+1);
+								enemy2.x=570;
+								enemy2.y=350;
+								enemy2.movement=1;
+							}else{
+								boss.movement=7;
+							}
+						}
+					}
+					if(boss.skin==7){
+						that.bgm9.pause();
+						that.bgm10.play();
+						that.bgm10.loop=true;
+						bosspart1.active=true;
+						bosspart1.skin=2;
+						bosspart1.x=boss.x-46;
+						bosspart1.y=boss.y-20;
+						bosspart2.active=true;
+						bosspart2.skin=3;
+						bosspart2.x=boss.x+130;
+						bosspart2.y=boss.y-20;
+						enemy1.active=true;
+						enemy1.skin=21;
+						enemy2.active=true;
+						enemy2.skin=22;
+						enemy1.y=hero.y-50;
+						enemy2.y=hero.y-50;
+						if(boss.movement==7||boss.movement==8){
+							bossbullet1.active=true;
+							bossbullet1.x=boss.x+40;
+							bossbullet1.y=boss.y+80;
+							bossbullet2.active=true;
+							bossbullet2.x=boss.x+40;
+							bossbullet2.y=boss.y+80;
+							bossbullet3.active=true;
+							bossbullet3.x=boss.x+40;
+							bossbullet3.y=boss.y+80;
+							if(bossbullet1.x<60||bossbullet1.y>450){
+								bossbullet1.skin=7;
+								bossbullet1.x=boss.x+40;
+								bossbullet1.y=boss.y+80;
+							}else{
+								bossbullet1.skin=12;
+								bossbullet1.movement=1;	
+							}
+							if(bossbullet2.y>450){
+								bossbullet2.skin=7;
+								bossbullet2.x=boss.x+40;
+								bossbullet2.y=boss.y+80;
+							}else{
+								bossbullet2.skin=12;
+								bossbullet2.movement=2;	
+							}
+							if(bossbullet3.x>500||bossbullet3.y>450){
+								bossbullet3.skin=7;
+								bossbullet3.x=boss.x+40;
+								bossbullet3.y=boss.y+80;
+							}else{
+								bossbullet3.skin=12;
+								bossbullet3.movement=3;	
+							}
+						}
+					}
+				}
+			}
+			if(controller.engrid>0){
+				enemy1.active=true;
+				enemy2.active=true;
+				enemy3.active=true;
+				enemy4.active=true;
+			}
+			if(controller.engrid==1){
+				enemy1.x=300;
+				enemy1.y=320;
+				enemy2.x=370;
+				enemy2.y=320;
+				enemy3.x=300;
+				enemy3.y=390;
+				enemy4.x=370;
+				enemy4.y=390;
+				controller.engrid=0;
+			}
+			if(controller.engrid==2){
+				enemy1.x=130;
+				enemy1.y=270;
+				enemy2.x=550;
+				enemy2.y=270;
+				enemy3.x=130;
+				enemy3.y=500;
+				enemy4.x=550;
+				enemy4.y=500;
+				controller.engrid=0;
+			}
+			if(controller.engrid==3){
+				enemy1.x=250;
+				enemy1.y=350;
+				enemy2.x=320;
+				enemy2.y=350;
+				enemy3.x=390;
+				enemy3.y=350;
+				enemy4.x=460;
+				enemy4.y=350;
+				controller.engrid=0;
+			}
+			if(controller.engrid==4){
+				enemy1.x=350;
+				enemy1.y=230;
+				enemy2.x=350;
+				enemy2.y=320;
+				enemy3.x=350;
+				enemy3.y=410;
+				enemy4.x=350;
+				enemy4.y=500;
+				controller.engrid=0;
+			}
+			if(controller.engrid==5){
+				enemy1.x=350;
+				enemy1.y=350;
+				enemy2.x=350;
+				enemy2.y=350;
+				enemy3.x=350;
+				enemy3.y=350;
+				enemy4.x=350;
+				enemy4.y=350;
+				controller.engrid=0;
 			}
 		}
 	};
@@ -10007,90 +15551,490 @@ if(enemy1.active==true&&attack2.active==true){
 				var entity = this.entities[i];
 				this.ctx.drawImage(this.masterSprite,entity.sourceX,entity.sourceY,entity.sourceWidth,entity.sourceHeight,Math.floor(entity.x),Math.floor(entity.y),entity.width,entity.height);
 			}
-		this.ctx.fillStyle = '#fff';
-		this.ctx.font="15px 'K2D'";
-		this.ctx.fillText("Z"+hero.active,513,44);
-		this.ctx.fillText("X"+enemy1.health+shine.active+shine.skin+shine.x+shine.y,513,62);
-		this.ctx.fillText("C"+controller.floor,513,92);
-		this.ctx.font="20px 'K2D'";
-		this.ctx.fillText("POZIOM : "+hero.level,330,50);
-		this.ctx.fillText("DOŚW : "+hero.exp,330,74);
-		this.ctx.fillText("/ "+hero.next,445,74);
-		this.ctx.fillText(": "+hero.kills,352,98);
-		this.ctx.fillText(": "+hero.gold,436,98);
-		this.ctx.fillStyle = '#fff';
-		if(controller.hint==false){
-			this.ctx.font="13px 'K2D'";
-			this.ctx.fillText("POMOC ( H )",620,653);
-		}else{
-			this.ctx.font="13px 'K2D'";
-			this.ctx.fillText("CHODZENIE - KLAWISZE STRZAŁEK  ATAK - KLAWISZE Z, X, Z+X  JABŁKO, MIKSTURA - KLAWISZ C, Z+C",43,653);
-		}
-		if(boss.active==true){
-			this.ctx.fillStyle = '#f00';
-			this.ctx.font="17px 'K2D'";
-			this.ctx.fillText("BOSS",145,628);
-		}
-		if(hero.apple>=1){
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText(""+hero.apple,568,101);	
-		}
-		if(hero.potion>=1){
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText(""+hero.potion,622,101);	
-		}
-		if(dialog.skin==1){
 			this.ctx.fillStyle = '#fff';
 			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("UZUPEŁNIJ EKWIPUNEK I WYKONAJ MISJĘ",235,226);
-			this.ctx.fillText("JAKĄ JEST ZBADANIE ODGŁOSÓW, KTÓRE",235,245);
-			this.ctx.fillText("DOBIEGAJĄ Z PODZIEMII, POWODZENIA !!!",235,264);	
-		}
-		if(dialog.skin==2){
-			this.ctx.fillStyle = '#fff';
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("W TEJ KOMNACIE JEST POMNIK BOHATERÓW,",235,226);
-			this.ctx.fillText("KTÓRY LECZY WSZYSTKIE OBRAŻENIA",235,245);
-		}
-		if(dialog.skin==3){
-			this.ctx.fillStyle = '#fff';
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("UWAŻAJ NA GRASUJĄCYCH W MIEŚCIE",235,226);
-			this.ctx.fillText("UZBROJONYCH ZŁODZIEI",235,245);			
-		}
-		if(dialog.skin==4){
-			this.ctx.fillStyle = '#fff';
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("BLA BLE BLA BLE BLU BLA BLI BLA BLE",235,226);
-			this.ctx.fillText("HA HA HA HA HA BLE PFF BLE BLU UUU",235,245);		
-		}
-		if(dialog.skin==5){
-			this.ctx.fillStyle = '#fff';
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("WITAJ DZIELNY WOJOWNIKU !",280,226);
-			this.ctx.fillText("JEŚLI CHCESZ COŚ KUPIĆ, TO PODEJDŹ DO",235,245);
-			this.ctx.fillText("TEGO PRZEDMIOTU",300,264);	
-			this.ctx.font="17px 'K2D'";
-			this.ctx.fillText("70G",158,349);
-			this.ctx.fillText("x 1",177,376);
-			this.ctx.fillText("500G",339,349);
-			this.ctx.fillText("x 1",364,376);
-			this.ctx.fillText("50G",531,349);
-			this.ctx.fillText("x 1",549,376);
-		}
-		if(dialog.skin==6){
-			this.ctx.fillStyle = '#fff';
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("JEŚLI PRZYPROWADZISZ MOJEGO ZIELONEGO",214,226); 
-			this.ctx.fillText("POMOCNIKA, TO DOSTANIESZ KLUCZ DO",214,245);
-			this.ctx.fillText("PODZIEMI. TRZYMAJ JEGO ULUBIONY PRZYSMAK. ",214,264);
-		}
-		if(dialog.skin==7){
-			this.ctx.fillStyle = '#fff';
-			this.ctx.font="15px 'K2D'";
-			this.ctx.fillText("!!!   DZIĘKI WIELKIE ZA POMOC   !!!",270,226); 
-			this.ctx.fillText("UWAŻAJ NA SIEBIE I POWODZENIA",270,264);
-		}
+			if(controller.brand==true){
+				if(controller.timer>8&&controller.timer<392){
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText("LOST WORLD © 2020 MARIUSZ JAŁYŃSKI",80,155);
+					this.ctx.fillText("TO DARMOWA APLIKACJA, KTÓREJ REALIZACJA MIAŁA",80,215);
+					this.ctx.fillText("NA CELU NAUKĘ JĘZYKA JAVASCRIPT.",80,240);
+					this.ctx.fillText("WYKORZYSTANE W GRZE GRAFIKI ORAZ KOD SĄ CHRONIONE",80,290);
+					this.ctx.fillText("PRAWAMI AUTORSKIMI.",80,315);
+					this.ctx.fillText("W APLIKACJI ZOSTAŁ WYKORZYSTANY KOD PRZYKŁADU",80,365);
+					this.ctx.fillText("RENDEROWANIA GRAFIKI, KTÓRY JEST AUTORSTWA JS.n00b",80,390);
+					this.ctx.fillText("MIŁEGO GRANIA :)",80,455);
+				}
+			}
+			if(controller.lang==0){
+				if(controller.choose==true){
+					this.ctx.fillStyle = '#ff';
+					this.ctx.font="40px 'K2D'";
+					this.ctx.fillText("WYBIERZ JĘZYK",180,100);
+				}
+				if(controller.title==true){
+					if(controller.timer>0&&controller.timer<60){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="20px 'K2D'";
+						this.ctx.fillText("NACIŚNIJ ENTER ABY ROZPOCZĄĆ PRZYGODĘ",150,440);
+					}else{
+						this.ctx.fillStyle = '#000';
+					}
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText("2020 MARIUSZ JAŁYŃSKI",230,620);
+				}
+				if(controller.tutorial==true||controller.ingame==true){
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="15px 'K2D'";
+					this.ctx.fillText("Z",513,44);
+					this.ctx.fillText("X",513,62);
+					this.ctx.fillText("C",513,92);
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText("POZIOM : "+hero.level,330,50);
+					this.ctx.fillText("DOŚW : "+hero.exp,330,74);
+					this.ctx.fillText("/ "+hero.next,445,74);
+					this.ctx.fillText(": "+hero.kills,352,98);
+					this.ctx.fillText(": "+hero.gold,436,98);
+					this.ctx.fillStyle = '#fff';
+					if(hero.apple>=1){
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText(""+hero.apple,568,101);	
+					}
+					if(hero.potion>=1){
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText(""+hero.potion,622,101);	
+					}
+					if(controller.hint==false){
+						this.ctx.font="13px 'K2D'";
+						this.ctx.fillText("POMOC ( H )",620,653);
+					}else{
+						this.ctx.font="13px 'K2D'";
+						this.ctx.fillText("CHODZENIE - KLAWISZE STRZAŁEK  ATAK - KLAWISZE Z, X, Z+X  JABŁKO, MIKSTURA - KLAWISZ C, Z+C",43,653);
+					}
+				}
+				if(controller.tutorial==true){
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="15px 'K2D'";
+					this.ctx.fillText("WCISKAJ KLAWISZE ZGODNIE ZE WSKAZÓWKAMI",190,461);
+				}
+				if(controller.ingame==true){
+					if(boss.active==true){
+						this.ctx.fillStyle = '#ca2500';
+						this.ctx.font="17px 'K2D'";
+						this.ctx.fillText("BOSS",145,628);
+					}
+					if(dialog.skin==1){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("OSTATNIEJ NOCY KSIĘŻNICZKA ZOSTAŁA",235,226);
+						this.ctx.fillText("PORWANA. DLATEGO NIE TRAĆ CZASU I",235,245);
+						this.ctx.fillText("RUSZAJ ŻEBY JĄ URATOWAĆ !!!",235,264);	
+					}
+					if(dialog.skin==2){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("W TEJ KOMNACIE JEST POMNIK BOHATERÓW,",235,226);
+						this.ctx.fillText("DZIĘKI NIEMU ULECZYSZ WSZYSTKIE",235,245);
+						this.ctx.fillText("ODNIESIONE OBRAŻENIA",235,264);
+					}
+					if(dialog.skin==3){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("PODOBNO ZNIKNIĘCIE KSIĘŻNICZIKI JEST",235,226);
+						this.ctx.fillText("SPOWODOWANE PRZEZ ZŁE MOCE, BO NIE",235,245);
+						this.ctx.fillText("MA ŚWIADKÓW I NIKT NIC NIE WIE.",235,264);			
+					}
+					if(dialog.skin==4){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("BLA BLE BLA BLE BLU BLA BLI BLA BLE",235,226);
+						this.ctx.fillText("HA HA HA HA HA BLE PFF BLE BLU UUU",235,245);		
+					}
+					if(dialog.skin==5){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("WITAJ DZIELNY WOJOWNIKU !",280,226);
+						this.ctx.fillText("ŻEBY COŚ KUPIĆ MUSISZ PODEJŚĆ DO",235,245);
+						this.ctx.fillText("TEGO PRZEDMIOTU",300,264);	
+						this.ctx.font="17px 'K2D'";
+						this.ctx.fillText("70G",158,349);
+						this.ctx.fillText("x 1",177,376);
+						this.ctx.fillText("500G",339,349);
+						this.ctx.fillText("x 1",364,376);
+						this.ctx.fillText("50G",531,349);
+						this.ctx.fillText("x 1",549,376);
+					}
+					if(dialog.skin==6){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("GDZIEŚ ZAWIERUSZYŁ SIĘ MÓJ POMOCNIK.",214,226); 
+						this.ctx.fillText("JEŚLI UDA CI SIĘ GO ZNALEŹĆ, TO DOSTANIESZ",214,245);
+						this.ctx.fillText("NAGRODĘ. WEŹ JEGO ULUBIONY PRZYSMAK. ",214,264);
+					}
+					if(dialog.skin==7){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText("!!!   DZIĘKI WIELKIE ZA POMOC   !!!",270,226); 
+						this.ctx.fillText("UWAŻAJ NA SIEBIE I POWODZENIA",270,264);
+					}
+					if(dialog.skin==9){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText ("GŁUPCZE!!! ZROBIŁEŚ DUŻY BŁĄD PRZYŁAŻĄC", 214,197);
+						this.ctx.fillText ("TUTAJ. JUŻ JEST PO TOBIE! HA HA HA HA", 214,220);
+					}
+				}
+				if(controller.ending==true){
+					if(controller.timer>=1300&&controller.timer<=1800){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("KSIĘŻNICZKA ZOSTAŁA WYBAWIONA Z RĄK",40,120);
+						this.ctx.fillText("ZŁEGO NEKROMANTY. WRAZ Z JEGO KLĘSKĄ",40,170);
+						this.ctx.fillText("ODESZŁO W ZAPOMNIENIE WSZELKIE ZŁO I ",40,220);
+						this.ctx.fillText("NIEBEZPIECZEŃSTWO. DZIĘKI TEMU",40,270);
+						this.ctx.fillText("KRÓLESTWO JEST JUŻ BEZPIECZNE, A ",40,320);
+						this.ctx.fillText("DRAGONIS POŚLUBIŁ KSIĘŻNICZKĘ.",40,370);
+						this.ctx.fillText("JEGO BOHATERSTWO I HEROIZM NIGDY NIE ",40,450);
+						this.ctx.fillText("ZOSTANĄ ZAPOMNIANE.",40,500);
+					}
+					if(controller.timer>=1800&&controller.timer<=1810){
+						this.ctx.fillStyle = '#001fa2';
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("KSIĘŻNICZKA ZOSTAŁA WYBAWIONA Z RĄK",40,120);
+						this.ctx.fillText("ZŁEGO NEKROMANTY. WRAZ Z JEGO KLĘSKĄ",40,170);
+						this.ctx.fillText("ODESZŁO W ZAPOMNIENIE WSZELKIE ZŁO I ",40,220);
+						this.ctx.fillText("NIEBEZPIECZEŃSTWO. DZIĘKI TEMU",40,270);
+						this.ctx.fillText("KRÓLESTWO JEST JUŻ BEZPIECZNE, A ",40,320);
+						this.ctx.fillText("DRAGONIS POŚLUBIŁ KSIĘŻNICZKĘ.",40,370);
+						this.ctx.fillText("JEGO BOHATERSTWO I HEROIZM NIGDY NIE ",40,450);
+						this.ctx.fillText("ZOSTANĄ ZAPOMNIANE!",40,500);
+					}
+					if(controller.timer>=1810&&controller.timer<=2110){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("POMYSŁ, GRAFIKA I KOD APLIKACJI",100,200);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,250);
+						this.ctx.fillText("KOD RENDEROWANIA GRAFIKI JS.n00b",150,300);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("TESTY",300,350);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,400);
+						this.ctx.fillText("PATRYK MORAWSKI",250,450);
+						this.ctx.fillText("ANNA SIENKIEWICZ",250,500);
+					}
+					if(controller.timer>=2110&&controller.timer<=2120){
+						this.ctx.fillStyle = '#001fa2';
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("POMYSŁ, GRAFIKA I KOD APLIKACJI",100,200);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,250);
+						this.ctx.fillText("KOD RENDEROWANIA GRAFIKI JS.n00b",150,300);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("TESTY",300,350);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,400);
+						this.ctx.fillText("PATRYK MORAWSKI",250,450);
+						this.ctx.fillText("ANNA SIENKIEWICZ",250,500);
+					}
+					if(controller.timer>=2120&&controller.timer<=2500){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("MUZYKA I DŹWIĘK",250,50);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,100);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("8-BITOWE COVERY UTWORÓW",170,150);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("AMON AMARTH - TWILIGHT OF THE THUNDER GOD",100,200);
+						this.ctx.fillText("DARK TRANQUILITY - CATHODE RAY SUNSHINE",100,250);
+						this.ctx.fillText("ELEKTRONOMIA - ENERGY",100,300);
+						this.ctx.fillText("ALAN WALKER - FADE",100,350);
+						this.ctx.fillText("PAKITO - LIVING ON VIDEO",100,400);
+						this.ctx.fillText("VICETONE & IGY - ASTRONOMIA",100,450);
+						this.ctx.fillText("SCOOTER - FIRE",100,500);
+						this.ctx.fillText("RIGHTEOUS BROTHER - UNCHAINED MELODY",100,550);
+						this.ctx.fillText("ORAZ UTWORY MOJEGO AUTORSTWA",100,600);
+					}
+					if(controller.timer>=2500&&controller.timer<=2510){
+						this.ctx.fillStyle = '#001fa2';
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("MUZYKA I DŹWIĘK",250,50);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,100);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("8-BITOWE COVERY UTWORÓW",170,150);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("AMON AMARTH - TWILIGHT OF THE THUNDER GOD",100,200);
+						this.ctx.fillText("DARK TRANQUILITY - CATHODE RAY SUNSHINE",100,250);
+						this.ctx.fillText("ELEKTRONOMIA - ENERGY",100,300);
+						this.ctx.fillText("ALAN WALKER - FADE",100,350);
+						this.ctx.fillText("PAKITO - LIVING ON VIDEO",100,400);
+						this.ctx.fillText("VICETONE & IGY - ASTRONOMIA",100,450);
+						this.ctx.fillText("SCOOTER - FIRE",100,500);
+						this.ctx.fillText("RIGHTEOUS BROTHER - UNCHAINED MELODY",100,550);
+						this.ctx.fillText("ORAZ UTWORY MOJEGO AUTORSTWA",100,600);
+					}
+					if(controller.timer>=2510){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="100px 'K2D'";
+						this.ctx.fillText("KONIEC",170,250);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("DZIĘKUJĘ ZA ROZGRYWKĘ",150,400);
+						this.ctx.fillText("GRATULUJĘ ZWYCIĘSTWA !!!",130,450);
+					}
+				}
+				if(controller.gameover==true){
+					this.ctx.fillStyle = '#ca2500';
+					this.ctx.font = "100px 'K2D'";
+					this.ctx.fillText ( "GAME OVER", 80,180);
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="40px 'K2D'";
+					this.ctx.fillText ( "TWOJE OSIĄGNIĘCIA", 180,300);
+					this.ctx.font="30px 'K2D'";
+					this.ctx.fillText ( "POZIOM: "+hero.level, 260,370);
+					this.ctx.fillText ( "ZŁOTO: "+hero.gold, 260,410);
+					this.ctx.fillText ( "POKONANI: "+hero.kills, 260,450);
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText ( "W TEN SPOSÓB TO BOHATEREM NIE ZOSTANIESZ ...", 120,540);
+				}	
+			}
+			if(controller.lang==1){
+				if(controller.choose==true){
+					this.ctx.fillStyle = '#ff';
+					this.ctx.font="40px 'K2D'";
+					this.ctx.fillText("CHOOSE LANGUAGE",160,100);
+				}
+				if(controller.title==true){
+					if(controller.timer>0&&controller.timer<60){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font="20px 'K2D'";
+						this.ctx.fillText ("PRESS ENTER TO START THE ADVENTURE", 170,440);
+					}else{
+						this.ctx.fillStyle = '#000';
+					}
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText("2020 MARIUSZ JAŁYŃSKI",230,620);
+				}
+				if(controller.tutorial==true||controller.ingame==true){
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="15px 'K2D'";
+					this.ctx.fillText("Z",513,44);
+					this.ctx.fillText("X",513,62);
+					this.ctx.fillText("C",513,92);
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText("LEVEL : "+hero.level,330,50);
+					this.ctx.fillText("EXP : "+hero.exp,330,74);
+					this.ctx.fillText("/ "+hero.next,445,74);
+					this.ctx.fillText(": "+hero.kills,352,98);
+					this.ctx.fillText(": "+hero.gold,436,98);
+					this.ctx.fillStyle = '#fff';
+					if(hero.apple>=1){
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText(""+hero.apple,568,101);	
+					}
+					if(hero.potion>=1){
+						this.ctx.font="15px 'K2D'";
+						this.ctx.fillText(""+hero.potion,622,101);	
+					}
+					if(controller.hint==false){
+						this.ctx.font="13px 'K2D'";
+						this.ctx.fillText("HELP ( H )",620,653);
+					}else{
+						this.ctx.font="13px 'K2D'";
+						this.ctx.fillText ("WALKING - ARROW KEYS ATTACK - Z, X, Z + X KEYS, MIXTURE - C, Z + C KEYS", 120,653);
+					}
+				}
+				if(controller.tutorial==true){
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="15px 'K2D'";
+					this.ctx.fillText ("PRESS THE KEYS ACCORDING TO THE TIPS", 210,461);
+				}
+				if (controller.ingame==true) {
+					if (boss.active==true) {
+						this.ctx.fillStyle = '#ca2500';
+						this.ctx.font = "17px 'K2D'";
+						this.ctx.fillText ( "BOSS", 145,628);
+					}
+					if (dialog.skin==1) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("LAST NIGHT THE PRINCESS HAS BEEN", 235,226);
+						this.ctx.fillText ("HIDDEN. SO DON'T WASTE TIME I GO", 235,245);
+						this.ctx.fillText ("TO SAVE HER !!!", 235,264);
+					}
+					if (dialog.skin==2) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("THIS CHAMBER IS A MONUMENT TO HEROES,", 235,226);
+						this.ctx.fillText ("WITH HIM YOU WILL HURRY ALL REFERENCE", 235,245);
+						this.ctx.fillText ("DAMAGE", 235,264);
+					}
+					if (dialog.skin==3) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("PLEASED THE DISAPPEARANCE OF A PRINCESS", 215,226);
+						this.ctx.fillText ("IS DIRECTED BY BAD POWERS, BECAUSE NOT", 215,245);
+						this.ctx.fillText ("HAS WITNESSES, AND NOBODY KNOWS ANYTHING", 215,264);
+					}
+					if (dialog.skin==4) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("BLA BLE BLA BLE BLU BLA BLI BLA BLE", 235,226);
+						this.ctx.fillText ("HA HA HA HA HA BLE PFF BLE BLU UUU", 235,245);
+					}
+					if (dialog.skin==5) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("HELLO BRAVE WARRIOR!", 280,226);
+						this.ctx.fillText ("TO BUY ANYTHING YOU HAVE TO COME TO", 235,245);
+						this.ctx.fillText ("THIS ITEM", 300,264);
+						this.ctx.font = "17px 'K2D'";
+						this.ctx.fillText ( "70G", 158,349);
+						this.ctx.fillText ("x 1", 177,376);
+						this.ctx.fillText ( "500G", 339,349);
+						this.ctx.fillText ("x 1", 364,376);
+						this.ctx.fillText ( "50G", 531,349);
+						this.ctx.fillText ("x 1", 549,376);
+					}
+					if (dialog.skin==6) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("WHEREVER MY HELPER HAS BEEN LOCATED.", 214,226);
+						this.ctx.fillText ("IF YOU CAN FIND IT, YOU WILL GET IT", 214,245);
+						this.ctx.fillText ("REWARD. GET HIS FAVORITE FAVOR.", 214,264);
+					}
+					if (dialog.skin==7) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("!!! THANK YOU A LOT FOR HELP !!!", 270,226);
+						this.ctx.fillText ("TAKE CARE OF YOURSELF AND GOOD LUCK", 270,264);
+					}
+					if (dialog.skin==9) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "15px 'K2D'";
+						this.ctx.fillText ("STUPID !!! YOU MADE A BIG MISTAKE COMING", 225,197);
+						this.ctx.fillText ("HERE. IT IS AFTER YOU! HA HA HA HA HA", 225,220);
+					}
+				}
+				if (controller.ending==true) {
+					if (controller.timer>1300&&controller.timer<=1800) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("THE PRINCESS HAS BEEN SAVED FROM", 40,120);
+						this.ctx.fillText ("HANDS BAD NECROMANT. AND HIS DEFEAT", 40,170);
+						this.ctx.fillText ("ALL EVIL FORGOTTEN FROM FORGOTTEN", 40,220);
+						this.ctx.fillText ("DANGER. FROM THIS THE KINGDOM", 40,270);
+						this.ctx.fillText ("IS ALREADY SAFE A DRAGONIS HAS", 40,320);
+						this.ctx.fillText ("MARRED A PRINCESS.", 40,370);
+						this.ctx.fillText ("HIS HEROES AND HEROISM NEVER", 40,450);
+						this.ctx.fillText ("WILL BE FORGOTTEN!", 40,500);
+					}
+					if (controller.timer>=1800&&controller.timer<=1810) {
+						this.ctx.fillStyle = '#001fa2';
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("THE PRINCESS HAS BEEN SAVED FROM", 40,120);
+						this.ctx.fillText ("HANDS BAD NECROMANT. AND HIS DEFEAT", 40,170);
+						this.ctx.fillText ("ALL EVIL FORGOTTEN FROM FORGOTTEN", 40,220);
+						this.ctx.fillText ("DANGER. FROM THIS THE KINGDOM", 40,270);
+						this.ctx.fillText ("IS ALREADY SAFE A DRAGONIS HAS", 40,320);
+						this.ctx.fillText ("MARRED A PRINCESS.", 40,370);
+						this.ctx.fillText ("HIS HEROES AND HEROISM NEVER", 40,450);
+						this.ctx.fillText ("WILL BE FORGOTTEN!", 40,500);
+					}
+					if (controller.timer>=1810&&controller.timer<=2110) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("IDEA, GRAPHICS AND APPLICATION CODE", 70,200);
+						this.ctx.font = "22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,250);
+						this.ctx.fillText("GRAPHICS RENDER CODE JS.n00b",180,300);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("TESTS",300,350);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,400);
+						this.ctx.fillText("PATRYK MORAWSKI",250,450);
+						this.ctx.fillText("ANNA SIENKIEWICZ",250,500);
+					}
+					if (controller.timer>=2110&&controller.timer<=2120) {
+						this.ctx.fillStyle = '#001fa2';
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("IDEA, GRAPHICS AND APPLICATION CODE", 70,200);
+						this.ctx.font = "22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,250);
+						this.ctx.fillText("GRAPHICS RENDER CODE JS.n00b",180,300);
+						this.ctx.font="30px 'K2D'";
+						this.ctx.fillText("TESTS",300,350);
+						this.ctx.font="22px 'K2D'";
+						this.ctx.fillText("MARIUSZ JAŁYŃSKI",250,400);
+						this.ctx.fillText("PATRYK MORAWSKI",250,450);
+						this.ctx.fillText("ANNA SIENKIEWICZ",250,500);
+					}
+					if(controller.timer>=2120&&controller.timer<=2500){
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("MUSIC AND SOUND", 230,50);
+						this.ctx.font = "22px 'K2D'";
+						this.ctx.fillText ("MARIUSZ JAŁYŃSKI", 250,100);
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("8 BIT TRACK COVER", 220,150);
+						this.ctx.font = "22px 'K2D'";
+						this.ctx.fillText ("AMON AMARTH - TWILIGHT OF THE THUNDER GOD", 100,200);
+						this.ctx.fillText ("DARK TRANQUILITY - CATHODE RAY SUNSHINE", 100,250);
+						this.ctx.fillText ("ELECTRONOMIA - ENERGY", 100,300);
+						this.ctx.fillText ("ALAN WALKER - FADE", 100,350);
+						this.ctx.fillText ("PAKITO - LIVING ON VIDEO", 100,400);
+						this.ctx.fillText ("VICETONE & IGY - ASTRONOMY", 100,450);
+						this.ctx.fillText("SCOOTER - FIRE",100,500);
+						this.ctx.fillText ("RIGHTEOUS BROTHER - UNCHAINED MELODY", 100,550);
+						this.ctx.fillText ("AND MY AUTHORIZED WORKS", 100,600);
+					}
+					if (controller.timer>=2500&&controller.timer<=2510) {
+						this.ctx.fillStyle = '#001fa2';
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("MUSIC AND SOUND", 230,50);
+						this.ctx.font = "22px 'K2D'";
+						this.ctx.fillText ("MARIUSZ JAŁYŃSKI", 250,100);
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("8 BIT TRACK COVER", 220,150);
+						this.ctx.font = "22px 'K2D'";
+						this.ctx.fillText ("AMON AMARTH - TWILIGHT OF THE THUNDER GOD", 100,200);
+						this.ctx.fillText ("DARK TRANQUILITY - CATHODE RAY SUNSHINE", 100,250);
+						this.ctx.fillText ("ELECTRONOMIA - ENERGY", 100,300);
+						this.ctx.fillText ("ALAN WALKER - FADE", 100,350);
+						this.ctx.fillText ("PAKITO - LIVING ON VIDEO", 100,400);
+						this.ctx.fillText ("VICETONE & IGY - ASTRONOMY", 100,450);
+						this.ctx.fillText("SCOOTER - FIRE",100,500);
+						this.ctx.fillText ("RIGHTEOUS BROTHER - UNCHAINED MELODY", 100,550);
+						this.ctx.fillText ("AND MY AUTHORIZED WORKS", 100,600);
+					}
+					if (controller.timer>=2510) {
+						this.ctx.fillStyle = '#fff';
+						this.ctx.font = "100px 'K2D'";
+						this.ctx.fillText ( "END", 250,250);
+						this.ctx.font = "30px 'K2D'";
+						this.ctx.fillText ("THANK YOU FOR YOUR PLAY", 150,400);
+						this.ctx.fillText ("CONGRATULATIONS FOR WINNING !!!", 100,450);
+					}
+				}
+				if(controller.gameover==true){
+					this.ctx.fillStyle = '#ca2500';
+					this.ctx.font = "100px 'K2D'";
+					this.ctx.fillText ( "GAME OVER", 80,180);
+					this.ctx.fillStyle = '#fff';
+					this.ctx.font="40px 'K2D'";
+					this.ctx.fillText ( "YOUR ACHIEVEMENTS", 160,300);
+					this.ctx.font="30px 'K2D'";
+					this.ctx.fillText ( "LEVEL: "+hero.level, 260,370);
+					this.ctx.fillText ( "GOLD: "+hero.gold, 260,410);
+					this.ctx.fillText ( "DEFEATED: "+hero.kills, 260,450);
+					this.ctx.font="20px 'K2D'";
+					this.ctx.fillText ( "IN THIS WAY, YOU WILL NOT BECOME A HERO ...", 150,540);
+				}
+			}
 			this.ctx.restore();
 		}
 	};
